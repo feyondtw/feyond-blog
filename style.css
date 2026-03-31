@@ -1,0 +1,1091 @@
+/* ═══════════════════════════════════════════════════════════
+   飛揚細籽 FEYOND — 共用樣式系統
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────
+   色彩系統 — 使用 data-theme 切換
+   ───────────────────────────────────────── */
+
+:root {
+  /* 共用基底 */
+  --cream: #FFFEF2;
+  --bark: #4A4238;
+  --bark-light: #6B6355;
+  --ink: #2C2824;
+  --ink-soft: #5C554D;
+  
+  /* 字體 */
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Noto Serif TC', Georgia, serif;
+  
+  /* 預設主題色（A 暖駝） */
+  --theme-50: #F8F5EE;
+  --theme-100: #E8E0D0;
+  --theme-200: #C5B8A8;
+  --theme-400: #8B7355;
+  --theme-600: #5C4A3A;
+  --theme-800: #3A2E28;
+}
+
+/* A. 暖駝 Taupe */
+[data-theme="taupe"] {
+  --theme-50: #F8F5EE;
+  --theme-100: #E8E0D0;
+  --theme-200: #C5B8A8;
+  --theme-400: #8B7355;
+  --theme-600: #5C4A3A;
+  --theme-800: #3A2E28;
+}
+
+/* B. 赭陶 Terracotta */
+[data-theme="terracotta"] {
+  --theme-50: #FDF8F3;
+  --theme-100: #F5E6D8;
+  --theme-200: #E8C8B0;
+  --theme-400: #C4978A;
+  --theme-600: #A06B5C;
+  --theme-800: #6B4A40;
+}
+
+/* C. 森綠 Forest */
+[data-theme="forest"] {
+  --theme-50: #F7FAF5;
+  --theme-100: #E0EBE0;
+  --theme-200: #B8D0B8;
+  --theme-400: #6B9B6B;
+  --theme-600: #3D6B4A;
+  --theme-800: #2A4A35;
+}
+
+/* D. 靛藍 Indigo */
+[data-theme="indigo"] {
+  --theme-50: #F5F8FC;
+  --theme-100: #E0E8F0;
+  --theme-200: #B0C4D8;
+  --theme-400: #6A8BA8;
+  --theme-600: #3A5A78;
+  --theme-800: #1A3A5C;
+}
+
+/* E. 紫藤 Wisteria */
+[data-theme="wisteria"] {
+  --theme-50: #FAF8FC;
+  --theme-100: #EDE5F0;
+  --theme-200: #D4C4E0;
+  --theme-400: #A088B8;
+  --theme-600: #6B5080;
+  --theme-800: #4A3860;
+}
+
+/* F. 琥珀 Amber */
+[data-theme="amber"] {
+  --theme-50: #FFFCF5;
+  --theme-100: #F8F0D8;
+  --theme-200: #E8D8A8;
+  --theme-400: #C9A227;
+  --theme-600: #8B7020;
+  --theme-800: #5C4A18;
+}
+
+/* G. 玫瑰 Rose */
+[data-theme="rose"] {
+  --theme-50: #FDF8F8;
+  --theme-100: #F5E5E5;
+  --theme-200: #E8C8C8;
+  --theme-400: #C49090;
+  --theme-600: #986868;
+  --theme-800: #6B4545;
+}
+
+/* H. 青瓷 Celadon */
+[data-theme="celadon"] {
+  --theme-50: #F8FCFA;
+  --theme-100: #E5F0EB;
+  --theme-200: #C0D8D0;
+  --theme-400: #7EB0A0;
+  --theme-600: #4A8070;
+  --theme-800: #2A5048;
+}
+
+/* J. 蒼白 Bone */
+[data-theme="bone"] {
+  --theme-50: #FDFCFA;
+  --theme-100: #F0EDE8;
+  --theme-200: #DDD8D0;
+  --theme-400: #B8B0A5;
+  --theme-600: #8A8278;
+  --theme-800: #58524A;
+}
+
+/* K. 鼠尾 Sage */
+[data-theme="sage"] {
+  --theme-50: #F8FAF5;
+  --theme-100: #E5EAE0;
+  --theme-200: #C8D0C0;
+  --theme-400: #9AA890;
+  --theme-600: #6B7865;
+  --theme-800: #454D42;
+}
+
+/* ─────────────────────────────────────────
+   基礎重置
+   ───────────────────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--cream);
+}
+
+body {
+  font-family: var(--font-body);
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--ink);
+  background: var(--cream);
+  min-height: 100vh;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ─────────────────────────────────────────
+   導覽列
+   ───────────────────────────────────────── */
+
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--cream);
+  border-bottom: 1px solid var(--theme-100);
+  padding: 0 24px;
+}
+
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 3px;
+  color: var(--bark);
+}
+
+.nav-logo span {
+  font-size: 12px;
+  font-style: italic;
+  letter-spacing: 1px;
+  color: var(--bark-light);
+  margin-left: 12px;
+}
+
+.nav-menu {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+
+.nav-menu a {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-style: italic;
+  letter-spacing: 1px;
+  color: var(--bark-light);
+  transition: color 0.2s;
+}
+
+.nav-menu a:hover,
+.nav-menu a.active {
+  color: var(--ink);
+}
+
+/* 手機版選單 */
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--bark);
+  margin: 4px 0;
+  transition: 0.2s;
+}
+
+@media (max-width: 768px) {
+  .nav-toggle { display: block; }
+  
+  .nav-menu {
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    background: var(--cream);
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s;
+    border-bottom: 1px solid var(--theme-100);
+  }
+  
+  .nav-menu.open { max-height: 300px; }
+  
+  .nav-menu a {
+    display: block;
+    padding: 16px 24px;
+    border-top: 1px solid var(--theme-100);
+  }
+}
+
+/* ─────────────────────────────────────────
+   頁首（首頁用）
+   ───────────────────────────────────────── */
+
+.site-header {
+  text-align: center;
+  padding: 80px 24px 60px;
+  border-bottom: 1px solid var(--theme-100);
+}
+
+.site-title {
+  font-family: var(--font-display);
+  font-size: clamp(48px, 10vw, 80px);
+  font-weight: 300;
+  letter-spacing: 8px;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+
+.site-tagline {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-style: italic;
+  color: var(--bark-light);
+  letter-spacing: 2px;
+}
+
+.site-intro {
+  max-width: 600px;
+  margin: 32px auto 0;
+  font-size: 15px;
+  line-height: 2;
+  color: var(--ink-soft);
+}
+
+/* ─────────────────────────────────────────
+   主題分類標籤
+   ───────────────────────────────────────── */
+
+.category-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 32px 24px;
+  flex-wrap: wrap;
+}
+
+.category-tab {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-style: italic;
+  letter-spacing: 2px;
+  color: var(--bark-light);
+  padding: 10px 20px;
+  border: 1px solid var(--theme-200);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.category-tab:hover,
+.category-tab.active {
+  background: var(--theme-100);
+  color: var(--ink);
+  border-color: var(--theme-400);
+}
+
+/* ─────────────────────────────────────────
+   文章卡片（首頁列表）
+   ───────────────────────────────────────── */
+
+.articles-grid {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 48px;
+}
+
+.article-card {
+  display: block;
+  transition: transform 0.3s;
+}
+
+.article-card:hover {
+  transform: translateY(-4px);
+}
+
+.article-card-image {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  margin-bottom: 20px;
+}
+
+.article-card-category {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-style: italic;
+  letter-spacing: 2px;
+  color: var(--theme-600);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.article-card-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+
+.article-card-excerpt {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--ink-soft);
+  margin-bottom: 16px;
+}
+
+.article-card-meta {
+  font-family: var(--font-display);
+  font-size: 12px;
+  color: var(--bark-light);
+  letter-spacing: 1px;
+}
+
+/* ─────────────────────────────────────────
+   文章頁 Hero
+   ───────────────────────────────────────── */
+
+/* Hero A：純文字（極簡風） */
+.hero-text {
+  padding: 100px 24px 60px;
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
+  border-bottom: 1px solid var(--theme-100);
+}
+
+.hero-category {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-style: italic;
+  letter-spacing: 4px;
+  color: var(--theme-600);
+  margin-bottom: 32px;
+  text-transform: uppercase;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 6vw, 60px);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--ink);
+  margin-bottom: 24px;
+  letter-spacing: -0.02em;
+}
+
+.hero-subtitle {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2.5vw, 22px);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--ink-soft);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Hero B：全幅圖片 + 標題疊加 */
+.hero-image {
+  position: relative;
+  width: 100%;
+  height: 70vh;
+  min-height: 500px;
+  max-height: 700px;
+  overflow: hidden;
+}
+
+.hero-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.75);
+}
+
+.hero-image-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 80px 24px 60px;
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+  text-align: center;
+}
+
+.hero-image-content .hero-category {
+  color: rgba(255,255,255,0.75);
+}
+
+.hero-image-content .hero-title {
+  color: #fff;
+  max-width: 800px;
+  margin: 0 auto 16px;
+}
+
+.hero-image-content .hero-subtitle {
+  color: rgba(255,255,255,0.85);
+}
+
+/* ─────────────────────────────────────────
+   文章 Meta
+   ───────────────────────────────────────── */
+
+.meta-bar {
+  text-align: center;
+  padding: 28px 24px;
+  border-bottom: 1px solid var(--theme-100);
+}
+
+.meta-bar span {
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: var(--bark-light);
+}
+
+.meta-bar .divider {
+  margin: 0 16px;
+  color: var(--theme-200);
+}
+
+/* ─────────────────────────────────────────
+   文章內容
+   ───────────────────────────────────────── */
+
+.article-content {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 56px 24px;
+}
+
+.article-content p {
+  font-size: 17px;
+  font-weight: 300;
+  line-height: 2;
+  color: var(--ink-soft);
+  margin-bottom: 28px;
+  text-align: justify;
+}
+
+.article-content p strong {
+  font-weight: 400;
+  color: var(--ink);
+}
+
+.article-content p em {
+  font-style: italic;
+}
+
+/* 首字放大 */
+.article-content p.drop-cap::first-letter {
+  font-family: var(--font-display);
+  font-size: 72px;
+  float: left;
+  line-height: 0.8;
+  padding-right: 12px;
+  padding-top: 4px;
+  color: var(--theme-600);
+}
+
+/* 清單 */
+.article-content ul {
+  margin: 32px 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.article-content ul li {
+  font-size: 17px;
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--ink-soft);
+  margin-bottom: 20px;
+  padding-left: 24px;
+  position: relative;
+}
+
+.article-content ul li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--theme-400);
+}
+
+/* ─────────────────────────────────────────
+   引言區塊
+   ───────────────────────────────────────── */
+
+.quote-light {
+  background: var(--theme-100);
+  margin: 64px calc(-50vw + 50%);
+  padding: 80px 24px;
+  text-align: center;
+}
+
+.quote-light blockquote {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 3.5vw, 28px);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.65;
+  color: var(--ink);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.quote-light cite {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-style: normal;
+  letter-spacing: 2px;
+  color: var(--theme-600);
+  margin-top: 28px;
+}
+
+.quote-dark {
+  background: var(--theme-800);
+  margin: 64px calc(-50vw + 50%);
+  padding: 100px 24px;
+  text-align: center;
+}
+
+.quote-dark blockquote {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 4vw, 32px);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.55;
+  color: #fff;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.quote-dark cite {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-style: normal;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.6);
+  margin-top: 32px;
+}
+
+/* ─────────────────────────────────────────
+   章節標記
+   ───────────────────────────────────────── */
+
+.section-marker {
+  text-align: center;
+  margin: 72px 0 48px;
+}
+
+.section-marker span {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-style: italic;
+  letter-spacing: 4px;
+  color: var(--theme-600);
+  display: inline-block;
+  padding: 0 24px;
+  position: relative;
+}
+
+.section-marker span::before,
+.section-marker span::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 40px;
+  height: 1px;
+  background: var(--theme-200);
+}
+
+.section-marker span::before { right: 100%; }
+.section-marker span::after { left: 100%; }
+
+.section-break {
+  text-align: center;
+  margin: 72px 0;
+}
+
+.section-break span {
+  display: inline-block;
+  width: 60px;
+  height: 1px;
+  background: var(--theme-200);
+}
+
+/* ─────────────────────────────────────────
+   圖片
+   ───────────────────────────────────────── */
+
+.inline-image {
+  margin: 56px 0;
+}
+
+.inline-image img {
+  width: 100%;
+  height: auto;
+}
+
+.inline-image figcaption,
+.full-image figcaption {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-style: italic;
+  color: var(--bark-light);
+  text-align: center;
+  margin-top: 16px;
+}
+
+.full-image {
+  margin: 72px calc(-50vw + 50%);
+  width: 100vw;
+}
+
+.full-image img {
+  width: 100%;
+  height: 50vh;
+  min-height: 320px;
+  max-height: 500px;
+  object-fit: cover;
+}
+
+.image-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  margin: 72px calc(-50vw + 50%);
+  width: 100vw;
+}
+
+.image-pair img {
+  width: 100%;
+  height: 45vh;
+  min-height: 280px;
+  object-fit: cover;
+}
+
+/* ─────────────────────────────────────────
+   植物資訊卡
+   ───────────────────────────────────────── */
+
+.plant-info {
+  background: var(--theme-100);
+  margin: 64px calc(-50vw + 50%);
+  padding: 64px 24px;
+}
+
+.plant-info-inner {
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.plant-info h3 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.plant-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px 48px;
+}
+
+.plant-info-item {
+  text-align: center;
+}
+
+.plant-info-item dt {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-style: italic;
+  letter-spacing: 2px;
+  color: var(--theme-600);
+  margin-bottom: 8px;
+}
+
+.plant-info-item dd {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--ink);
+  line-height: 1.6;
+}
+
+.plant-info-full {
+  grid-column: 1 / -1;
+  text-align: left;
+}
+
+.plant-info-full dt {
+  text-align: center;
+}
+
+/* ─────────────────────────────────────────
+   儀式區塊
+   ───────────────────────────────────────── */
+
+.ritual-section {
+  background: var(--theme-100);
+  margin: 64px calc(-50vw + 50%);
+  padding: 80px 24px;
+}
+
+.ritual-inner {
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.ritual-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.ritual-card {
+  background: var(--cream);
+  padding: 40px;
+  margin-bottom: 32px;
+  border-left: 3px solid var(--theme-400);
+}
+
+.ritual-card:last-child {
+  margin-bottom: 0;
+}
+
+.ritual-card h4 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 20px;
+}
+
+.ritual-card .recipe {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-style: italic;
+  color: var(--theme-600);
+  padding: 16px 20px;
+  background: var(--theme-50);
+  margin-bottom: 20px;
+}
+
+.ritual-card p {
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--ink-soft);
+  margin-bottom: 20px;
+}
+
+.ritual-card blockquote {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-style: italic;
+  line-height: 1.8;
+  color: var(--ink);
+  padding: 24px;
+  background: var(--theme-50);
+  border-left: 2px solid var(--theme-600);
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────
+   結尾區塊
+   ───────────────────────────────────────── */
+
+.closing {
+  background: var(--theme-100);
+  margin: 80px calc(-50vw + 50%) 0;
+  padding: 100px 24px;
+  text-align: center;
+}
+
+.closing-icon {
+  font-size: 32px;
+  margin-bottom: 24px;
+  color: var(--theme-400);
+}
+
+.closing-text {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 4vw, 28px);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--ink);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ─────────────────────────────────────────
+   文章導覽（上一篇/下一篇）
+   ───────────────────────────────────────── */
+
+.article-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 48px 24px;
+  border-top: 1px solid var(--theme-100);
+}
+
+.article-nav-item {
+  padding: 24px;
+  border: 1px solid var(--theme-200);
+  transition: all 0.2s;
+}
+
+.article-nav-item:hover {
+  background: var(--theme-50);
+  border-color: var(--theme-400);
+}
+
+.article-nav-item.next {
+  text-align: right;
+}
+
+.article-nav-label {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-style: italic;
+  letter-spacing: 2px;
+  color: var(--theme-600);
+  margin-bottom: 8px;
+}
+
+.article-nav-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--ink);
+  line-height: 1.4;
+}
+
+/* ─────────────────────────────────────────
+   標籤
+   ───────────────────────────────────────── */
+
+.tags {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 40px 24px;
+  border-top: 1px solid var(--theme-100);
+}
+
+.tags a {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-style: italic;
+  letter-spacing: 1px;
+  color: var(--theme-600);
+  padding: 6px 14px;
+  border: 1px solid var(--theme-200);
+  transition: all 0.2s;
+}
+
+.tags a:hover {
+  background: var(--theme-100);
+  color: var(--theme-800);
+}
+
+/* ─────────────────────────────────────────
+   頁尾
+   ───────────────────────────────────────── */
+
+.site-footer {
+  padding: 64px 24px;
+  text-align: center;
+  border-top: 1px solid var(--theme-100);
+  background: var(--cream);
+}
+
+.footer-brand {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: 4px;
+  color: var(--bark);
+  margin-bottom: 16px;
+}
+
+.footer-tagline {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-style: italic;
+  color: var(--bark-light);
+  margin-bottom: 32px;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+.footer-links a {
+  font-family: var(--font-display);
+  font-size: 13px;
+  color: var(--bark-light);
+  transition: color 0.2s;
+}
+
+.footer-links a:hover {
+  color: var(--ink);
+}
+
+.footer-copy {
+  font-size: 12px;
+  color: var(--theme-400);
+}
+
+/* ─────────────────────────────────────────
+   動畫
+   ───────────────────────────────────────── */
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─────────────────────────────────────────
+   響應式
+   ───────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .hero-text { padding: 60px 24px 40px; }
+  .hero-image { height: 60vh; min-height: 400px; }
+  
+  .quote-light, .quote-dark, .plant-info, .ritual-section,
+  .closing, .full-image, .image-pair {
+    margin-left: -24px;
+    margin-right: -24px;
+    width: calc(100% + 48px);
+  }
+  
+  .plant-info-grid { grid-template-columns: 1fr; }
+  .image-pair { grid-template-columns: 1fr; gap: 0; }
+  .image-pair img { height: 35vh; }
+  
+  .article-nav { grid-template-columns: 1fr; }
+  .article-nav-item.next { text-align: left; }
+  
+  .ritual-card { padding: 28px 20px; }
+  
+  .article-content p.drop-cap::first-letter { font-size: 56px; }
+  
+  .footer-links { flex-direction: column; gap: 16px; }
+}
+
+/* ─────────────────────────────────────────
+   返回頂端
+   ───────────────────────────────────────── */
+
+.back-to-top {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 48px;
+  height: 48px;
+  background: var(--cream);
+  border: 1px solid var(--theme-200);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+  z-index: 99;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.back-to-top:hover {
+  background: var(--theme-100);
+  border-color: var(--theme-400);
+}
+
+.back-to-top::before {
+  content: '↑';
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--bark);
+}
