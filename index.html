@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>飛揚細籽｜FEYOND</title>
 <meta name="description" content="根本芳療 Dhyana Aromatherapy 的25年芳療文章匯集，由 Feyond 老師主筆，探索心覺、身覺、香旅三大主題。">
-<link rel="canonical" href="https://feyondtw.github.io/feyond-blog/">
+<link rel="canonical" href="https://feyond.muzen.store/">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Noto+Serif+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="style.css">
 </head>
 <body data-theme="taupe">
 
@@ -53,7 +53,7 @@
 <main class="articles-grid">
 
   <!-- 藍雲杉 -->
-  <a href="articles/blue-spruce.html" class="article-card fade-in" data-category="soul">
+  <a href="blue-spruce.html" class="article-card fade-in" data-category="soul">
     <img src="https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?w=600&h=450&fit=crop" alt="藍雲杉" class="article-card-image">
     <p class="article-card-category">心覺</p>
     <h2 class="article-card-title">藍雲杉：在自己的土地上靜靜站立</h2>
@@ -62,7 +62,7 @@
   </a>
 
   <!-- 永久花 -->
-  <a href="articles/helichrysum.html" class="article-card fade-in" data-category="journey">
+  <a href="helichrysum.html" class="article-card fade-in" data-category="journey">
     <img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=600&h=450&fit=crop" alt="永久花" class="article-card-image">
     <p class="article-card-category">香旅</p>
     <h2 class="article-card-title">巴爾幹半島｜摺痕大地綻出的不凋花</h2>
@@ -71,7 +71,7 @@
   </a>
 
   <!-- 花梨木 -->
-  <a href="articles/rosewood.html" class="article-card fade-in" data-category="journey">
+  <a href="rosewood.html" class="article-card fade-in" data-category="journey">
     <img src="https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&h=450&fit=crop" alt="亞馬遜雨林" class="article-card-image">
     <p class="article-card-category">香旅</p>
     <h2 class="article-card-title">雨林裡的芳香守護職人</h2>
@@ -80,29 +80,12 @@
   </a>
 
   <!-- 漠地 -->
-  <a href="articles/desert-spirit.html" class="article-card fade-in" data-category="journey">
+  <a href="desert-spirit.html" class="article-card fade-in" data-category="journey">
     <img src="https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=600&h=450&fit=crop" alt="沙漠" class="article-card-image">
     <p class="article-card-category">香旅</p>
     <h2 class="article-card-title">漠地裡的純淨靈性</h2>
     <p class="article-card-excerpt">追隨歐姬芙的足跡，從亞利桑那到聖塔非，在人煙稀少的漠地裡尋找純白到空靈的美。</p>
     <p class="article-card-meta">2019-03-23</p>
-  </a>
-
-  <!-- 更多文章佔位 -->
-  <a href="#" class="article-card fade-in" data-category="body">
-    <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&h=450&fit=crop" alt="瑜伽" class="article-card-image">
-    <p class="article-card-category">身覺</p>
-    <h2 class="article-card-title">心靈總會在瑜伽中找到它的依歸</h2>
-    <p class="article-card-excerpt">艾揚格瑜伽與芳療的身心對話，在呼吸與體式之間找到內在的平靜。</p>
-    <p class="article-card-meta">2023</p>
-  </a>
-
-  <a href="#" class="article-card fade-in" data-category="body">
-    <img src="https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=600&h=450&fit=crop" alt="熊野古道" class="article-card-image">
-    <p class="article-card-category">身覺</p>
-    <h2 class="article-card-title">熊野古道小邊路｜飛揚的山徑</h2>
-    <p class="article-card-excerpt">在古老的朝聖之路上，用身體丈量大地，用呼吸感受森林的脈動。</p>
-    <p class="article-card-meta">2023</p>
   </a>
 
 </main>
@@ -138,7 +121,6 @@ window.addEventListener('scroll', () => {
 // 分類篩選
 document.querySelectorAll('.category-tab').forEach(tab => {
   tab.addEventListener('click', () => {
-    // 更新 active 狀態
     document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
     
@@ -158,9 +140,7 @@ document.querySelectorAll('.nav-menu a[data-filter]').forEach(link => {
   link.addEventListener('click', (e) => {
     e.preventDefault();
     const filter = link.dataset.filter;
-    // 觸發對應的 tab
     document.querySelector(`.category-tab[data-filter="${filter}"]`).click();
-    // 滾動到文章區
     document.querySelector('.articles-grid').scrollIntoView({ behavior: 'smooth' });
   });
 });
