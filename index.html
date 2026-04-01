@@ -3,146 +3,727 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>飛揚細籽｜FEYOND</title>
-<meta name="description" content="根本芳療 Dhyana Aromatherapy 的25年芳療文章匯集，由 Feyond 老師主筆，探索心覺、身覺、香旅三大主題。">
-<link rel="canonical" href="https://feyond.muzen.store/">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Noto+Serif+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<title>飛揚細籽 FEYOND｜芳療深度文章</title>
+<meta name="description" content="Feyond 老師 25 年芳療文章匯集——植物學、香氣哲思、產地旅行、調香手記">
+<link rel="canonical" href="https://feyond.muzen.store">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+TC:wght@300;400;500&family=Noto+Sans+TC:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #FFFEF8;
+  --sand: #EDE6D6;
+  --parchment: #F5F0E3;
+  --ink: #252220;
+  --ink-soft: #4A4540;
+  --ink-muted: #7A756D;
+  --ink-faint: #A8A29A;
+  --gold: #B8965A;
+  --gold-light: #D4B87A;
+  
+  /* 分類色 */
+  --cat-botany: #2D4A3E;
+  --cat-philosophy: #B8965A;
+  --cat-journey: #8B5A3C;
+  --cat-blending: #3D4A6B;
+  
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-serif: 'Noto Serif TC', Georgia, serif;
+  --font-sans: 'Noto Sans TC', -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { 
+  font-family: var(--font-serif); 
+  background: var(--cream); 
+  color: var(--ink); 
+  line-height: 1.8;
+  font-weight: 300;
+}
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+
+/* ═══════════════════════════════════════
+   HEADER / NAV — Aesop 極簡風
+   ═══════════════════════════════════════ */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: var(--cream);
+  border-bottom: 1px solid var(--sand);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.site-header.scrolled {
+  box-shadow: 0 2px 20px rgba(0,0,0,0.04);
+}
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+}
+.nav-logo span {
+  font-weight: 300;
+  color: var(--ink-muted);
+  margin-left: 8px;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+}
+.nav-links {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+.nav-link {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: var(--ink-muted);
+  transition: color 0.3s;
+}
+.nav-link:hover { color: var(--ink); }
+.nav-link.active { color: var(--gold); }
+
+/* ═══════════════════════════════════════
+   HERO — 文字為主，Aesop Library 風格
+   ═══════════════════════════════════════ */
+.hero {
+  padding: 160px 40px 100px;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+.hero-eyebrow {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 24px;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 6vw, 56px);
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  line-height: 1.3;
+  color: var(--ink);
+  margin-bottom: 24px;
+}
+.hero-subtitle {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+  margin-bottom: 40px;
+}
+.hero-description {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 2;
+  color: var(--ink-soft);
+  max-width: 520px;
+  margin: 0 auto 48px;
+}
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  padding-top: 32px;
+  border-top: 1px solid var(--sand);
+}
+.stat-item {
+  text-align: center;
+}
+.stat-number {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--ink);
+  letter-spacing: 0.05em;
+}
+.stat-label {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-top: 4px;
+}
+
+/* ═══════════════════════════════════════
+   CATEGORY FILTER
+   ═══════════════════════════════════════ */
+.filter-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px 60px;
+}
+.filter-bar {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.filter-btn {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  padding: 10px 20px;
+  border: 1px solid var(--sand);
+  background: transparent;
+  color: var(--ink-muted);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.filter-btn:hover {
+  border-color: var(--ink-muted);
+  color: var(--ink);
+}
+.filter-btn.active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--cream);
+}
+
+/* ═══════════════════════════════════════
+   ARTICLE GRID — Aesop 風格卡片
+   ═══════════════════════════════════════ */
+.articles-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px 100px;
+}
+.articles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 40px;
+}
+.article-card {
+  display: block;
+  background: var(--cream);
+  transition: transform 0.4s ease;
+}
+.article-card:hover {
+  transform: translateY(-4px);
+}
+.article-card-image {
+  position: relative;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  background: var(--sand);
+}
+.article-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+  filter: saturate(0.85) contrast(0.95);
+}
+.article-card:hover .article-card-image img {
+  transform: scale(1.03);
+}
+.article-card-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  display: flex;
+  gap: 8px;
+}
+.badge {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  background: var(--cream);
+}
+.badge-category { color: var(--ink-soft); }
+.badge-premium { 
+  background: var(--gold); 
+  color: var(--cream);
+}
+.badge-free {
+  background: var(--cat-botany);
+  color: var(--cream);
+}
+
+.article-card-body {
+  padding: 24px 0;
+}
+.article-card-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.article-card-subtitle {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--ink-muted);
+  margin-bottom: 12px;
+}
+.article-card-excerpt {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--ink-soft);
+  margin-bottom: 16px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.article-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--ink-faint);
+}
+.article-card-read {
+  color: var(--gold);
+  font-weight: 400;
+  transition: color 0.3s;
+}
+.article-card:hover .article-card-read {
+  color: var(--ink);
+}
+
+/* ═══════════════════════════════════════
+   MEMBERSHIP CTA SECTION
+   ═══════════════════════════════════════ */
+.membership-section {
+  background: var(--parchment);
+  padding: 80px 40px;
+  margin: 60px 0;
+}
+.membership-inner {
+  max-width: 680px;
+  margin: 0 auto;
+  text-align: center;
+}
+.membership-eyebrow {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+.membership-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  line-height: 1.5;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+.membership-subtitle {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--ink-muted);
+  margin-bottom: 24px;
+}
+.membership-description {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 2;
+  color: var(--ink-soft);
+  margin-bottom: 32px;
+}
+.membership-benefits {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+.benefit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: var(--ink-soft);
+}
+.benefit-icon {
+  width: 16px;
+  height: 16px;
+  fill: var(--gold);
+}
+.membership-btn {
+  display: inline-block;
+  padding: 14px 40px;
+  background: var(--ink);
+  color: var(--cream);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  transition: all 0.3s;
+  margin-right: 16px;
+}
+.membership-btn:hover {
+  background: var(--gold);
+  color: var(--ink);
+}
+.membership-login {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  transition: color 0.3s;
+}
+.membership-login:hover {
+  color: var(--ink);
+}
+
+/* ═══════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════ */
+.site-footer {
+  padding: 60px 40px;
+  border-top: 1px solid var(--sand);
+  text-align: center;
+}
+.footer-brand {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+.footer-tagline {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-style: italic;
+  color: var(--ink-muted);
+  margin-bottom: 24px;
+}
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+.footer-link {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--ink-faint);
+  transition: color 0.3s;
+}
+.footer-link:hover { color: var(--ink); }
+.footer-copy {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+}
+
+/* ═══════════════════════════════════════
+   RWD
+   ═══════════════════════════════════════ */
+@media (max-width: 768px) {
+  .nav-inner { padding: 16px 24px; }
+  .nav-links { display: none; }
+  .hero { padding: 120px 24px 60px; }
+  .hero-stats { flex-direction: column; gap: 24px; }
+  .filter-section, .articles-section { padding-left: 24px; padding-right: 24px; }
+  .articles-grid { grid-template-columns: 1fr; gap: 32px; }
+  .membership-section { padding: 60px 24px; }
+  .membership-benefits { flex-direction: column; gap: 16px; }
+}
+</style>
 </head>
-<body data-theme="taupe">
+<body>
 
-<!-- 導覽列 -->
-<nav class="site-nav">
+<!-- HEADER -->
+<header class="site-header" id="siteHeader">
   <div class="nav-inner">
-    <a href="index.html" class="nav-logo">
-      飛揚細籽 <span>FEYOND</span>
-    </a>
-    <button class="nav-toggle" onclick="this.nextElementSibling.classList.toggle('open')">
-      <span></span><span></span><span></span>
-    </button>
-    <ul class="nav-menu">
-      <li><a href="index.html" class="active">所有文章</a></li>
-      <li><a href="#" data-filter="soul">心覺</a></li>
-      <li><a href="#" data-filter="body">身覺</a></li>
-      <li><a href="#" data-filter="journey">香旅</a></li>
-      <li><a href="https://www.dhyana.store" target="_blank">根本芳療</a></li>
-    </ul>
+    <a href="index.html" class="nav-logo">FEYOND <span>飛揚細籽</span></a>
+    <nav class="nav-links">
+      <a href="#articles" class="nav-link active">文章</a>
+      <a href="https://dhyana.store" class="nav-link" target="_blank">根本芳療</a>
+      <a href="#membership" class="nav-link">會員</a>
+    </nav>
   </div>
-</nav>
-
-<!-- 頁首 -->
-<header class="site-header">
-  <h1 class="site-title">飛揚細籽</h1>
-  <p class="site-tagline">FEYOND</p>
-  <p class="site-intro">
-    根本芳療 Dhyana Aromatherapy 的25年芳療文章匯集，<br>
-    由 Feyond 老師主筆。<br>
-    探索心靈的覺醒、身體的變化、以及全球尋香的旅程。
-  </p>
 </header>
 
-<!-- 分類標籤 -->
-<div class="category-tabs">
-  <button class="category-tab active" data-filter="all">全部</button>
-  <button class="category-tab" data-filter="soul">心覺｜心靈覺醒</button>
-  <button class="category-tab" data-filter="body">身覺｜身體變化</button>
-  <button class="category-tab" data-filter="journey">香旅｜全球尋香</button>
-</div>
-
-<!-- 文章列表 -->
-<main class="articles-grid">
-
-  <!-- 藍雲杉 -->
-  <a href="blue-spruce.html" class="article-card fade-in" data-category="soul">
-    <img src="https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?w=600&h=450&fit=crop" alt="藍雲杉" class="article-card-image">
-    <p class="article-card-category">心覺</p>
-    <h2 class="article-card-title">藍雲杉：在自己的土地上靜靜站立</h2>
-    <p class="article-card-excerpt">藍雲杉與現代人的界線清理之道。每一株藍雲杉，都是為了記得我們忘了的事而存在。</p>
-    <p class="article-card-meta">2024</p>
-  </a>
-
-  <!-- 永久花 -->
-  <a href="helichrysum.html" class="article-card fade-in" data-category="journey">
-    <img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=600&h=450&fit=crop" alt="永久花" class="article-card-image">
-    <p class="article-card-category">香旅</p>
-    <h2 class="article-card-title">巴爾幹半島｜摺痕大地綻出的不凋花</h2>
-    <p class="article-card-excerpt">永久花，學名是由希臘文 helios（太陽）和 chrysos（金黃）二個字所組成。</p>
-    <p class="article-card-meta">2022-10-02</p>
-  </a>
-
-  <!-- 花梨木 -->
-  <a href="rosewood.html" class="article-card fade-in" data-category="journey">
-    <img src="https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&h=450&fit=crop" alt="亞馬遜雨林" class="article-card-image">
-    <p class="article-card-category">香旅</p>
-    <h2 class="article-card-title">雨林裡的芳香守護職人</h2>
-    <p class="article-card-excerpt">一位致力巴西亞馬遜雨林芳香植物研究三十年的學者，與他守護花梨木的故事。</p>
-    <p class="article-card-meta">2021-07-11</p>
-  </a>
-
-  <!-- 漠地 -->
-  <a href="desert-spirit.html" class="article-card fade-in" data-category="journey">
-    <img src="https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=600&h=450&fit=crop" alt="沙漠" class="article-card-image">
-    <p class="article-card-category">香旅</p>
-    <h2 class="article-card-title">漠地裡的純淨靈性</h2>
-    <p class="article-card-excerpt">追隨歐姬芙的足跡，從亞利桑那到聖塔非，在人煙稀少的漠地裡尋找純白到空靈的美。</p>
-    <p class="article-card-meta">2019-03-23</p>
-  </a>
-
-</main>
-
-<!-- 頁尾 -->
-<footer class="site-footer">
-  <p class="footer-brand">飛揚細籽</p>
-  <p class="footer-tagline">FEYOND · 25年芳療文章匯集</p>
-  <div class="footer-links">
-    <a href="https://www.dhyana.store" target="_blank">根本芳療 DHYANA</a>
-    <a href="https://www.dhyana.store/zh-TW/blogs/feyond" target="_blank">原站連結</a>
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-eyebrow">Feyond · 25 Years of Aromatherapy</p>
+  <h1 class="hero-title">在香氣中，找到自己的語言</h1>
+  <p class="hero-subtitle">Finding your voice through scent</p>
+  <p class="hero-description">
+    這裡是 Feyond 老師二十五年芳療旅程的文字匯集——<br>
+    從台灣霧林到索馬利蘭沙漠，從植物科學到調香哲學，<br>
+    每一篇都是與香氣對話的真實記錄。
+  </p>
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-number">25</div>
+      <div class="stat-label">Years</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">40+</div>
+      <div class="stat-label">Articles</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">6</div>
+      <div class="stat-label">Continents</div>
+    </div>
   </div>
-  <p class="footer-copy">© 2024 Feyond. All rights reserved.</p>
+</section>
+
+<!-- CATEGORY FILTER -->
+<section class="filter-section">
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">全部文章</button>
+    <button class="filter-btn" data-filter="botany">植物學</button>
+    <button class="filter-btn" data-filter="philosophy">香氣哲思</button>
+    <button class="filter-btn" data-filter="journey">產地旅行</button>
+    <button class="filter-btn" data-filter="blending">調香手記</button>
+  </div>
+</section>
+
+<!-- ARTICLES GRID -->
+<section class="articles-section" id="articles">
+  <div class="articles-grid">
+
+    <!-- 文章 1：永久花（Premium） -->
+    <a href="helichrysum.html?paywall=true" class="article-card" data-category="philosophy">
+      <div class="article-card-image">
+        <img src="https://images.unsplash.com/photo-1518882605630-8eb erected?w=600" alt="永久花">
+        <div class="article-card-badge">
+          <span class="badge badge-category">香氣哲思</span>
+          <span class="badge badge-premium">Premium</span>
+        </div>
+      </div>
+      <div class="article-card-body">
+        <h2 class="article-card-title">永久花的金色療癒</h2>
+        <p class="article-card-subtitle">The Golden Healer</p>
+        <p class="article-card-excerpt">在科西嘉島的陽光下，永久花以它獨特的方式訴說著時間與療癒的故事。</p>
+        <div class="article-card-meta">
+          <span>2024</span>
+          <span class="article-card-read">閱讀全文 →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 文章 2：藍雲杉（Free） -->
+    <a href="blue-spruce.html" class="article-card" data-category="blending">
+      <div class="article-card-image">
+        <img src="https://images.unsplash.com/photo-1476231682828-37e571bc172f?w=600" alt="藍雲杉">
+        <div class="article-card-badge">
+          <span class="badge badge-category">調香手記</span>
+          <span class="badge badge-free">Free</span>
+        </div>
+      </div>
+      <div class="article-card-body">
+        <h2 class="article-card-title">藍雲杉的靛藍秘密</h2>
+        <p class="article-card-subtitle">Blue Spruce · Colorado</p>
+        <p class="article-card-excerpt">科羅拉多高原上的藍雲杉，在調香師的鼻尖展開一場針葉系的交響樂。</p>
+        <div class="article-card-meta">
+          <span>2024</span>
+          <span class="article-card-read">閱讀全文 →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 文章 3：漠地之靈（Premium） -->
+    <a href="desert-spirit.html?paywall=true" class="article-card" data-category="journey">
+      <div class="article-card-image">
+        <img src="https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=600" alt="漠地之靈">
+        <div class="article-card-badge">
+          <span class="badge badge-category">產地旅行</span>
+          <span class="badge badge-premium">Premium</span>
+        </div>
+      </div>
+      <div class="article-card-body">
+        <h2 class="article-card-title">漠地之靈</h2>
+        <p class="article-card-subtitle">Desert Spirit · New Mexico</p>
+        <p class="article-card-excerpt">在歐姬芙的沙漠裡，艾草與鼠尾草守護著這片純淨的靈性之地。</p>
+        <div class="article-card-meta">
+          <span>2024</span>
+          <span class="article-card-read">閱讀全文 →</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 文章 4：花梨木（Premium） -->
+    <a href="rosewood.html?paywall=true" class="article-card" data-category="botany">
+      <div class="article-card-image">
+        <img src="https://images.unsplash.com/photo-1448375240586-882707db888b?w=600" alt="花梨木">
+        <div class="article-card-badge">
+          <span class="badge badge-category">植物學</span>
+          <span class="badge badge-premium">Premium</span>
+        </div>
+      </div>
+      <div class="article-card-body">
+        <h2 class="article-card-title">花梨木的重生之路</h2>
+        <p class="article-card-subtitle">Rosewood · Sustainable Future</p>
+        <p class="article-card-excerpt">從瀕危到永續，花梨木的故事教會我們如何與森林共存。</p>
+        <div class="article-card-meta">
+          <span>2024</span>
+          <span class="article-card-read">閱讀全文 →</span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- MEMBERSHIP CTA -->
+<section class="membership-section" id="membership">
+  <div class="membership-inner">
+    <p class="membership-eyebrow">Feyond Membership</p>
+    <h2 class="membership-title">解鎖所有深度文章</h2>
+    <p class="membership-subtitle">Unlock the full library</p>
+    <p class="membership-description">
+      成為飛揚細籽會員，閱讀所有深度產地故事、調香手記與芳療知識。<br>
+      每月更新，專屬內容，陪伴你探索香氣的世界。
+    </p>
+    <div class="membership-benefits">
+      <div class="benefit">
+        <svg class="benefit-icon" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+        <span>全站文章完整閱讀</span>
+      </div>
+      <div class="benefit">
+        <svg class="benefit-icon" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+        <span>每月新文章更新</span>
+      </div>
+      <div class="benefit">
+        <svg class="benefit-icon" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+        <span>會員專屬優惠</span>
+      </div>
+    </div>
+    <a href="https://dhyana.store/products/feyond-membership" class="membership-btn" target="_blank">立即訂閱</a>
+    <a href="#" class="membership-login" id="memberLoginBtn">已是會員？輸入密碼</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p class="footer-brand">FEYOND · 飛揚細籽</p>
+  <p class="footer-tagline">Finding your voice through scent</p>
+  <div class="footer-links">
+    <a href="https://dhyana.store" class="footer-link" target="_blank">根本芳療 DHYANA</a>
+    <a href="https://dhyana.store/blogs/feyond" class="footer-link" target="_blank">CYB 部落格</a>
+  </div>
+  <p class="footer-copy">© 2026 Dhyana Aromatherapy. All rights reserved.</p>
 </footer>
 
-<!-- 返回頂端 -->
-<button class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})"></button>
-
+<!-- SCRIPTS -->
 <script>
-// 淡入動畫
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) entry.target.classList.add('visible');
-  });
-}, { threshold: 0.1 });
-document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-// 返回頂端按鈕
+// Header scroll effect
+let lastScroll = 0;
+const header = document.getElementById('siteHeader');
 window.addEventListener('scroll', () => {
-  document.querySelector('.back-to-top').classList.toggle('visible', window.scrollY > 400);
+  const currentScroll = window.pageYOffset;
+  if (currentScroll > 50) {
+    header.classList.add('scrolled');
+  } else {
+    header.classList.remove('scrolled');
+  }
+  lastScroll = currentScroll;
 });
 
-// 分類篩選
-document.querySelectorAll('.category-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
+// Category filter
+const filterBtns = document.querySelectorAll('.filter-btn');
+const articleCards = document.querySelectorAll('.article-card');
+
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const filter = btn.dataset.filter;
     
-    const filter = tab.dataset.filter;
-    document.querySelectorAll('.article-card').forEach(card => {
+    // Update active state
+    filterBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    // Filter articles
+    articleCards.forEach(card => {
       if (filter === 'all' || card.dataset.category === filter) {
-        card.style.display = 'block';
+        card.style.display = '';
+        card.style.opacity = '1';
       } else {
-        card.style.display = 'none';
+        card.style.opacity = '0';
+        setTimeout(() => {
+          if (!card.dataset.category.includes(filter) && filter !== 'all') {
+            card.style.display = 'none';
+          }
+        }, 300);
       }
     });
   });
 });
 
-// 導覽列分類連結
-document.querySelectorAll('.nav-menu a[data-filter]').forEach(link => {
-  link.addEventListener('click', (e) => {
-    e.preventDefault();
-    const filter = link.dataset.filter;
-    document.querySelector(`.category-tab[data-filter="${filter}"]`).click();
-    document.querySelector('.articles-grid').scrollIntoView({ behavior: 'smooth' });
+// Member status check
+const isMember = localStorage.getItem('feyondMember') === 'true';
+if (isMember) {
+  // Update Premium badges to show "已解鎖"
+  document.querySelectorAll('.badge-premium').forEach(badge => {
+    badge.textContent = '已解鎖';
+    badge.style.background = 'var(--cat-botany)';
   });
+  
+  // Hide membership section or show different message
+  const membershipSection = document.getElementById('membership');
+  membershipSection.querySelector('.membership-title').textContent = '歡迎回來，會員';
+  membershipSection.querySelector('.membership-subtitle').textContent = 'Welcome back';
+  membershipSection.querySelector('.membership-description').textContent = '感謝你的支持，所有文章已解鎖。盡情探索吧！';
+  membershipSection.querySelector('.membership-btn').textContent = '瀏覽全部文章';
+  membershipSection.querySelector('.membership-btn').href = '#articles';
+  membershipSection.querySelector('.membership-btn').removeAttribute('target');
+  membershipSection.querySelector('.membership-login').style.display = 'none';
+}
+
+// Member login modal (簡化版，實際可做成 modal)
+document.getElementById('memberLoginBtn').addEventListener('click', function(e) {
+  e.preventDefault();
+  const password = prompt('請輸入會員密碼：');
+  if (password === 'FEYOND2024') {
+    localStorage.setItem('feyondMember', 'true');
+    alert('驗證成功！歡迎回來。');
+    location.reload();
+  } else if (password !== null) {
+    alert('密碼錯誤，請重新輸入。');
+  }
 });
 </script>
 
