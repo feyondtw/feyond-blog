@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>會員專屬知識庫｜飛揚細籽 FEYOND</title>
+<link rel="stylesheet" href="../../style.css">
+<style>
+/* 會員頁專屬樣式 - 延續現有設計語言 */
+.member-welcome {
+  padding: 60px 48px 48px;
+  text-align: center;
+  background: var(--parchment, #F5F0E3);
+}
+.member-greeting {
+  font-family: var(--font-display, 'Cormorant Garamond', serif);
+  font-size: 13px;
+  font-style: italic;
+  letter-spacing: 0.2em;
+  color: var(--gold, #B8965A);
+  margin-bottom: 12px;
+}
+.member-title {
+  font-family: var(--font-display, 'Cormorant Garamond', serif);
+  font-size: 28px;
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  color: var(--ink, #252220);
+}
+
+.member-library {
+  padding: 48px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.library-section {
+  margin-bottom: 56px;
+}
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--sand, #EDE6D6);
+}
+.section-icon {
+  font-size: 20px;
+  opacity: 0.8;
+}
+.section-title {
+  font-family: var(--font-display, 'Cormorant Garamond', serif);
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--ink, #252220);
+}
+.section-title-en {
+  font-family: var(--font-display, 'Cormorant Garamond', serif);
+  font-size: 12px;
+  font-style: italic;
+  letter-spacing: 0.1em;
+  color: var(--ink-faint, #A8A29A);
+}
+
+.article-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+.article-item {
+  display: block;
+  padding: 24px 28px;
+  background: var(--parchment, #F5F0E3);
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+}
+.article-item:hover {
+  background: var(--cream, #FFFEF8);
+  border-color: var(--gold, #B8965A);
+}
+.article-item-title {
+  font-family: var(--font-display, 'Cormorant Garamond', serif);
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--ink, #252220);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+.article-item-meta {
+  display: flex;
+  gap: 16px;
+  font-family: var(--font-sans, 'Noto Sans TC', sans-serif);
+  font-size: 11px;
+  color: var(--ink-faint, #A8A29A);
+}
+.article-item-new {
+  color: var(--gold, #B8965A);
+  font-weight: 400;
+}
+
+.member-nav {
+  padding: 24px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--sand, #EDE6D6);
+}
+.nav-logo {
+  font-family: var(--font-display, 'Cormorant Garamond', serif);
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  color: var(--ink, #252220);
+  text-decoration: none;
+}
+.member-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.member-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--gold, #B8965A);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display, 'Cormorant Garamond', serif);
+  font-size: 14px;
+  color: var(--cream, #FFFEF8);
+}
+.member-info { text-align: right; }
+.member-name {
+  font-family: var(--font-sans, 'Noto Sans TC', sans-serif);
+  font-size: 13px;
+  color: var(--ink-soft, #4A4540);
+}
+.member-status {
+  font-family: var(--font-sans, 'Noto Sans TC', sans-serif);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--teal, #4A7C6F);
+  text-transform: uppercase;
+}
+
+.member-footer {
+  background: var(--ink, #252220);
+  padding: 40px;
+  text-align: center;
+}
+.footer-brand {
+  font-family: var(--font-display, 'Cormorant Garamond', serif);
+  font-size: 15px;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  color: var(--cream, #FFFEF8);
+  margin-bottom: 12px;
+}
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+.footer-links a {
+  font-family: var(--font-sans, 'Noto Sans TC', sans-serif);
+  font-size: 12px;
+  color: rgba(255,254,248,0.5);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.footer-links a:hover { color: var(--gold, #B8965A); }
+
+@media (max-width: 768px) {
+  .member-nav, .member-welcome, .member-library { 
+    padding-left: 24px; 
+    padding-right: 24px; 
+  }
+  .article-list { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="member-nav">
+  <a href="../../index.html" class="nav-logo">飛揚細籽 FEYOND</a>
+  <div class="member-badge">
+    <div class="member-info">
+      <div class="member-name">會員</div>
+      <div class="member-status">Premium Member</div>
+    </div>
+    <div class="member-avatar">會</div>
+  </div>
+</nav>
+
+<!-- WELCOME -->
+<section class="member-welcome">
+  <p class="member-greeting">Welcome back</p>
+  <h1 class="member-title">您的專屬知識庫</h1>
+</section>
+
+<!-- LIBRARY -->
+<main class="member-library">
+
+  <!-- 心覺 -->
+  <section class="library-section">
+    <div class="section-header">
+      <span class="section-icon">🕯️</span>
+      <h2 class="section-title">心覺</h2>
+      <span class="section-title-en">Soul</span>
+    </div>
+    <div class="article-list">
+      <a href="../../blue-spruce.html" class="article-item">
+        <h3 class="article-item-title">藍雲杉：在自己的土地上靜靜站立</h3>
+        <div class="article-item-meta">
+          <span>2024</span>
+          <span class="article-item-new">會員專屬</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- 香旅 -->
+  <section class="library-section">
+    <div class="section-header">
+      <span class="section-icon">🌍</span>
+      <h2 class="section-title">香旅</h2>
+      <span class="section-title-en">Journey</span>
+    </div>
+    <div class="article-list">
+      <a href="../../helichrysum.html" class="article-item">
+        <h3 class="article-item-title">巴爾幹半島｜摺痕大地綻出的不凋花</h3>
+        <div class="article-item-meta">
+          <span>2022-10-02</span>
+        </div>
+      </a>
+      <a href="../../rosewood.html" class="article-item">
+        <h3 class="article-item-title">雨林裡的芳香守護職人</h3>
+        <div class="article-item-meta">
+          <span>2021-07-11</span>
+        </div>
+      </a>
+      <a href="../../desert-spirit.html" class="article-item">
+        <h3 class="article-item-title">漠地裡的純淨靈性</h3>
+        <div class="article-item-meta">
+          <span>2019-03-23</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="member-footer">
+  <p class="footer-brand">飛揚細籽 · FEYOND</p>
+  <div class="footer-links">
+    <a href="../../index.html">部落格首頁</a>
+    <a href="https://www.dhyana.store" target="_blank">DHYANA 商店</a>
+  </div>
+</footer>
+
+</body>
+</html>
