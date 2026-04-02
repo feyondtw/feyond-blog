@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>關於 Feyond｜飛揚細籽 FEYOND</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+TC:wght@300;400;500&family=Noto+Sans+TC:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #FFFEF8;
+  --sand: #EDE6D6;
+  --parchment: #F5F0E3;
+  --ink: #252220;
+  --ink-soft: #4A4540;
+  --ink-muted: #7A756D;
+  --ink-faint: #A8A29A;
+  --gold: #B8965A;
+  --gold-light: #D4B87A;
+  --font-display: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+  --font-body: 'Noto Serif TC', Georgia, serif;
+  --font-sans: 'Noto Sans TC', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 17px; }
+body { 
+  font-family: var(--font-body); 
+  background: var(--cream); 
+  color: var(--ink); 
+  line-height: 1.9;
+  font-weight: 300;
+}
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+
+/* NAV */
+.nav {
+  padding: 28px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--sand);
+}
+.nav-back {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  transition: color 0.3s;
+}
+.nav-back:hover { color: var(--ink); }
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  color: var(--ink);
+}
+
+/* ═══════════════════════════════════════
+   HERO SECTION
+   ═══════════════════════════════════════ */
+.about-hero {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 80px 24px;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 60px;
+  align-items: start;
+}
+.hero-portrait {
+  position: sticky;
+  top: 100px;
+}
+.hero-portrait img {
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  filter: saturate(0.85) contrast(0.95);
+}
+.hero-content {
+  padding-top: 20px;
+}
+.hero-eyebrow {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+.hero-name {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.hero-name-en {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.1em;
+  color: var(--ink-muted);
+  margin-bottom: 24px;
+}
+.hero-title {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: var(--ink-soft);
+  margin-bottom: 32px;
+  line-height: 1.8;
+}
+.hero-intro {
+  font-size: 1rem;
+  line-height: 2.2;
+  color: var(--ink-soft);
+}
+.hero-intro p {
+  margin-bottom: 1.5em;
+}
+
+/* ═══════════════════════════════════════
+   SECTION STYLES
+   ═══════════════════════════════════════ */
+.section {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+.section-divider::before,
+.section-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--sand);
+}
+.section-label {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* ═══════════════════════════════════════
+   CREDENTIALS GRID
+   ═══════════════════════════════════════ */
+.credential-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+.credential-block {
+  padding: 32px;
+  background: var(--parchment);
+  border-left: 3px solid var(--gold);
+}
+.credential-block.full-width {
+  grid-column: 1 / -1;
+}
+.credential-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  margin-bottom: 20px;
+}
+.credential-list {
+  list-style: none;
+}
+.credential-list li {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--ink-soft);
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+.credential-list li:last-child {
+  border-bottom: none;
+}
+.credential-highlight {
+  color: var(--gold);
+  font-weight: 400;
+}
+
+/* ═══════════════════════════════════════
+   ROLES LIST
+   ═══════════════════════════════════════ */
+.roles-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.role-item {
+  padding: 16px 20px;
+  background: var(--parchment);
+  border-left: 2px solid var(--gold);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+
+/* ═══════════════════════════════════════
+   BRAND WORK
+   ═══════════════════════════════════════ */
+.brand-section {
+  background: var(--ink);
+  padding: 80px 24px;
+}
+.brand-inner {
+  max-width: 960px;
+  margin: 0 auto;
+}
+.brand-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+.brand-header h2 {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  color: var(--cream);
+  margin-bottom: 12px;
+}
+.brand-header p {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-style: italic;
+  color: rgba(255,254,248,0.5);
+}
+.brand-stats {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  margin-bottom: 48px;
+}
+.stat-item {
+  text-align: center;
+}
+.stat-number {
+  font-family: var(--font-display);
+  font-size: 56px;
+  font-weight: 300;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.stat-label {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  color: rgba(255,254,248,0.5);
+  text-transform: uppercase;
+}
+.brand-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.brand-card {
+  padding: 24px;
+  border: 1px solid rgba(255,254,248,0.1);
+  transition: border-color 0.3s;
+}
+.brand-card:hover {
+  border-color: var(--gold);
+}
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--cream);
+  margin-bottom: 8px;
+}
+.brand-desc {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: rgba(255,254,248,0.5);
+}
+.brand-count {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 4px 12px;
+  background: rgba(184,150,90,0.2);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+}
+
+/* ═══════════════════════════════════════
+   RESEARCH
+   ═══════════════════════════════════════ */
+.research-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.research-item {
+  padding: 24px 32px;
+  background: var(--parchment);
+  border-left: 3px solid var(--gold);
+}
+.research-org {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.research-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+.research-desc {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--ink-muted);
+  line-height: 1.8;
+}
+
+/* ═══════════════════════════════════════
+   COUNTRIES MAP
+   ═══════════════════════════════════════ */
+.countries-section {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 60px 24px;
+  text-align: center;
+}
+.countries-header h2 {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+.countries-header p {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-style: italic;
+  color: var(--ink-muted);
+  margin-bottom: 40px;
+}
+.countries-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+.country-chip {
+  padding: 8px 16px;
+  background: var(--parchment);
+  border: 1px solid var(--sand);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--ink-soft);
+  transition: all 0.3s;
+}
+.country-chip:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* ═══════════════════════════════════════
+   PUBLICATIONS
+   ═══════════════════════════════════════ */
+.publication-item {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--sand);
+}
+.publication-item:last-child {
+  border-bottom: none;
+}
+.publication-type {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.publication-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.publication-desc {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--ink-muted);
+}
+
+/* ═══════════════════════════════════════
+   CTA
+   ═══════════════════════════════════════ */
+.about-cta {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 60px 40px;
+  background: var(--parchment);
+  border-left: 3px solid var(--gold);
+  text-align: center;
+  margin-bottom: 80px;
+}
+.about-cta h2 {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+.about-cta p {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--ink-muted);
+  margin-bottom: 28px;
+  line-height: 1.9;
+}
+.cta-button {
+  display: inline-block;
+  padding: 14px 40px;
+  background: var(--ink);
+  color: var(--cream);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  transition: all 0.3s;
+}
+.cta-button:hover {
+  background: var(--gold);
+  color: var(--ink);
+}
+
+/* FOOTER */
+.site-footer {
+  background: var(--ink);
+  padding: 56px 24px;
+  text-align: center;
+}
+.footer-brand {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  color: var(--cream);
+  margin-bottom: 8px;
+}
+.footer-copy {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: rgba(255,254,248,0.4);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  html { font-size: 16px; }
+  .nav { padding: 20px 24px; }
+  
+  .about-hero {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 60px 24px;
+  }
+  .hero-portrait {
+    position: static;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+  .hero-name { font-size: 36px; }
+  
+  .credential-grid,
+  .roles-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .brand-stats {
+    flex-direction: column;
+    gap: 32px;
+  }
+  .stat-number { font-size: 42px; }
+  
+  .brand-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html" class="nav-back">← 返回首頁</a>
+  <a href="index.html" class="nav-logo">飛揚細籽 FEYOND</a>
+</nav>
+
+<!-- ═══════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════ -->
+<section class="about-hero">
+  <div class="hero-portrait">
+    <img src="https://feyond.muzen.store/images/feyond-avatar.jpg" alt="Feyond 顏憶萍">
+  </div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">About the Author</p>
+    <h1 class="hero-name">顏憶萍</h1>
+    <p class="hero-name-en">Feyond Yen</p>
+    <p class="hero-title">
+      根本芳療國際（股）公司 創始人<br>
+      根本 MUZEN 全球營運執行長<br>
+      德國芳療協會認證芳療師<br>
+      ICATS 培訓國際調香師
+    </p>
+    <div class="hero-intro">
+      <p>
+        自 2001 年踏入芳香療法的世界，我便開始了一段與植物香氣相伴的旅程。二十多年來走訪超過 20 個國家的精油產地，從南法普羅旺斯到印度檀香森林，從摩洛哥玫瑰谷到越南沉香產區——每一次的產地探訪，都讓我更深刻地理解：精油不只是瓶中的液體，而是土地、氣候、人文與時間的結晶。
+      </p>
+      <p>
+        「飛揚細籽」是我記錄這一路所見所聞的園地，願這些文字能成為你探索香氣世界的地圖。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     現任職務
+     ═══════════════════════════════════════ -->
+<section class="section">
+  <div class="section-divider">
+    <span class="section-label">現任職務</span>
+  </div>
+  <div class="roles-grid">
+    <div class="role-item"><span class="credential-highlight">根本芳療國際（股）公司</span> 創始人</div>
+    <div class="role-item"><span class="credential-highlight">根本 MUZEN</span> 全球營運執行長</div>
+    <div class="role-item"><span class="credential-highlight">日本根本芳療（株）会社</span> 社長</div>
+    <div class="role-item"><span class="credential-highlight">上海磐余杉</span> 執行長（IFRA 亞太企業會員）</div>
+    <div class="role-item"><span class="credential-highlight">根本 DPSL 植物香氣實驗室</span> 計劃主持人</div>
+    <div class="role-item"><span class="credential-highlight">深根大地有機農場</span> 大地除草園丁</div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     專業資格
+     ═══════════════════════════════════════ -->
+<section class="section">
+  <div class="section-divider">
+    <span class="section-label">專業資格與學歷</span>
+  </div>
+  <div class="credential-grid">
+    <div class="credential-block">
+      <h3 class="credential-title">專業認證</h3>
+      <ul class="credential-list">
+        <li><span class="credential-highlight">德國芳療協會</span> 認證芳療師</li>
+        <li><span class="credential-highlight">ICATS</span> 培訓國際調香師</li>
+      </ul>
+    </div>
+    <div class="credential-block">
+      <h3 class="credential-title">學歷</h3>
+      <ul class="credential-list">
+        <li><span class="credential-highlight">國立屏東科技大學</span><br>農學院 研究所碩士</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     顧問與合作
+     ═══════════════════════════════════════ -->
+<section class="section">
+  <div class="section-divider">
+    <span class="section-label">顧問與合作</span>
+  </div>
+  <div class="roles-grid">
+    <div class="role-item">台灣高雄醫學院心圓安寧病房 精油指導顧問</div>
+    <div class="role-item">高雄微恩家醫診所 精油顧問</div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     芳療相關研究
+     ═══════════════════════════════════════ -->
+<section class="section">
+  <div class="section-divider">
+    <span class="section-label">芳療相關研究</span>
+  </div>
+  <div class="research-list">
+    <div class="research-item">
+      <p class="research-org">DPSL 根本植物香氣實驗室</p>
+      <h3 class="research-title">台灣在地香藥草植物香氣萃取以及抗氧化能力研究</h3>
+    </div>
+    <div class="research-item">
+      <p class="research-org">University of Minnesota · HFO Research Lab</p>
+      <h3 class="research-title">Investigation of High Frequency Oscillation (HFO) in Identification of Seizure Onset Zone and Seizure Prediction</h3>
+      <p class="research-desc">香氣與癲癇臨床應用計劃研究員</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     品牌調香實績
+     ═══════════════════════════════════════ -->
+<section class="brand-section">
+  <div class="brand-inner">
+    <div class="brand-header">
+      <h2>品牌創作調香實績</h2>
+      <p>15 年以上精油香粧品牌創作調香經驗</p>
+    </div>
+    
+    <div class="brand-stats">
+      <div class="stat-item">
+        <div class="stat-number">200+</div>
+        <div class="stat-label">香型系列</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">10+</div>
+        <div class="stat-label">合作品牌</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">15+</div>
+        <div class="stat-label">年資歷</div>
+      </div>
+    </div>
+    
+    <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">Somatics</h3>
+        <p class="brand-desc">芳療基礎身心精油、旅行情境精油、GIG 專業芳療精油、精油保養品香型</p>
+        <span class="brand-count">59+ 系列</span>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">MUZEN</h3>
+        <p class="brand-desc">胭脂保養品、五行綠環洗髮露、他方精油淡香水、淨甦膚芳香乾潔手露</p>
+        <span class="brand-count">26+ 系列</span>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">DHAN</h3>
+        <p class="brand-desc">阿育吠陀精油保養品全系列、氣卦全系列香型</p>
+        <span class="brand-count">44+ 系列</span>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">SOSPA</h3>
+        <p class="brand-desc">經典居家芳療 12 系列</p>
+        <span class="brand-count">40+ 系列</span>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">OEM / ODM</h3>
+        <p class="brand-desc">諸多委任品牌核心香型研發調香</p>
+        <span class="brand-count">30+ 系列</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     親訪產地
+     ═══════════════════════════════════════ -->
+<section class="countries-section">
+  <div class="countries-header">
+    <h2>親訪過的精油原料國度</h2>
+    <p>走進產地，親眼見證從植物到精油的轉化</p>
+  </div>
+  <div class="countries-grid">
+    <span class="country-chip">🇺🇸 美國</span>
+    <span class="country-chip">🇯🇵 日本</span>
+    <span class="country-chip">🇮🇩 印尼</span>
+    <span class="country-chip">🇦🇺 澳洲</span>
+    <span class="country-chip">🇱🇰 斯里蘭卡</span>
+    <span class="country-chip">🇧🇹 不丹</span>
+    <span class="country-chip">🇮🇳 印度</span>
+    <span class="country-chip">🇨🇦 加拿大</span>
+    <span class="country-chip">🇳🇵 尼泊爾</span>
+    <span class="country-chip">🇲🇦 摩洛哥</span>
+    <span class="country-chip">🇫🇷 法國</span>
+    <span class="country-chip">🇮🇹 義大利</span>
+    <span class="country-chip">🇪🇸 西班牙</span>
+    <span class="country-chip">🇨🇭 瑞士</span>
+    <span class="country-chip">🇩🇪 德國</span>
+    <span class="country-chip">🇧🇪 比利時</span>
+    <span class="country-chip">🇧🇬 保加利亞</span>
+    <span class="country-chip">🇷🇸 塞維亞</span>
+    <span class="country-chip">🇭🇺 匈牙利</span>
+    <span class="country-chip">🇬🇧 英國</span>
+    <span class="country-chip">🇨🇴 哥倫比亞</span>
+    <span class="country-chip">🇧🇷 巴西</span>
+    <span class="country-chip">🇲🇽 墨西哥</span>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     個人學術著作
+     ═══════════════════════════════════════ -->
+<section class="section">
+  <div class="section-divider">
+    <span class="section-label">個人學術著作</span>
+  </div>
+  
+  <div class="publication-item">
+    <p class="publication-type">學術研究</p>
+    <h3 class="publication-title">台灣產茉莉花不同萃取方式的成分分析及其抗氧化能力之研究</h3>
+  </div>
+  
+  <div class="publication-item">
+    <p class="publication-type">主編</p>
+    <h3 class="publication-title">DPSL 芳香植物科學書</h3>
+    <p class="publication-desc">根本植物香氣實驗室出版</p>
+  </div>
+  
+  <div class="publication-item">
+    <p class="publication-type">部落格</p>
+    <h3 class="publication-title">飛揚細籽</h3>
+    <p class="publication-desc">自 2001 年持續書寫的芳療知識園地</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     CTA
+     ═══════════════════════════════════════ -->
+<section class="about-cta">
+  <h2>一起探索香氣的世界</h2>
+  <p>訂閱飛揚細籽，閱讀更多產地故事、調香手記與芳療知識</p>
+  <a href="https://dhyana.store/products/feyond-membership" class="cta-button" target="_blank">
+    訂閱知識會員
+  </a>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p class="footer-brand">飛揚細籽 · FEYOND</p>
+  <p class="footer-copy">© 2026 Dhyana Aromatherapy · 根本芳療</p>
+</footer>
+
+</body>
+</html>
