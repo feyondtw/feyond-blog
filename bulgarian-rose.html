@@ -18,491 +18,275 @@
   --ink-faint: #A8A29A;
   --gold: #B8965A;
   --gold-light: #D4B87A;
-  
-  /* 產地旅行分類色 */
   --cat-journey: #8B5A3C;
-  
-  /* ═══════════════════════════════════════
-     G. 玫瑰 Rose 色系 - 柔美浪漫
-     適合：奧圖玫瑰、大馬士革玫瑰、天竺葵
-     ═══════════════════════════════════════ */
   --theme-accent: #B8918C;
   --theme-quote-bg: #F5ECEA;
   --theme-quote-border: #C4A4A0;
   --theme-quote-text: #6B4A48;
-  
   --font-display: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
   --font-body: 'Noto Serif TC', Georgia, serif;
   --font-sans: 'Noto Sans TC', sans-serif;
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; font-size: 17px; }
-body { 
-  font-family: var(--font-body); 
-  background: var(--cream); 
-  color: var(--ink); 
-  line-height: 2;
-  font-weight: 300;
-}
+body { font-family: var(--font-body); background: var(--cream); color: var(--ink); line-height: 2; font-weight: 300; }
 a { color: inherit; text-decoration: none; }
 img { max-width: 100%; display: block; }
-
-/* NAV */
-.nav {
-  padding: 28px 48px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid var(--sand);
-}
-.nav-logo {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 400;
-  letter-spacing: 0.15em;
-  color: var(--ink);
-}
-.nav-back {
-  font-family: var(--font-sans);
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  color: var(--ink-muted);
-  transition: color 0.3s;
-}
+.nav { padding: 28px 48px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--sand); }
+.nav-logo { font-family: var(--font-display); font-size: 18px; font-weight: 400; letter-spacing: 0.15em; color: var(--ink); }
+.nav-back { font-family: var(--font-sans); font-size: 13px; letter-spacing: 0.08em; color: var(--ink-muted); transition: color 0.3s; }
 .nav-back:hover { color: var(--ink); }
-
-/* ARTICLE HEADER */
-.article-header {
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 80px 24px 48px;
-  text-align: center;
-}
-.article-category {
-  font-family: var(--font-sans);
-  font-size: 11px;
-  font-weight: 400;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--theme-accent);
-  margin-bottom: 24px;
-}
-.article-title {
-  font-family: var(--font-display);
-  font-size: 42px;
-  font-weight: 400;
-  letter-spacing: 0.06em;
-  line-height: 1.4;
-  color: var(--ink);
-  margin-bottom: 16px;
-}
-.article-subtitle {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 300;
-  font-style: italic;
-  letter-spacing: 0.08em;
-  color: var(--ink-muted);
-  margin-bottom: 32px;
-}
-.article-meta {
-  font-family: var(--font-sans);
-  font-size: 12px;
-  letter-spacing: 0.12em;
-  color: var(--ink-faint);
-}
-
-/* HERO IMAGE */
-.article-hero {
-  max-width: 960px;
-  margin: 0 auto 80px;
-  padding: 0 24px;
-}
-.article-hero img {
-  width: 100%;
-  aspect-ratio: 16/9;
-  object-fit: cover;
-  background: var(--sand);
-}
-.article-hero figcaption {
-  margin-top: 12px;
-  font-family: var(--font-sans);
-  font-size: 12px;
-  color: var(--ink-faint);
-  text-align: center;
-  letter-spacing: 0.05em;
-}
-
-/* ═══════════════════════════════════════
-   TWO COLUMN LAYOUT - Aesop 風格
-   ═══════════════════════════════════════ */
-.content-section {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 0 24px 60px;
-}
-
-.two-col {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 60px;
-  padding: 48px 0;
-  border-top: 1px solid var(--sand);
-}
-
-.two-col:first-of-type {
-  border-top: none;
-  padding-top: 0;
-}
-
-/* 左欄：標題/摘要 */
-.col-left {
-  position: sticky;
-  top: 100px;
-  align-self: start;
-}
-.col-left h2 {
-  font-family: var(--font-display);
-  font-size: 24px;
-  font-weight: 400;
-  letter-spacing: 0.06em;
-  line-height: 1.5;
-  color: var(--ink);
-  margin-bottom: 16px;
-}
-.col-left .summary {
-  font-family: var(--font-sans);
-  font-size: 13px;
-  font-weight: 300;
-  line-height: 1.9;
-  color: var(--ink-muted);
-  letter-spacing: 0.02em;
-}
-
-/* 右欄：主要內文 */
-.col-right p {
-  font-size: 1rem;
-  font-weight: 300;
-  line-height: 2.2;
-  color: var(--ink-soft);
-  margin-bottom: 1.8em;
-  letter-spacing: 0.02em;
-}
-.col-right p:last-child {
-  margin-bottom: 0;
-}
-
-/* 引言 - 套用主題色系 */
-.col-right blockquote {
-  margin: 2em 0;
-  padding: 1.5em 2em;
-  background: var(--theme-quote-bg);
-  border-left: 3px solid var(--theme-quote-border);
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  font-style: italic;
-  line-height: 2;
-  color: var(--theme-quote-text);
-}
-
-/* 單欄（開場段落）*/
-.intro-section {
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 0 24px 60px;
-}
-.intro-section p {
-  font-size: 1rem;
-  font-weight: 300;
-  line-height: 2.2;
-  color: var(--ink-soft);
-  margin-bottom: 1.8em;
-  letter-spacing: 0.02em;
-}
-.intro-section p:first-of-type::first-letter {
-  font-family: var(--font-display);
-  font-size: 4em;
-  float: left;
-  line-height: 0.85;
-  margin: 6px 16px 0 0;
-  color: var(--theme-accent);
-  font-weight: 400;
-}
-
-/* 全幅圖 */
-.img-full {
-  max-width: 960px;
-  margin: 40px auto 60px;
-  padding: 0 24px;
-}
-.img-full img {
-  width: 100%;
-}
-.img-full figcaption {
-  margin-top: 12px;
-  font-family: var(--font-sans);
-  font-size: 12px;
-  color: var(--ink-faint);
-  text-align: center;
-}
-
-/* CYB 原文連結 - 套用主題色系 */
-.source-link {
-  max-width: 680px;
-  margin: 0 auto 40px;
-  padding: 24px;
-  background: var(--theme-quote-bg);
-  border-left: 3px solid var(--theme-accent);
-  text-align: center;
-}
-.source-link p {
-  font-family: var(--font-sans);
-  font-size: 13px;
-  color: var(--ink-muted);
-  margin-bottom: 12px;
-}
-.source-link a {
-  font-family: var(--font-sans);
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  color: var(--gold);
-  text-decoration: underline;
-  transition: color 0.3s;
-}
-.source-link a:hover {
-  color: var(--ink);
-}
-
-/* ARTICLE FOOTER */
-.article-footer {
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 48px 24px;
-  border-top: 1px solid var(--sand);
-  text-align: center;
-}
-.article-footer p {
-  font-size: 14px;
-  color: var(--ink-muted);
-  margin-bottom: 32px;
-}
-.back-link {
-  display: inline-block;
-  font-family: var(--font-sans);
-  font-size: 13px;
-  letter-spacing: 0.12em;
-  color: var(--gold);
-  padding: 14px 32px;
-  border: 1px solid var(--gold);
-  transition: all 0.3s;
-}
-.back-link:hover {
-  background: var(--gold);
-  color: var(--cream);
-}
-
-/* SITE FOOTER */
-.site-footer {
-  background: var(--ink);
-  padding: 56px 24px;
-  text-align: center;
-}
-.footer-brand {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 300;
-  letter-spacing: 0.15em;
-  color: var(--cream);
-  margin-bottom: 8px;
-}
-.footer-copy {
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  color: rgba(255,254,248,0.4);
-}
-
-/* RWD */
+.article-header { max-width: 680px; margin: 0 auto; padding: 80px 24px 48px; text-align: center; }
+.article-category { font-family: var(--font-sans); font-size: 11px; font-weight: 400; letter-spacing: 0.25em; text-transform: uppercase; color: var(--theme-accent); margin-bottom: 24px; }
+.article-title { font-family: var(--font-display); font-size: 42px; font-weight: 400; letter-spacing: 0.06em; line-height: 1.4; color: var(--ink); margin-bottom: 16px; }
+.article-subtitle { font-family: var(--font-display); font-size: 18px; font-weight: 300; font-style: italic; letter-spacing: 0.08em; color: var(--ink-muted); margin-bottom: 32px; }
+.article-meta { font-family: var(--font-sans); font-size: 12px; letter-spacing: 0.12em; color: var(--ink-faint); }
+.article-hero { max-width: 960px; margin: 0 auto 80px; padding: 0 24px; }
+.article-hero img { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: var(--sand); }
+.article-hero figcaption { margin-top: 12px; font-family: var(--font-sans); font-size: 12px; color: var(--ink-faint); text-align: center; letter-spacing: 0.05em; }
+.content-section { max-width: 960px; margin: 0 auto; padding: 0 24px 60px; }
+.two-col { display: grid; grid-template-columns: 280px 1fr; gap: 60px; padding: 48px 0; border-top: 1px solid var(--sand); }
+.two-col:first-of-type { border-top: none; padding-top: 0; }
+.col-left { position: sticky; top: 100px; align-self: start; }
+.col-left h2 { font-family: var(--font-display); font-size: 24px; font-weight: 400; letter-spacing: 0.06em; line-height: 1.5; color: var(--ink); margin-bottom: 16px; }
+.col-left .summary { font-family: var(--font-sans); font-size: 13px; font-weight: 300; line-height: 1.9; color: var(--ink-muted); letter-spacing: 0.02em; }
+.col-right p { font-size: 1rem; font-weight: 300; line-height: 2.2; color: var(--ink-soft); margin-bottom: 1.8em; letter-spacing: 0.02em; }
+.col-right p:last-child { margin-bottom: 0; }
+.col-right blockquote { margin: 2em 0; padding: 1.5em 2em; background: var(--theme-quote-bg); border-left: 3px solid var(--theme-quote-border); font-family: var(--font-display); font-size: 1.1rem; font-style: italic; line-height: 2; color: var(--theme-quote-text); }
+.intro-section { max-width: 680px; margin: 0 auto; padding: 0 24px 60px; }
+.intro-section p { font-size: 1rem; font-weight: 300; line-height: 2.2; color: var(--ink-soft); margin-bottom: 1.8em; letter-spacing: 0.02em; }
+.intro-section p:first-of-type::first-letter { font-family: var(--font-display); font-size: 4em; float: left; line-height: 0.85; margin: 6px 16px 0 0; color: var(--theme-accent); font-weight: 400; }
+.img-full { max-width: 960px; margin: 40px auto 60px; padding: 0 24px; }
+.img-full img { width: 100%; }
+.img-full figcaption { margin-top: 12px; font-family: var(--font-sans); font-size: 12px; color: var(--ink-faint); text-align: center; }
+/* 雙圖並排 */
+.img-pair { max-width: 960px; margin: 40px auto 60px; padding: 0 24px; }
+.img-pair-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.img-pair-item img { width: 100%; aspect-ratio: 4/3; object-fit: cover; background: var(--sand); }
+.img-pair figcaption { margin-top: 12px; font-family: var(--font-sans); font-size: 12px; color: var(--ink-faint); text-align: center; }
+/* 三圖並排 */
+.img-trio { max-width: 960px; margin: 40px auto 60px; padding: 0 24px; }
+.img-trio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.img-trio-item { position: relative; }
+.img-trio-item img { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: var(--sand); }
+.img-trio-label { position: absolute; bottom: 8px; left: 8px; font-family: var(--font-sans); font-size: 11px; color: var(--cream); background: rgba(0,0,0,0.5); padding: 2px 8px; letter-spacing: 0.05em; }
+.img-trio figcaption { margin-top: 12px; font-family: var(--font-sans); font-size: 12px; color: var(--ink-faint); text-align: center; }
+.source-link { max-width: 680px; margin: 0 auto 40px; padding: 24px; background: var(--theme-quote-bg); border-left: 3px solid var(--theme-accent); text-align: center; }
+.source-link p { font-family: var(--font-sans); font-size: 13px; color: var(--ink-muted); margin-bottom: 12px; }
+.source-link a { font-family: var(--font-sans); font-size: 12px; letter-spacing: 0.1em; color: var(--gold); text-decoration: underline; transition: color 0.3s; }
+.source-link a:hover { color: var(--ink); }
+.article-footer { max-width: 680px; margin: 0 auto; padding: 48px 24px; border-top: 1px solid var(--sand); text-align: center; }
+.article-footer p { font-size: 14px; color: var(--ink-muted); margin-bottom: 32px; }
+.back-link { display: inline-block; font-family: var(--font-sans); font-size: 13px; letter-spacing: 0.12em; color: var(--gold); padding: 14px 32px; border: 1px solid var(--gold); transition: all 0.3s; }
+.back-link:hover { background: var(--gold); color: var(--cream); }
+.site-footer { background: var(--ink); padding: 56px 24px; text-align: center; }
+.footer-brand { font-family: var(--font-display); font-size: 18px; font-weight: 300; letter-spacing: 0.15em; color: var(--cream); margin-bottom: 8px; }
+.footer-copy { font-size: 11px; letter-spacing: 0.1em; color: rgba(255,254,248,0.4); }
 @media (max-width: 768px) {
   html { font-size: 16px; }
   .nav { padding: 20px 24px; }
   .article-header { padding: 60px 20px 40px; }
   .article-title { font-size: 32px; }
-  
-  .two-col {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-  .col-left {
-    position: static;
-    border-bottom: 1px solid var(--sand);
-    padding-bottom: 24px;
-  }
+  .two-col { grid-template-columns: 1fr; gap: 24px; }
+  .col-left { position: static; border-bottom: 1px solid var(--sand); padding-bottom: 24px; }
+  .img-pair-grid { grid-template-columns: 1fr; gap: 12px; }
+  .img-trio-grid { grid-template-columns: 1fr; gap: 12px; }
 }
 </style>
 </head>
 <body>
-
-<!-- NAV -->
 <nav class="nav">
   <a href="index.html" class="nav-back">← 返回文章列表</a>
   <a href="index.html" class="nav-logo">飛揚細籽 FEYOND</a>
 </nav>
-
-<!-- HEADER -->
 <header class="article-header">
   <p class="article-category">產地旅行 · Journey</p>
   <h1 class="article-title">保加利亞玫瑰特輯報導</h1>
   <p class="article-subtitle">Bulgarian Rose · The Golden Essence of Kazanlak Valley</p>
   <p class="article-meta">Feyond · 2013</p>
 </header>
-
-<!-- HERO IMAGE -->
 <figure class="article-hero">
   <img src="https://feyondtw.github.io/feyond-blog/images/bulgarian-rose-hero.jpg" alt="保加利亞玫瑰谷">
   <figcaption>保加利亞卡贊勒克玫瑰谷，清晨的玫瑰田</figcaption>
 </figure>
-
-<!-- 前言（單欄開場）-->
 <section class="intro-section">
   <p>幾世紀以來，無論香水工業界的寵兒如何隨著時尚更迭，人們心裡永遠為玫瑰留著一個位置，不為其它，只因為她是玫瑰，有著獨一無二的風彩，足以令人為之著迷，瘋狂。</p>
 </section>
-
-<!-- FULL CONTENT -->
 <div class="content-section">
-
-  <!-- Section 1：玫瑰谷 -->
   <div class="two-col">
     <div class="col-left">
       <h2>玫瑰谷</h2>
-      <p class="summary">大馬士革玫瑰的起源與保加利亞玫瑰谷的獨特風土。</p>
+      <p class="summary">大馬士革玫瑰的故鄉，全球85%玫瑰精油產能的核心產區。</p>
     </div>
     <div class="col-right">
-      <p>玫瑰精油中著名的大馬士革玫瑰（<em>Rosa damascena</em>）源自於中東敍利亞千年古城的大馬士革城（具有香城之稱）。當時此區為玫瑰重要的交易集散地。早期由土耳其人於安那托利亞進行栽種，但因受制於地型、氣候、土壤等因素，一直品質不佳。而後將此玫瑰品種傳入保加利亞地區開始栽種。</p>
-      
-      <p>保加利亞老輩有此一說，大馬士革品種又名 Rose of Castile，是古老的玫瑰品種 <em>Rosa Gallica</em> 與 <em>Rose Moschata</em> 的混交種。從植物 DNA 也被檢測出有 <em>Rose fedtschenkoana</em> 的基因存在。這三款均是以香氣取勝的玫瑰品種。也造就了大馬士革香氣令人醉迷的原因。在保加利亞即以 atir（attar）這個精粹甜美之意尊稱由這植物萃取的黃金液體。</p>
-      
-      <p>保加利亞有許多小城 karlovo、sopot、kalofer、Pavel banya 都有大面積玫瑰栽種的區域，但最出名的產區即為卡贊勒拉 Kazanlak，也就是一般所知的玫瑰谷，距離索菲亞城約2個半小時的車程。在玫瑰谷的玫瑰品種有上千種，但能萃取的只有3~4種，其中最著名的即是大馬士革玫瑰（<em>Rosa damascena</em>）以及這幾年來，因香氣獨特而逐漸興起的保加利亞白玫瑰（<em>Rosa alba</em>），現今玫瑰谷的玫瑰精油佔全世界85%的產能。</p>
-      
+      <p>玫瑰精油中著名的大馬士革玫瑰（Rosa damascene）源自於中東敍利亞千年古城的大馬士革城（具有香城之稱）。當時此區為玫瑰重要的交易集散地。早期由土耳其人於安那托利亞進行栽種，但因受制於地型、氣候、土壤等因素，一直品質不佳。而後將此玫瑰品種傳入保加利亞地區開始栽種。</p>
+      <p>保加利亞老輩有此一說，大馬士革品種又名Rose of Castile，是古老的玫瑰品種Rosa Gallica與Rose Moschata的混交種。從植物DNA也被檢測出有Rose fedtschenkoana的基因存在。這三款均是以香氣取勝的玫瑰品種。也造就了大馬士革香氣令人醉迷的原因。在保加利亞即以atir(attar)這個精粹甜美之意尊稱由這植物萃取的黃金液體。</p>
+      <p>保加利亞有許多小城karlovo、sopot、kalofer.Pavel banya都有大面積玫瑰栽種的區域，但最出名的產區即為卡贊勒拉Kazanlak，也就是一般所知的玫瑰谷，距離索菲亞城約2個半小時的車程。在玫瑰谷的玫瑰品種有上千種，但能萃取的只有3~4種，其中最著名的即是大馬士革玫瑰（Rosa damascene）以及這幾年來，因香氣獨特而逐漸興起的保加利亞白玫瑰（Rosa alba），現今玫瑰谷的玫瑰精油佔全世界85﹪的產能。</p>
       <p>玫瑰谷是斯特列馬河與登塞河在北邊巴爾幹山峰，與西南方有斯雷那山脈沖刷形成的河谷地形。因為二座山脈分佈於南北邊，故不影響河谷東西向的日照，加上登塞河是保國最重要的河川，地中海的暖濕氣流順進入了河谷，此為沙質肥沃疏鬆的土壤，讓玫瑰的排水性通透，水源灌溉充足，加上原始地型的陰濕天性，造就了得天獨厚的最宜玫瑰栽種的氣候型態，也是讓大馬士革玫瑰蒸餾出繁郁與淡雅兼具氣味的主因。</p>
-      
-      <blockquote>
-        我剛進玫瑰谷不到二小時內，就親身經驗了豔陽烈烤、雷雨襲擊、狂風颶掃的三種氣候變化。如此得天獨厚的地形與環境，讓多年來自世界各國著名植物學家到玫瑰谷試圖將大馬士革品種移栽至其它產區栽種卻無法成功之故。這也是何以大馬士革玫瑰呈現既陰又陽的柔和感，不在陰柔或陽剛中偏向極端，如同太極一樣平衡，悠然自若。
-      </blockquote>
+      <blockquote>我剛進玫瑰谷不到二小時內，就親身經驗了豔陽烈烤、雷雨襲擊、狂風颶掃的三種氣候變化。如此得天獨厚的地形與環境，讓多年來自世界各國著名植物學家到玫瑰谷試圖將大馬士革品種移栽至其它產區栽種卻無法成功之故。這也是何以大馬士革玫瑰呈現既陰又陽的柔和感，不在陰柔或陽剛中偏向極端，如同太極一樣平衡，悠然自若。</blockquote>
     </div>
   </div>
-
-  <!-- Section 2：2013植栽與採收現況 -->
+  <!-- 圖組 1：Rosa alba 白玫瑰（雙圖並排）-->
+  <figure class="img-pair">
+    <div class="img-pair-grid">
+      <div class="img-pair-item">
+        <img src="https://feyondtw.github.io/feyond-blog/images/bulgarian-rose-alba-1.jpg" alt="Rosa alba 白玫瑰">
+      </div>
+      <div class="img-pair-item">
+        <img src="https://feyondtw.github.io/feyond-blog/images/bulgarian-rose-alba-2.jpg" alt="Rosa alba 白玫瑰">
+      </div>
+    </div>
+    <figcaption>Rosa alba 保加利亞獨有的白玫瑰品種</figcaption>
+  </figure>
   <div class="two-col">
     <div class="col-left">
-      <h2>2013 植栽與採收現況</h2>
-      <p class="summary">氣候變遷對玫瑰採收的影響，以及傳統採收方式。</p>
+      <h2>2013植栽與採收現況</h2>
+      <p class="summary">氣候變遷下的煎熬，花農們面對極為複雜的一季。</p>
     </div>
     <div class="col-right">
       <p>2013年對保加利亞人是極煎熬又情緒複雜的一年。面對全球氣候的變遷，原本6初開始10-15天的花期，在酷熱的5月下旬即開始爆出花苞，花農的收成提早，玫瑰節也被迫提早，雖然花期拉長，收花成數卻是降低，採收工時也相對拉長，造成農家成本提高。目前多數保加利亞玫瑰田仍保留傳統栽種的方式，但這幾年為因應口服玫瑰精油的奢華風，也開始導入了有機栽種的技術。</p>
-      
       <p>一般來說，3噸花瓣可以萃出1公斤的玫瑰精油，但2013年則需要3.3噸才能萃取1公斤的精油，普遍萃油率降了百分之十。甚至往年能收成250噸的農家，在今年的總收成也有降至150公噸。面對早於一年前已決定的預購單，許多廠家有交不出貨的窘境。</p>
-      
       <p>採集玫瑰均在晨㬢之時，那時露水能保有玫瑰的鮮度。為維持通透性，會置於傳統的竹籃送至萃取廠。萃取玫瑰的形態多半分成2種，第一種是含苞半開全株萃取，據農家說此花型含油量最高，另一種是已爆開的花朵則蒂頭去除，只取玫瑰花瓣，這種採收則較為費工，但萃出的玫瑰精油的香氣也更為淡雅。</p>
-      
       <p>所以這次參訪的重點即在以百年銅鍋單獨萃取玫瑰花瓣為主。</p>
     </div>
   </div>
-
-  <!-- Section 3：蒸餾 -->
+  <!-- 圖組 2：採收（三圖並排）-->
+  <figure class="img-trio">
+    <div class="img-trio-grid">
+      <div class="img-trio-item">
+        <img src="https://feyondtw.github.io/feyond-blog/images/bulgarian-rose-harvest-1.jpg" alt="含苞半開採收">
+        <span class="img-trio-label">圖1</span>
+      </div>
+      <div class="img-trio-item">
+        <img src="https://feyondtw.github.io/feyond-blog/images/bulgarian-rose-harvest-2.jpg" alt="含苞半開採收">
+        <span class="img-trio-label">圖2</span>
+      </div>
+      <div class="img-trio-item">
+        <img src="https://feyondtw.github.io/feyond-blog/images/bulgarian-rose-harvest-3.jpg" alt="去蒂花瓣">
+        <span class="img-trio-label">圖3</span>
+      </div>
+    </div>
+    <figcaption>圖1、2：含苞半開全株萃取，含油量最高｜圖3：去蒂花瓣，香氣更為淡雅</figcaption>
+  </figure>
   <div class="two-col">
     <div class="col-left">
       <h2>蒸餾</h2>
-      <p class="summary">三百年工藝傳承，循環水蒸餾法與銅鍋萃取的奧秘。</p>
+      <p class="summary">三百年工藝傳承，循環水蒸餾法的奧秘。</p>
     </div>
     <div class="col-right">
       <p>參訪保加利亞傳統的蒸餾場對視覺與嗅覺而言都是件享受的。多數的傳統蒸餾廠，會保留傳統的木門木製的迴廊的建築特色，週圍環境也非常原始樸素，與一般想像的現代工業蒸餾廠有極大的差異。</p>
-      
-      <blockquote>
-        循環水蒸餾法在保加利亞已有300多年歴史，這是一種傳統萃取工藝技術的保留，此萃取法不但提升了玫瑰精油的產能，而經過長時間在水火中粹煉過的玫瑰精油更顯冷傲優柔。突顯了比溶劑萃取的可貴之處。
-      </blockquote>
-      
-      <p>有別於一般僅純露再循環利用的知識，循環水蒸餾法將新鮮玫瑰與泉水依各家商業機密的比例倒入蒸餾桶中，由這回參訪的12間廠商，花與水的比例就有1:10~1:1均有。（價差的起因也在此），循環重覆蒸餾的各家也不一，過程從2次到5次不等，第一道煮沸的玫瑰水會再經過冷凝程序進行升溫，再進入另一個注入蒸氣的及古磁片佈滿的萃取槽桶進行二次萃取蒸餾。最後會進入收集桶內沈澱後油水分離，待冷卻後即可取得玫瑰精油。</p>
-      
+    </div>
+  </div>
+  <!-- 圖組 3：蒸餾廠外觀（雙圖並排）-->
+  <figure class="img-pair">
+    <div class="img-pair-grid">
+      <div class="img-pair-item">
+        <img src="https://feyondtw.github.io/feyond-blog/images/bulgarian-rose-factory-1.jpg" alt="傳統蒸餾廠外觀">
+      </div>
+      <div class="img-pair-item">
+        <img src="https://feyondtw.github.io/feyond-blog/images/bulgarian-rose-factory-2.jpg" alt="傳統蒸餾廠迴廊">
+      </div>
+    </div>
+    <figcaption>傳統蒸餾廠保留木門木製迴廊的建築特色</figcaption>
+  </figure>
+  <div class="two-col">
+    <div class="col-left">
+      <h2>蒸餾（續）</h2>
+      <p class="summary">循環水蒸餾法的工藝細節</p>
+    </div>
+    <div class="col-right">
+      <blockquote>循環水蒸餾法在保加利亞已有300多年歴史，這是一種傳統萃取工藝技術的保留，此萃取法不但提升了玫瑰精油的產能，而經過長時間在水火中粹煉過的玫瑰精油更顯冷傲優柔。突顯了比溶劑萃取的可貴之處。</blockquote>
+      <p>有別於一般僅純露再循環利用的知識，循環水蒸餾法將新鮮玫瑰與泉水依各家商業機密的比例倒入蒸餾桶中，由這回參訪的12間廠商，花與水的比例就有1：10～1：1均有。（價差的起因也在此），循環重覆蒸餾的各家也不一，過程從2次到5次不等，第一道煮沸的玫瑰水會再經過冷凝程序進行升溫，再進入另一個注入蒸氣的及古磁片佈滿的萃取槽桶進行二次萃取蒸餾。最後會進入收集桶內沈澱後油水分離，待冷卻後即可取得玫瑰精油。</p>
       <p>看似簡易的知識，實則循環水蒸餾導入的經驗從溫控、直式冷凝管中的冷熱交換原理、以及在二萃鍋爐中以傳統磁片提升玫瑰分子的質感及產能等複雜獨有技術於其中。不禁令人瞪目結舌古老萃取技術上的先進。</p>
-      
       <p>不銹鋼鍋是保加利亞玫瑰精油萃取的標準設備，但獨有古磁片架構於循環萃取槽桶的設計，將所蒸出的水氣再降低，提升玫瑰芳香分子的濃度。這也是為什麼保加利亞所產的玫瑰精油單價會昂貴其他產區些的原因。再者除了提供香水業的現代工萃取廠，多數傳統的萃油廠多數是水蒸餾與水蒸汽蒸餾的複合萃取。不單一使用水蒸汽蒸餾方式，除了他們想取得玫瑰浸於水中的精華外，在數小時的蒸餾時間，都在是持續高溫的狀態也容易破壞了熱敏成份。</p>
     </div>
   </div>
-
-  <!-- 內文圖片：蒸餾廠 -->
-  <figure class="img-full">
-    <img src="https://feyondtw.github.io/feyond-blog/images/bulgarian-rose-distillery.jpg" alt="傳統銅鍋蒸餾">
-    <figcaption>百年傳承的銅製蒸餾器</figcaption>
+  <!-- 圖組 4：銅鍋萃取設備（三圖並排）-->
+  <figure class="img-trio">
+    <div class="img-trio-grid">
+      <div class="img-trio-item">
+        <img src="https://feyondtw.github.io/feyond-blog/images/bulgarian-rose-copper-1.jpg" alt="銅鍋蒸餾設備">
+      </div>
+      <div class="img-trio-item">
+        <img src="https://feyondtw.github.io/feyond-blog/images/bulgarian-rose-copper-2.jpg" alt="銅鍋蒸餾細節">
+      </div>
+      <div class="img-trio-item">
+        <img src="https://feyondtw.github.io/feyond-blog/images/bulgarian-rose-copper-3.jpg" alt="銅鍋蒸餾作業">
+      </div>
+    </div>
+    <figcaption>百年銅鍋萃取設備，受熱平均、穿透性強，能將玫瑰精華萃得更完整</figcaption>
   </figure>
-
-  <!-- Section 4：銅鍋萃取 -->
   <div class="two-col">
     <div class="col-left">
       <h2>銅鍋萃取</h2>
-      <p class="summary">百年銅鍋的珍貴價值與萃取優勢。</p>
+      <p class="summary">百年老廠的珍稀設備，穿透性與逼香的極致。</p>
     </div>
     <div class="col-right">
       <p>相對不銹鋼鍋而言純度百分之百的銅鍋則顯得稀有與珍貴，所以目前還能保有銅鍋的萃取廠，廠齡都已是百年老廠。銅鍋的受熱平均，持溫久，密度比不銹鋼高出許多，熱的傳導是不銹鋼鍋的10倍，其穿透性與逼香的功能強勁，能將玫瑰所有精華萃得更完整。由於熱傳導率高的銅，必須用小火，萃取的過程是由冷水慢慢低溫加熱萃取，許多不銹鋼鍋萃廠為省熱電能則會先溫熱鍋爐中的水，再將摘採的新鮮植材倒入萃取槽桶中進行萃取，兩者就分析中得知，以銅鍋萃取的玫瑰精油，就比不鏽鋼桶中大馬士革酮及金合歡醇更高。完整的升溫過程，象徵由初至終的昇華，能把植物能量完整提煉，並且藉由保溫效果極佳的銅鍋，鎖住玫瑰氣味，讓植物靈魂保留至極致。</p>
-      
-      <p>除了保留傳統的萃取法，隨著國際市場對玫瑰原精與凝香體的需求，也有許多蒸餾廠商引進特級超臨界流體萃取法（又稱二氧化碳萃取法，SCO2），及溶劑萃取設備以應不同市場的需求，二氧化碳是酸性氣體，所得的帖烯含量較低，酯類成份會高出許多，所以玫瑰蠟質降低，而花香味更為濃郁。</p>
+      <p>除了保留傳統的萃取法，隨著國際市場對玫瑰原精與凝香體的需求，也有許多蒸餾廠商引進特級超臨界流體萃取法（又稱二氧化碳萃取法，SCO2）,及溶劑萃取設備以應不同市場的需求，二氧化碳是酸性氣體，所得的帖烯含量較低，酯類成份會高出許多，所以玫瑰蠟質降低，而花香味更為濃郁。</p>
     </div>
   </div>
-
-  <!-- Section 5：玫瑰純露 -->
+  <!-- 圖組 5：SCO2 萃取（雙圖並排）-->
+  <figure class="img-pair">
+    <div class="img-pair-grid">
+      <div class="img-pair-item">
+        <img src="https://feyondtw.github.io/feyond-blog/images/bulgarian-rose-sco2-1.jpg" alt="SCO2萃取設備">
+      </div>
+      <div class="img-pair-item">
+        <img src="https://feyondtw.github.io/feyond-blog/images/bulgarian-rose-sco2-2.jpg" alt="SCO2萃取玫瑰原精">
+      </div>
+    </div>
+    <figcaption>SCO2 萃取的玫瑰原精，香氣與剛摘採下的玫瑰香氣接近</figcaption>
+  </figure>
   <div class="two-col">
     <div class="col-left">
       <h2>玫瑰純露</h2>
-      <p class="summary">第一道萃取的珍貴純露與市場現況。</p>
+      <p class="summary">第一道萃取的珍貴精露，需提早一年預定。</p>
     </div>
     <div class="col-right">
-      <p>目前保加利亞最大宗的玫瑰精油採購商來自日本，日本某製藥廠推廣以口服玫瑰精油改善體質進而散出玫瑰氣息的而讓玫瑰精油香氣風靡全日本。以致於也讓保加利亞玫瑰有供不應求的現象，循環水蒸餾的用意就在於濃縮玫瑰精質與提精油的產能，因此只採集純露對廠商來說是一大浪費，必須提早一年以前預定及付足採購金額，才會有極少的廠家願意釋放第一道萃取，以水與花材1:1比例萃取的純露，第一道萃取溫度廠家會在約18°C時收純露，保留最高的苯乙醇與酸的含量，當中純露也會含有0.05%-0.08%的玫瑰芳香分子，當地人稱之為精露，而我們稱為純露，沒有經過陽光照射的純露能保留很久。</p>
-      
-      <p>正因為純露的產量不是保加利亞的產能重點，所以有一些蒸餾廠會把循環水的純露賣給精油採購廠，或於水中添加「類玫瑰味」水溶性的單體分子增添於其中。若拿到氣味「有異」的玫瑰純露時，除了農產品的不穩定性，也別忘了排除是循環水蒸餾純露的可能！</p>
+      <p>目前保加利亞最大宗的玫瑰精油採購商來自日本，日本某製藥廠推廣以口服玫瑰精油改善體質進而散出玫瑰氣息的而讓玫瑰精油香氣風靡全日本。以致於也讓保加利亞玫瑰有供不應求的現象，循環水蒸餾的用意就在於濃縮玫瑰精質與提精油的產能，因此只採集純露對廠商來說是一大浪費，必須提早一年以前預定及付足採購金額，才會有極少的廠家願意釋放第一道萃取，以水與花材1:1比例萃取的純露，第一道萃取溫度廠家會在約18°C時收純露，保留最高的苯乙醇與酸的含量，當中純露也會含有0.05﹪-0.08%的玫瑰芳香分子，當地人稱之為精露，而我們稱為純露，沒有經過陽光照射的純露能保留很久。正因為純露的產量不是保加利亞的產能重點，所以有一些蒸餾廠會把循環水的純露賣給精油採購廠，或於水中添加"類玫瑰味"水溶性的單體分子增添於其中。若拿到氣味「有異」的玫瑰純露時，除了農產品的不穩定性，也別忘了排除是循環水蒸餾純露的可能！</p>
     </div>
   </div>
-
-  <!-- Section 6：玫瑰蠟 -->
+  <!-- 圖組 6：純露收集（單圖）-->
+  <figure class="img-full">
+    <img src="https://feyondtw.github.io/feyond-blog/images/bulgarian-rose-hydrosol.jpg" alt="玫瑰純露收集">
+    <figcaption>第一道萃取溫度約 18°C 時收純露，保留最高的苯乙醇與酸含量</figcaption>
+  </figure>
   <div class="two-col">
     <div class="col-left">
       <h2>玫瑰蠟</h2>
-      <p class="summary">玫瑰蠟的珍貴價值與鑑別方式。</p>
+      <p class="summary">中古世紀的身價來源，測量結晶溫度的古老智慧。</p>
     </div>
     <div class="col-right">
-      <p>玫瑰蠟是保護玫瑰在受烈陽與暴風雨侵害的天然防護物質，對於皮膚（尤其是乾性肌膚或是心理情緒對愛乾涸的人）有極大的舒緩效果，也只有透過蒸餾方式的玫瑰精油才會有玫瑰蠟的保留，玫瑰臘的多寡在中古世紀是重要的玫瑰身價來源。老一輩的保加利亞交易玫瑰時會以溫度計來測量玫瑰臘凍結狀態。至今仍分成二派，年紀輕的玫瑰精油蠟質敏銳，平均的結晶溫度則落在15-17度，陳年的玫瑰精油，則會在10度以下才會結晶。</p>
+      <p>玫瑰蠟是保護玫瑰在受烈陽與暴風雨侵害的天然防護物質，對於皮膚（尤其是乾性肌膚或是心理情緒對愛乾涸的人）有極大的舒緩效果，也只有透過蒸餾方式的玫瑰精油才會有玫瑰蠟的保留，玫瑰臘的多寡在中古世紀是重要的玫瑰身價來源。老一輩的保加利亞交易玫瑰時會以溫度計來測量玫瑰臘凍結狀態。至今仍分成二派，年紀輕的玫瑰精油蠟質敏銳，平均的結晶溫度則落在15﹣17度，陳年的玫瑰精油，則會在10度以下才會結晶。</p>
     </div>
   </div>
-
-  <!-- Section 7：尾記 -->
+  <!-- 圖組 7：1995年玫瑰精油結晶（單圖）-->
+  <figure class="img-full">
+    <img src="https://feyondtw.github.io/feyond-blog/images/bulgarian-rose-wax.jpg" alt="1995年玫瑰精油結晶">
+    <figcaption>1995 年萃取的玫瑰精油，在 13°C 低溫下開始呈現結晶狀態</figcaption>
+  </figure>
   <div class="two-col">
     <div class="col-left">
       <h2>尾記</h2>
-      <p class="summary">大馬士革玫瑰的療癒能量。</p>
+      <p class="summary">敞綻一身華麗，無懼的愛才懂得釋放。</p>
     </div>
     <div class="col-right">
       <p>全然盛開綻放之姿的大馬士革玫瑰，與摩洛哥玫瑰重重包覆的花型能量不同，不論是烈陽雷雨或颶風之中，皆能自在無畏的敞開自我，不但坦然釋放幽暗於心的情緒，排鬱解悶。也讓我們能從中學習無懼的「愛」才懂得釋放，它同時也是緩解人際能量淤塞於心時造成腫脹的流通劑，改善經期，利心與促進淋巴循環皆為首效，養肝利膽與護膚的精油其實不勝枚舉，但大馬士革玫瑰千百年來不朽的地位應該就是來自於她敞綻一身華麗有關吧！</p>
     </div>
   </div>
-
 </div>
-
-<!-- CYB 原文連結 -->
 <div class="source-link">
   <p>本文首發於 Dhyana 根本芳療部落格</p>
   <a href="https://www.dhyana.store/zh-TW/blogs/feyond/124443" target="_blank">閱讀原始版本 →</a>
 </div>
-
-<!-- ARTICLE FOOTER -->
 <div class="article-footer">
   <p>感謝閱讀</p>
   <a href="index.html" class="back-link">返回文章列表</a>
 </div>
-
-<!-- SITE FOOTER -->
 <footer class="site-footer">
   <p class="footer-brand">飛揚細籽 · FEYOND</p>
   <p class="footer-copy">© 2026 Dhyana Aromatherapy</p>
 </footer>
-
 </body>
 </html>
