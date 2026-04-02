@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>飛揚細籽 FEYOND｜在香氣中找到自己的語言</title>
+<meta name="description" content="Feyond 老師的芳療知識平台，25年產地旅程，用文字記錄香氣的哲學。">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+TC:wght@300;400;500&family=Noto+Sans+TC:wght@300;400&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -156,6 +157,16 @@ img { max-width: 100%; display: block; }
   background: var(--sand);
   flex-shrink: 0;
   overflow: hidden;
+  transition: transform 0.3s;
+}
+.author-avatar:hover {
+  transform: scale(1.05);
+}
+.author-name-link {
+  text-decoration: none;
+}
+.author-name-link:hover .author-name {
+  color: var(--gold);
 }
 .author-avatar img {
   width: 100%;
@@ -172,6 +183,7 @@ img { max-width: 100%; display: block; }
   letter-spacing: 0.06em;
   color: var(--ink);
   margin-bottom: 6px;
+  transition: color 0.3s;
 }
 .author-bio {
   font-family: var(--font-sans);
@@ -631,12 +643,12 @@ img { max-width: 100%; display: block; }
      AUTHOR SECTION
      ═══════════════════════════════════════ -->
 <section class="author-section">
-  <div class="author-avatar">
+  <a href="about.html" class="author-avatar">
     <img src="https://feyond.muzen.store/images/feyond-avatar.jpg" alt="Feyond 老師">
-  </div>
+  </a>
   <div class="author-info">
-    <h2 class="author-name">Feyond 老師</h2>
-    <p class="author-bio">根本芳療創辦人<br>25 年全球尋香，專注植物的療癒與故事</p>
+    <a href="about.html" class="author-name-link"><h2 class="author-name">Feyond 老師</h2></a>
+    <p class="author-bio">根本芳療創辦人<br>Forum Essenzia 德國芳療協會認證治療師</p>
   </div>
   <a href="https://dhyana.store/products/feyond-membership" class="author-cta" target="_blank">
     訂閱知識會員 →
@@ -688,7 +700,7 @@ img { max-width: 100%; display: block; }
 <section class="new-article">
   <a href="articles/hinoki.html?paywall=true" class="new-article-card">
     <div class="new-article-image">
-      <!-- 替換為實際照片 CDN -->
+      <!-- 待替換：台灣紅檜實際照片 CDN -->
       <img src="https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?w=800" alt="台灣紅檜">
     </div>
     <div class="new-article-content">
@@ -721,6 +733,7 @@ img { max-width: 100%; display: block; }
     <!-- Featured 1 -->
     <a href="articles/bulgarian-rose.html?paywall=true" class="featured-card">
       <div class="featured-image">
+        <!-- 待替換：保加利亞玫瑰谷實際照片 CDN -->
         <img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=600" alt="保加利亞玫瑰谷">
       </div>
       <div class="featured-badges">
@@ -735,6 +748,7 @@ img { max-width: 100%; display: block; }
     <!-- Featured 2 -->
     <a href="articles/helichrysum.html?paywall=true" class="featured-card">
       <div class="featured-image">
+        <!-- 待替換：科西嘉永久花實際照片 CDN -->
         <img src="https://images.unsplash.com/photo-1596438459194-f275867a5c8b?w=600" alt="科西嘉永久花">
       </div>
       <div class="featured-badges">
@@ -749,6 +763,7 @@ img { max-width: 100%; display: block; }
     <!-- Featured 3 -->
     <a href="articles/oud-time.html?paywall=true" class="featured-card">
       <div class="featured-image">
+        <!-- 待替換：沉香實際照片 CDN -->
         <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600" alt="沉香與時間">
       </div>
       <div class="featured-badges">
