@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>飛揚細籽 FEYOND｜香氣是記憶的容器</title>
+<meta name="description" content="飛揚細籽 FEYOND - 25年全球精油產地探訪，深度芳療知識與香氣哲學">
+<link rel="canonical" href="https://feyond.muzen.store">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+TC:wght@300;400;500&family=Noto+Sans+TC:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #FFFEF8;
+  --sand: #EDE6D6;
+  --parchment: #F5F0E3;
+  --ink: #252220;
+  --ink-soft: #4A4540;
+  --ink-muted: #7A756D;
+  --ink-faint: #A8A29A;
+  --gold: #B8965A;
+  --gold-light: #D4B87A;
+  
+  /* 四大分類色 */
+  --cat-botany: #2D4A3E;
+  --cat-philosophy: #B8965A;
+  --cat-journey: #8B5A3C;
+  --cat-blending: #3D4A6B;
+  
+  --font-display: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+  --font-body: 'Noto Serif TC', Georgia, serif;
+  --font-sans: 'Noto Sans TC', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 17px; }
+body { 
+  font-family: var(--font-body); 
+  background: var(--cream); 
+  color: var(--ink); 
+  line-height: 1.8;
+  font-weight: 300;
+}
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+
+/* ═══════════════════════════════════════
+   NAV
+   ═══════════════════════════════════════ */
+.nav {
+  padding: 28px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--sand);
+}
+.nav-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  color: var(--ink);
+}
+.nav-tagline {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-style: italic;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+}
+.nav-member {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  padding: 8px 16px;
+  border: 1px solid var(--sand);
+  transition: all 0.3s;
+}
+.nav-member:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* ═══════════════════════════════════════
+   HERO - 極簡純文字
+   ═══════════════════════════════════════ */
+.hero {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 100px 24px 80px;
+  text-align: center;
+}
+.hero-eyebrow {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-style: italic;
+  letter-spacing: 0.25em;
+  color: var(--gold);
+  margin-bottom: 24px;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: 56px;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  line-height: 1.3;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+.hero-title-en {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.2em;
+  color: var(--ink-muted);
+  margin-bottom: 40px;
+}
+.hero-divider {
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  margin: 0 auto 40px;
+}
+.hero-lead {
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 2.2;
+  color: var(--ink-soft);
+  letter-spacing: 0.04em;
+}
+
+/* ═══════════════════════════════════════
+   MAIN CONTENT - 雙欄佈局
+   ═══════════════════════════════════════ */
+.main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 48px 80px;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 60px;
+}
+
+/* ─── 左側：分類篩選 ─── */
+.sidebar {
+  position: sticky;
+  top: 40px;
+  align-self: start;
+}
+.sidebar-title {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-style: italic;
+  letter-spacing: 0.15em;
+  color: var(--ink-faint);
+  margin-bottom: 24px;
+  text-transform: uppercase;
+}
+.filter-list {
+  list-style: none;
+}
+.filter-item {
+  margin-bottom: 16px;
+}
+.filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+  transition: color 0.3s;
+  padding: 0;
+}
+.filter-btn:hover {
+  color: var(--ink);
+}
+.filter-btn.active {
+  color: var(--ink);
+  font-weight: 400;
+}
+.filter-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid var(--ink-faint);
+  transition: all 0.3s;
+}
+.filter-btn.active .filter-dot {
+  background: var(--gold);
+  border-color: var(--gold);
+}
+.filter-btn[data-filter="botany"]:hover .filter-dot,
+.filter-btn[data-filter="botany"].active .filter-dot { 
+  background: var(--cat-botany); 
+  border-color: var(--cat-botany); 
+}
+.filter-btn[data-filter="philosophy"]:hover .filter-dot,
+.filter-btn[data-filter="philosophy"].active .filter-dot { 
+  background: var(--cat-philosophy); 
+  border-color: var(--cat-philosophy); 
+}
+.filter-btn[data-filter="journey"]:hover .filter-dot,
+.filter-btn[data-filter="journey"].active .filter-dot { 
+  background: var(--cat-journey); 
+  border-color: var(--cat-journey); 
+}
+.filter-btn[data-filter="blending"]:hover .filter-dot,
+.filter-btn[data-filter="blending"].active .filter-dot { 
+  background: var(--cat-blending); 
+  border-color: var(--cat-blending); 
+}
+
+/* ─── 右側：文章列表 ─── */
+.articles {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.article-card {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  padding: 40px 0;
+  border-bottom: 1px solid var(--sand);
+  transition: all 0.3s;
+}
+.article-card:first-child {
+  padding-top: 0;
+}
+.article-card:hover {
+  background: linear-gradient(90deg, transparent, var(--parchment) 20%, var(--parchment) 80%, transparent);
+  margin: 0 -24px;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.article-card-category {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.article-card[data-category="botany"] .article-card-category { color: var(--cat-botany); }
+.article-card[data-category="philosophy"] .article-card-category { color: var(--cat-philosophy); }
+.article-card[data-category="journey"] .article-card-category { color: var(--cat-journey); }
+.article-card[data-category="blending"] .article-card-category { color: var(--cat-blending); }
+
+.article-card-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  color: var(--ink);
+  margin-bottom: 8px;
+  transition: color 0.3s;
+}
+.article-card:hover .article-card-title {
+  color: var(--gold);
+}
+.article-card-subtitle {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-style: italic;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+  margin-bottom: 16px;
+}
+.article-card-excerpt {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 2;
+  color: var(--ink-soft);
+  letter-spacing: 0.02em;
+  max-width: 560px;
+}
+.article-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 20px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--ink-faint);
+}
+.article-card-read {
+  color: var(--gold);
+  transition: letter-spacing 0.3s;
+}
+.article-card:hover .article-card-read {
+  letter-spacing: 0.2em;
+}
+
+/* Premium 標記 */
+.article-card-premium {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-sans);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+.article-card-premium svg {
+  width: 10px;
+  height: 10px;
+  fill: var(--gold);
+}
+
+/* ═══════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════ */
+.site-footer {
+  background: var(--ink);
+  padding: 56px 24px;
+  text-align: center;
+}
+.footer-brand {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  color: var(--cream);
+  margin-bottom: 8px;
+}
+.footer-tagline {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-style: italic;
+  letter-spacing: 0.1em;
+  color: rgba(255,254,248,0.5);
+  margin-bottom: 24px;
+}
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+.footer-link {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: rgba(255,254,248,0.6);
+  transition: color 0.3s;
+}
+.footer-link:hover {
+  color: var(--gold);
+}
+.footer-copy {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: rgba(255,254,248,0.3);
+}
+
+/* ═══════════════════════════════════════
+   RWD
+   ═══════════════════════════════════════ */
+@media (max-width: 900px) {
+  .main {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 0 24px 60px;
+  }
+  .sidebar {
+    position: static;
+    border-bottom: 1px solid var(--sand);
+    padding-bottom: 24px;
+  }
+  .filter-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+  }
+  .filter-item {
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .nav {
+    padding: 20px 24px;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .hero {
+    padding: 60px 20px 50px;
+  }
+  .hero-title {
+    font-size: 36px;
+  }
+  .hero-title-en {
+    font-size: 14px;
+  }
+  .article-card-title {
+    font-size: 22px;
+  }
+  .article-card:hover {
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand">
+    <span class="nav-logo">飛揚細籽 FEYOND</span>
+    <span class="nav-tagline">Dhyana Aromatherapy</span>
+  </div>
+  <a href="#" class="nav-member" id="memberBtn">會員入口</a>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <p class="hero-eyebrow">Since 2001 · Global Sourcing</p>
+  <h1 class="hero-title">飛揚細籽</h1>
+  <p class="hero-title-en">FEYOND</p>
+  <div class="hero-divider"></div>
+  <p class="hero-lead">
+    香氣是記憶的容器，文字是旅程的地圖。<br>
+    二十五年全球產地探訪，從土耳其玫瑰田到越南沉香林，<br>
+    用文字記錄每一滴精油背後的風土與人文。
+  </p>
+</header>
+
+<!-- MAIN -->
+<main class="main">
+  
+  <!-- 左側：分類篩選 -->
+  <aside class="sidebar">
+    <p class="sidebar-title">Categories</p>
+    <ul class="filter-list">
+      <li class="filter-item">
+        <button class="filter-btn active" data-filter="all">
+          <span class="filter-dot"></span>
+          全部文章
+        </button>
+      </li>
+      <li class="filter-item">
+        <button class="filter-btn" data-filter="botany">
+          <span class="filter-dot"></span>
+          植物學
+        </button>
+      </li>
+      <li class="filter-item">
+        <button class="filter-btn" data-filter="philosophy">
+          <span class="filter-dot"></span>
+          香氣哲思
+        </button>
+      </li>
+      <li class="filter-item">
+        <button class="filter-btn" data-filter="journey">
+          <span class="filter-dot"></span>
+          產地旅行
+        </button>
+      </li>
+      <li class="filter-item">
+        <button class="filter-btn" data-filter="blending">
+          <span class="filter-dot"></span>
+          調香手記
+        </button>
+      </li>
+    </ul>
+  </aside>
+  
+  <!-- 右側：文章列表 -->
+  <section class="articles" id="articleList">
+    
+    <!-- 文章：保加利亞玫瑰（免費）-->
+    <a href="bulgarian-rose.html" class="article-card" data-category="journey">
+      <div>
+        <p class="article-card-category">產地旅行</p>
+        <h2 class="article-card-title">保加利亞玫瑰特輯報導</h2>
+        <p class="article-card-subtitle">Bulgarian Rose · The Golden Essence of Kazanlak Valley</p>
+        <p class="article-card-excerpt">
+          我剛進玫瑰谷不到二小時內，就親身經歷了豔陽烈烤、雷雨襲擊、狂風颶掃的三種氣候變化。如此得天獨厚的地形與環境，讓大馬士革玫瑰呈現既陰又陽的柔和感，如同太極一樣平衡，悠然自若。
+        </p>
+        <div class="article-card-meta">
+          <span>2013</span>
+          <span class="article-card-read">Read →</span>
+        </div>
+      </div>
+    </a>
+    
+    <!-- 文章 1：大馬士革玫瑰 -->
+    <a href="rose.html?paywall=true" class="article-card" data-category="journey">
+      <div>
+        <p class="article-card-category">產地旅行</p>
+        <h2 class="article-card-title">大馬士革玫瑰</h2>
+        <p class="article-card-subtitle">Damascus Rose · 千年絲路上的芬芳記憶</p>
+        <p class="article-card-excerpt">
+          凌晨四點，伊斯帕爾塔的玫瑰田還籠罩在薄霧中。採收必須在日出前完成——當第一道陽光觸及花瓣，精油便開始揮發。一公斤玫瑰精油需要三到五噸的花瓣，這不只是萃取，是一種近乎虔誠的轉化儀式。
+        </p>
+        <div class="article-card-meta">
+          <span>2026</span>
+          <span class="article-card-premium">
+            <svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+            Premium
+          </span>
+          <span class="article-card-read">Read →</span>
+        </div>
+      </div>
+    </a>
+    
+    <!-- 文章 2：台灣紅檜 -->
+    <a href="hinoki.html?paywall=true" class="article-card" data-category="botany">
+      <div>
+        <p class="article-card-category">植物學</p>
+        <h2 class="article-card-title">台灣紅檜</h2>
+        <p class="article-card-subtitle">Chamaecyparis formosensis · 千年巨木的沉靜之香</p>
+        <p class="article-card-excerpt">
+          檜木醇的療癒不在於濃烈，而在於它如何讓你想起山林。那種氣息像是被時間沉澱過的安靜，帶著一點木質的溫暖，一點雨後泥土的清新。站在神木面前，你會明白為什麼古人稱它為「神木」。
+        </p>
+        <div class="article-card-meta">
+          <span>2026</span>
+          <span class="article-card-premium">
+            <svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+            Premium
+          </span>
+          <span class="article-card-read">Read →</span>
+        </div>
+      </div>
+    </a>
+    
+    <!-- 文章 3：沉香與時間 -->
+    <a href="oud-time.html?paywall=true" class="article-card" data-category="philosophy">
+      <div>
+        <p class="article-card-category">香氣哲思</p>
+        <h2 class="article-card-title">沉香與時間</h2>
+        <p class="article-card-subtitle">Oud and Time · 在越南雨林深處的領悟</p>
+        <p class="article-card-excerpt">
+          沉香的形成需要樹木受傷、感染、抵抗，然後用數十年甚至數百年的時間轉化那份創傷。最珍貴的香氣往往來自最深的傷痕。這讓我想起人生中那些不願回首的時刻，原來都在暗暗釀成某種溫柔。
+        </p>
+        <div class="article-card-meta">
+          <span>2026</span>
+          <span class="article-card-premium">
+            <svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+            Premium
+          </span>
+          <span class="article-card-read">Read →</span>
+        </div>
+      </div>
+    </a>
+    
+    <!-- 文章 4：藍雲杉 -->
+    <a href="blue-spruce.html" class="article-card" data-category="botany">
+      <div>
+        <p class="article-card-category">植物學</p>
+        <h2 class="article-card-title">藍雲杉</h2>
+        <p class="article-card-subtitle">Blue Spruce · 落磯山脈的銀藍守護者</p>
+        <p class="article-card-excerpt">
+          藍雲杉的針葉帶著獨特的銀藍光澤，那是一層蠟質保護膜。在芳療中，它被視為「界線」的象徵——教會我們如何在保護自己的同時，依然保持與世界的連結。寧靜而不孤絕，這是藍雲杉的智慧。
+        </p>
+        <div class="article-card-meta">
+          <span>2025</span>
+          <span class="article-card-read">Read →</span>
+        </div>
+      </div>
+    </a>
+    
+    <!-- 文章 5：夏日調香 -->
+    <a href="summer-blend.html?paywall=true" class="article-card" data-category="blending">
+      <div>
+        <p class="article-card-category">調香手記</p>
+        <h2 class="article-card-title">夏日調香手記</h2>
+        <p class="article-card-subtitle">Summer Blending Notes · 清涼與深邃的平衡</p>
+        <p class="article-card-excerpt">
+          夏天的調香挑戰在於如何在清涼中保有深度。薄荷太過直白，柑橘類容易揮發。我嘗試用絲柏的沉穩來錨定佛手柑的輕盈，再加一滴岩蘭草帶來大地的厚實。這個夏天，我想調一支讓人想起海邊晚風的香氣。
+        </p>
+        <div class="article-card-meta">
+          <span>2025</span>
+          <span class="article-card-premium">
+            <svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+            Premium
+          </span>
+          <span class="article-card-read">Read →</span>
+        </div>
+      </div>
+    </a>
+    
+    <!-- 文章 6：永久花 -->
+    <a href="helichrysum.html" class="article-card" data-category="journey">
+      <div>
+        <p class="article-card-category">產地旅行</p>
+        <h2 class="article-card-title">永久花</h2>
+        <p class="article-card-subtitle">Helichrysum · 科西嘉島的金色不凋</p>
+        <p class="article-card-excerpt">
+          永久花的名字來自它風乾後依然保持金黃的特性。在科西嘉島的野地裡，這些小小的金色花朵在地中海的烈日下綻放。當地人說，永久花最珍貴的不是它的不凋，而是它療癒傷痛的能力。
+        </p>
+        <div class="article-card-meta">
+          <span>2025</span>
+          <span class="article-card-read">Read →</span>
+        </div>
+      </div>
+    </a>
+    
+  </section>
+  
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p class="footer-brand">飛揚細籽 · FEYOND</p>
+  <p class="footer-tagline">The scent is a vessel of memory</p>
+  <div class="footer-links">
+    <a href="https://dhyana.store" class="footer-link" target="_blank">精油選購</a>
+    <a href="https://www.dhyana.store/zh-TW/blogs/feyond" class="footer-link" target="_blank">舊文章庫</a>
+    <a href="mailto:feyond@dhyana.com.tw" class="footer-link">聯絡我們</a>
+  </div>
+  <p class="footer-copy">© 2026 Dhyana Aromatherapy · All Rights Reserved</p>
+</footer>
+
+<script>
+(function() {
+  // ═══════════════════════════════════════
+  // 分類篩選功能
+  // ═══════════════════════════════════════
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const articles = document.querySelectorAll('.article-card');
+  
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      const filter = this.dataset.filter;
+      
+      // 更新 active 狀態
+      filterBtns.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      
+      // 篩選文章
+      articles.forEach(article => {
+        if (filter === 'all' || article.dataset.category === filter) {
+          article.style.display = '';
+        } else {
+          article.style.display = 'none';
+        }
+      });
+    });
+  });
+  
+  // ═══════════════════════════════════════
+  // 會員狀態檢查
+  // ═══════════════════════════════════════
+  const isMember = localStorage.getItem('feyondMember') === 'true';
+  const memberBtn = document.getElementById('memberBtn');
+  
+  if (isMember) {
+    memberBtn.textContent = '已登入';
+    memberBtn.style.borderColor = '#B8965A';
+    memberBtn.style.color = '#B8965A';
+  }
+  
+  memberBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    if (isMember) {
+      if (confirm('確定要登出嗎？')) {
+        localStorage.removeItem('feyondMember');
+        location.reload();
+      }
+    } else {
+      // 導向訂閱頁或顯示密碼輸入
+      const password = prompt('請輸入會員密碼：');
+      if (password === 'FEYOND2024') {
+        localStorage.setItem('feyondMember', 'true');
+        alert('登入成功！歡迎回來。');
+        location.reload();
+      } else if (password !== null) {
+        alert('密碼錯誤，請重新輸入。\n\n如需訂閱會員，請前往 dhyana.store 購買。');
+      }
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
