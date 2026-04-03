@@ -363,8 +363,22 @@ img { max-width: 100%; display: block; }
   color: var(--botany);
 }
 .badge-premium {
-  border: 1px solid var(--ink-faint);
-  color: var(--ink-muted);
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  padding-left: 18px;
+  position: relative;
+}
+.badge-premium::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 7px;
+  height: 8px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B8965A' stroke-width='2.5'%3E%3Crect x='5' y='11' width='14' height='10' rx='2'/%3E%3Cpath d='M8 11V7a4 4 0 0 1 8 0v4'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 .new-article-title {
   font-family: var(--font-display);
@@ -538,6 +552,11 @@ img { max-width: 100%; display: block; }
 .article-list-item:hover .article-list-arrow {
   opacity: 1;
 }
+.article-list-item.is-premium {
+  border-left: 2px solid var(--gold);
+  padding-left: 16px;
+  background: linear-gradient(to right, #FAF6EF 0%, transparent 60%);
+}
 
 /* ═══════════════════════════════════════
    FOOTER
@@ -697,8 +716,8 @@ img { max-width: 100%; display: block; }
   <p class="section-label">最新文章</p>
 </div>
 
-<section class="new-article">
-  <a href="michelia-alba.html" class="new-article-card">
+<section class="new-article" id="section-new-article">
+  <a href="michelia-alba.html" class="new-article-card" data-category="journey" data-date="2022-08-28">
     <div class="new-article-image">
       <img src="https://feyond.muzen.store/images/白玉蘭主圖.jpg" alt="白玉蘭">
     </div>
@@ -729,7 +748,7 @@ img { max-width: 100%; display: block; }
   <div class="featured-grid">
     
     <!-- Featured 1 -->
-    <a href="bulgarian-rose.html?paywall=true" class="featured-card">
+    <a href="bulgarian-rose.html?paywall=true" class="featured-card" data-category="journey" data-date="2026-03-28">
       <div class="featured-image">
         <img src="https://feyond.muzen.store/images/盛綻的保加利亞玫瑰.jpg" alt="保加利亞玫瑰特輯報導">
       </div>
@@ -743,7 +762,7 @@ img { max-width: 100%; display: block; }
     </a>
     
     <!-- Featured 2 -->
-    <a href="helichrysum.html?paywall=true" class="featured-card">
+    <a href="helichrysum.html?paywall=true" class="featured-card" data-category="botany" data-date="2026-03-20">
       <div class="featured-image">
         <!-- 待替換：科西嘉永久花實際照片 CDN -->
         <img src="https://images.unsplash.com/photo-1596438459194-f275867a5c8b?w=600" alt="科西嘉永久花">
@@ -758,7 +777,7 @@ img { max-width: 100%; display: block; }
     </a>
     
     <!-- Featured 3 -->
-    <a href="oud-time.html?paywall=true" class="featured-card">
+    <a href="oud-time.html?paywall=true" class="featured-card" data-category="philosophy" data-date="2026-03-15">
       <div class="featured-image">
         <!-- 待替換：沉香實際照片 CDN -->
         <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600" alt="沉香與時間">
@@ -784,7 +803,7 @@ img { max-width: 100%; display: block; }
 
 <section class="article-list">
   
-  <a href="blue-spruce.html" class="article-list-item">
+  <a href="blue-spruce.html" class="article-list-item" data-category="botany" data-date="2026-03-10">
     <div class="article-list-info">
       <div class="article-list-badges">
         <span class="badge badge-category">植物誌</span>
@@ -796,7 +815,7 @@ img { max-width: 100%; display: block; }
     <span class="article-list-arrow">→</span>
   </a>
   
-  <a href="rosewood.html" class="article-list-item">
+  <a href="rosewood.html" class="article-list-item" data-category="botany" data-date="2026-03-05">
     <div class="article-list-info">
       <div class="article-list-badges">
         <span class="badge badge-category">植物誌</span>
@@ -808,7 +827,7 @@ img { max-width: 100%; display: block; }
     <span class="article-list-arrow">→</span>
   </a>
   
-  <a href="desert-spirit.html" class="article-list-item">
+  <a href="desert-spirit.html" class="article-list-item" data-category="philosophy" data-date="2026-02-28">
     <div class="article-list-info">
       <div class="article-list-badges">
         <span class="badge badge-category" style="border-color: var(--philosophy); color: var(--philosophy);">香氣哲思</span>
@@ -820,7 +839,7 @@ img { max-width: 100%; display: block; }
     <span class="article-list-arrow">→</span>
   </a>
   
-  <a href="vietnam-oud.html?paywall=true" class="article-list-item">
+  <a href="vietnam-oud.html?paywall=true" class="article-list-item is-premium" data-category="journey" data-date="2026-02-20">
     <div class="article-list-info">
       <div class="article-list-badges">
         <span class="badge badge-category" style="border-color: var(--journey); color: var(--journey);">產區尋香</span>
@@ -833,7 +852,7 @@ img { max-width: 100%; display: block; }
     <span class="article-list-arrow">→</span>
   </a>
   
-  <a href="frankincense.html?paywall=true" class="article-list-item">
+  <a href="frankincense.html?paywall=true" class="article-list-item is-premium" data-category="botany" data-date="2026-02-15">
     <div class="article-list-info">
       <div class="article-list-badges">
         <span class="badge badge-category">植物誌</span>
@@ -861,46 +880,92 @@ img { max-width: 100%; display: block; }
      ═══════════════════════════════════════ -->
 <script>
 (function() {
-  // Category Tab switching
+
+  // ── NEW 標籤自動判斷（30天內自動顯示，無需手動管理）──
+  // 使用方式：在文章元素加上 data-date="YYYY-MM-DD"
+  const today = new Date();
+  document.querySelectorAll('[data-date]').forEach(function(el) {
+    const d = new Date(el.dataset.date);
+    const days = (today - d) / (1000 * 60 * 60 * 24);
+    if (days <= 30) {
+      const badgesEl = el.querySelector('.new-article-badges, .featured-badges, .article-list-badges');
+      if (badgesEl && !badgesEl.querySelector('.badge-new')) {
+        const badge = document.createElement('span');
+        badge.className = 'badge badge-new';
+        badge.textContent = 'New';
+        badgesEl.prepend(badge);
+      }
+    }
+  });
+
+  // ── Category Tab 篩選 ──
   const tabs = document.querySelectorAll('.category-tab');
   const subcategoryBotany = document.getElementById('subcategory-botany');
   const subcategoryJourney = document.getElementById('subcategory-journey');
-  
-  tabs.forEach(tab => {
+
+  // Section 節點（用於整區顯示/隱藏）
+  const sectionHeaders = document.querySelectorAll('.section-header');
+  const sectionNew = document.getElementById('section-new-article');
+  const sectionFeatured = document.querySelector('.featured-articles');
+  const sectionList = document.querySelector('.article-list');
+
+  function filterArticles(category) {
+    // 最新文章區（單篇）
+    const newCard = sectionNew ? sectionNew.querySelector('[data-category]') : null;
+    if (newCard) {
+      const show = category === 'all' || newCard.dataset.category === category;
+      sectionNew.style.display = show ? '' : 'none';
+      if (sectionHeaders[0]) sectionHeaders[0].style.display = show ? '' : 'none';
+    }
+
+    // 精選文章（3欄 grid，個別顯示）
+    let featuredCount = 0;
+    document.querySelectorAll('.featured-card').forEach(function(card) {
+      const show = category === 'all' || card.dataset.category === category;
+      card.style.display = show ? '' : 'none';
+      if (show) featuredCount++;
+    });
+    if (sectionFeatured) sectionFeatured.style.display = featuredCount > 0 ? '' : 'none';
+    if (sectionHeaders[1]) sectionHeaders[1].style.display = featuredCount > 0 ? '' : 'none';
+
+    // 所有文章列表
+    let listCount = 0;
+    document.querySelectorAll('.article-list-item').forEach(function(item) {
+      const show = category === 'all' || item.dataset.category === category;
+      item.style.display = show ? '' : 'none';
+      if (show) listCount++;
+    });
+    if (sectionList) sectionList.style.display = listCount > 0 ? '' : 'none';
+    if (sectionHeaders[2]) sectionHeaders[2].style.display = listCount > 0 ? '' : 'none';
+  }
+
+  tabs.forEach(function(tab) {
     tab.addEventListener('click', function() {
-      // Remove active from all
-      tabs.forEach(t => t.classList.remove('active'));
-      // Add active to clicked
+      tabs.forEach(function(t) { t.classList.remove('active'); });
       this.classList.add('active');
-      
-      // Show/hide subcategories
+
       const category = this.dataset.category;
-      
+
+      // 子分類顯示切換（原有邏輯保留）
       subcategoryBotany.classList.remove('active');
       subcategoryJourney.classList.remove('active');
-      
-      if (category === 'botany') {
-        subcategoryBotany.classList.add('active');
-      } else if (category === 'journey') {
-        subcategoryJourney.classList.add('active');
-      }
-      
-      // TODO: Filter articles based on category
+      if (category === 'botany') subcategoryBotany.classList.add('active');
+      else if (category === 'journey') subcategoryJourney.classList.add('active');
+
+      filterArticles(category);
     });
   });
-  
-  // Subcategory chip selection
+
+  // Subcategory chip selection（原有邏輯保留）
   const chips = document.querySelectorAll('.subcategory-chip');
-  chips.forEach(chip => {
+  chips.forEach(function(chip) {
     chip.addEventListener('click', function() {
-      // Within same parent, toggle active
       const siblings = this.parentElement.querySelectorAll('.subcategory-chip');
-      siblings.forEach(s => s.classList.remove('active'));
+      siblings.forEach(function(s) { s.classList.remove('active'); });
       this.classList.add('active');
-      
-      // TODO: Filter articles based on subcategory
     });
   });
+
 })();
 </script>
 
