@@ -27,6 +27,95 @@
 
 ---
 
+## ⚠️ Claude 操作原則（每次修改前必讀）
+
+**新增功能時，絕對不能改動原有版面佈局與結構。**
+
+- 圖片尺寸、欄位比例、間距、字型大小，一律不動
+- 只能在原有 HTML 元素上新增 attribute（如 `data-category`、`data-date`、`id`、`class`）
+- 只能在 CSS 區塊末尾新增新的 class，不修改已有的 class
+- 只能在 JS 中擴充邏輯，不刪除既有的 event listener
+- 如需確認現有結構，先用 view tool 讀取原始檔，再動手
+
+---
+
+## 首頁功能規範（index.html）
+
+### 首頁佈局結構（固定，不得更動）
+
+```
+NAV（sticky，含品牌標誌 + 訂閱按鈕）
+HERO（純文字，中央對齊）
+AUTHOR SECTION（作者名片 + 訂閱 CTA）
+CATEGORY TABS（水平 tab，4大分類 + 全部）
+  └── 子分類 chips（植物誌 / 產區尋香 各有子分類，點 tab 才展開）
+最新文章 section（大卡片，左圖右文 1:1 欄位）
+精選文章 section（3欄 grid，有圖）
+所有文章 section（純文字列表，無圖）
+FOOTER
+```
+
+### 新增文章的 SOP
+
+1. 把新文章卡片的 HTML 放進對應的 section 最上方
+2. 舊的最新文章移降到「精選文章」或「所有文章」
+3. 在文章元素上加上以下 data 屬性：
+
+```html
+data-category="botany"      ← 四大分類之一（見下表）
+data-date="2026-04-03"      ← 文章日期，格式 YYYY-MM-DD
+```
+
+**分類對應表：**
+
+| data-category | 中文顯示 | 色碼 |
+|------|------|------|
+| `botany` | 植物誌 | `#2D4A3E` |
+| `journey` | 產區尋香 | `#8B5A3C` |
+| `philosophy` | 香氣哲思 | `#B8965A` |
+| `blending` | 調香手記 | `#3D4A6B` |
+
+### NEW 標籤自動化機制
+
+- 文章元素只需加上 `data-date="YYYY-MM-DD"`
+- JS 自動計算距今天數，30天內自動顯示金色 NEW 標籤
+- 超過 30 天自動消失，無需手動管理
+- 適用於：最新文章卡片、精選文章卡片、所有文章列表
+
+### Tab 篩選功能
+
+- 點任一分類 Tab，三個 section（最新 / 精選 / 所有文章）同步過濾
+- 某 section 若篩選後完全沒有文章，整個 section 連 section-header 一起隱藏
+- 全部 Tab 恢復顯示所有文章
+
+### Premium 視覺規範
+
+**Badge 樣式（所有文章類型通用）：**
+- Premium badge：金色邊框 + 金色文字 + 小鎖頭圖示
+- Free 文章：不加 badge，維持乾淨
+
+**Premium 文章加到所有文章列表時：**
+- `<a>` 元素加上 class `is-premium`
+- 效果：左側金色細邊 + 極淡暖色漸層底，低調有層次
+
+```html
+<!-- Premium 文章列表範例 -->
+<a href="article.html?paywall=true" class="article-list-item is-premium"
+   data-category="botany" data-date="2026-04-01">
+  ...
+  <span class="badge badge-premium">Premium</span>
+  ...
+</a>
+
+<!-- Free 文章列表範例 -->
+<a href="article.html" class="article-list-item"
+   data-category="journey" data-date="2026-04-01">
+  ...
+</a>
+```
+
+---
+
 ## 會員付費機制
 
 ### 運作原理（無需後端）
@@ -102,10 +191,12 @@ const correctPassword = 'FEYOND2024'; // 由 CYBERBIZ 發送給會員
 ## 日期格式
 
 ```
-YYYY.MM.DD
+YYYY.MM.DD（顯示用）
+YYYY-MM-DD（data-date 屬性用）
 ```
 
-範例：`2013.06.25`
+範例顯示：`2013.06.25`
+範例屬性：`data-date="2013-06-25"`
 
 ---
 
@@ -207,17 +298,17 @@ FOOTER
 
 ## 已發布文章
 
-| 文章 | 檔名 | 日期 | 類型 |
-|------|------|------|------|
-| 月光下的華韻香 — 白玉蘭 | `michelia-alba.html` | 2022.08.28 | 免費 |
-| 保加利亞玫瑰特輯報導 | `bulgarian-rose.html?paywall=true` | 2013.06.25 | Premium |
-| 科西嘉永久花 | `helichrysum.html?paywall=true` | - | Premium |
-| 沉香與時間 | `oud-time.html?paywall=true` | - | Premium |
-| 藍雲杉 | `blue-spruce.html` | - | 免費 |
-| 花梨木 | `rosewood.html` | - | 免費 |
-| 沙漠之靈 | `desert-spirit.html` | - | 免費 |
-| 越南芽莊沉香 | `vietnam-oud.html?paywall=true` | - | Premium |
-| 阿曼乳香 | `frankincense.html?paywall=true` | - | Premium |
+| 文章 | 檔名 | 日期 | 分類 | 類型 |
+|------|------|------|------|------|
+| 月光下的華韻香 — 白玉蘭 | `michelia-alba.html` | 2022.08.28 | journey | 免費 |
+| 保加利亞玫瑰特輯報導 | `bulgarian-rose.html?paywall=true` | 2013.06.25 | journey | Premium |
+| 科西嘉永久花 | `helichrysum.html?paywall=true` | - | botany | Premium |
+| 沉香與時間 | `oud-time.html?paywall=true` | - | philosophy | Premium |
+| 藍雲杉 | `blue-spruce.html` | - | botany | 免費 |
+| 花梨木 | `rosewood.html` | - | botany | 免費 |
+| 沙漠之靈 | `desert-spirit.html` | - | philosophy | 免費 |
+| 越南芽莊沉香 | `vietnam-oud.html?paywall=true` | - | journey | Premium |
+| 阿曼乳香 | `frankincense.html?paywall=true` | - | botany | Premium |
 
 > **注意**：所有文章 HTML 檔案皆放在**根目錄**，不使用 `articles/` 資料夾。
 
@@ -234,6 +325,7 @@ FOOTER
 
 | 版本 | 日期 | 變更 |
 |------|------|------|
+| v2.3 | 2026-04-03 | 加入首頁功能規範、Claude 操作原則、NEW 自動標籤、Tab 篩選、Premium 視覺規範 |
 | v2.2 | 2026-04-03 | 新增白玉蘭文章、更新文章連結清單 |
 | v2.1 | 2026-04-02 | 新增製作流程、照片規範、會員機制 |
 | v2.0 | 2026-04-01 | 整合規範 |
