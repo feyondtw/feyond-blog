@@ -207,9 +207,19 @@ FOOTER
 
 ## 已發布文章
 
-| 文章 | 檔名 | 日期 |
-|------|------|------|
-| 保加利亞玫瑰特輯報導 | `bulgarian-rose.html` | 2013.06.25 |
+| 文章 | 檔名 | 日期 | 類型 |
+|------|------|------|------|
+| 月光下的華韻香 — 白玉蘭 | `michelia-alba.html` | 2022.08.28 | 免費 |
+| 保加利亞玫瑰特輯報導 | `bulgarian-rose.html?paywall=true` | 2013.06.25 | Premium |
+| 科西嘉永久花 | `helichrysum.html?paywall=true` | - | Premium |
+| 沉香與時間 | `oud-time.html?paywall=true` | - | Premium |
+| 藍雲杉 | `blue-spruce.html` | - | 免費 |
+| 花梨木 | `rosewood.html` | - | 免費 |
+| 沙漠之靈 | `desert-spirit.html` | - | 免費 |
+| 越南芽莊沉香 | `vietnam-oud.html?paywall=true` | - | Premium |
+| 阿曼乳香 | `frankincense.html?paywall=true` | - | Premium |
+
+> **注意**：所有文章 HTML 檔案皆放在**根目錄**，不使用 `articles/` 資料夾。
 
 ---
 
@@ -224,6 +234,7 @@ FOOTER
 
 | 版本 | 日期 | 變更 |
 |------|------|------|
+| v2.2 | 2026-04-03 | 新增白玉蘭文章、更新文章連結清單 |
 | v2.1 | 2026-04-02 | 新增製作流程、照片規範、會員機制 |
 | v2.0 | 2026-04-01 | 整合規範 |
 
