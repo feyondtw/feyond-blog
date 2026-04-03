@@ -363,22 +363,8 @@ img { max-width: 100%; display: block; }
   color: var(--botany);
 }
 .badge-premium {
-  border: 1px solid var(--gold);
-  color: var(--gold);
-  padding-left: 18px;
-  position: relative;
-}
-.badge-premium::before {
-  content: '';
-  position: absolute;
-  left: 7px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 7px;
-  height: 8px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B8965A' stroke-width='2.5'%3E%3Crect x='5' y='11' width='14' height='10' rx='2'/%3E%3Cpath d='M8 11V7a4 4 0 0 1 8 0v4'/%3E%3C/svg%3E");
-  background-size: contain;
-  background-repeat: no-repeat;
+  border: 1px solid var(--ink-faint);
+  color: var(--ink-muted);
 }
 .new-article-title {
   font-family: var(--font-display);
@@ -552,11 +538,6 @@ img { max-width: 100%; display: block; }
 .article-list-item:hover .article-list-arrow {
   opacity: 1;
 }
-.article-list-item.is-premium {
-  border-left: 2px solid var(--gold);
-  padding-left: 16px;
-  background: linear-gradient(to right, #FAF6EF 0%, transparent 60%);
-}
 
 /* ═══════════════════════════════════════
    FOOTER
@@ -628,6 +609,17 @@ img { max-width: 100%; display: block; }
   }
   .article-list-meta { text-align: left; }
   .article-list-arrow { display: none; }
+}
+
+/* Premium 文章列表樣式 */
+.article-list-item.is-premium {
+  border-left: 2px solid var(--gold);
+  padding-left: 16px;
+  background: linear-gradient(90deg, rgba(184,150,90,0.05) 0%, transparent 60%);
+}
+.badge-premium {
+  border: 1px solid var(--gold) !important;
+  color: var(--gold) !important;
 }
 </style>
 </head>
@@ -710,162 +702,30 @@ img { max-width: 100%; display: block; }
 </div>
 
 <!-- ═══════════════════════════════════════
-     NEW ARTICLE
+     最新文章（由 JS 動態生成）
      ═══════════════════════════════════════ -->
-<div class="section-header">
+<div class="section-header" id="header-new">
   <p class="section-label">最新文章</p>
 </div>
-
-<section class="new-article" id="section-new-article">
-  <a href="michelia-alba.html" class="new-article-card" data-category="journey" data-date="2022-08-28">
-    <div class="new-article-image">
-      <img src="https://feyond.muzen.store/images/白玉蘭主圖.jpg" alt="白玉蘭">
-    </div>
-    <div class="new-article-content">
-      <div class="new-article-badges">
-        <span class="badge badge-new">New</span>
-        <span class="badge badge-category" style="border-color: var(--journey); color: var(--journey);">產區尋香</span>
-      </div>
-      <h2 class="new-article-title">月光下的華韻香 — 白玉蘭</h2>
-      <p class="new-article-subtitle">Michelia alba</p>
-      <p class="new-article-excerpt">
-        色白如玉、香氣似蘭。大武山下的玉蘭田，與農民潘北北合作十年，從無毒栽種到安寧照護的臨床奇蹟，這是台灣在地純露萃取的芳香農業實踐之路...
-      </p>
-      <p class="new-article-meta">2022.08.28 · 產區尋香 / 台灣</p>
-      <span class="read-more">閱讀全文 →</span>
-    </div>
-  </a>
-</section>
+<section class="new-article" id="section-new"></section>
 
 <!-- ═══════════════════════════════════════
-     FEATURED ARTICLES (3 Columns)
+     精選文章（由 JS 動態生成）
      ═══════════════════════════════════════ -->
-<div class="section-header">
+<div class="section-header" id="header-featured">
   <p class="section-label">精選文章</p>
 </div>
-
-<section class="featured-articles">
-  <div class="featured-grid">
-    
-    <!-- Featured 1 -->
-    <a href="bulgarian-rose.html?paywall=true" class="featured-card" data-category="journey" data-date="2026-03-28">
-      <div class="featured-image">
-        <img src="https://feyond.muzen.store/images/盛綻的保加利亞玫瑰.jpg" alt="保加利亞玫瑰特輯報導">
-      </div>
-      <div class="featured-badges">
-        <span class="badge badge-category" style="border-color: var(--journey); color: var(--journey);">產區尋香</span>
-        <span class="badge badge-premium">Premium</span>
-      </div>
-      <h3 class="featured-title">保加利亞玫瑰特輯報導</h3>
-      <p class="featured-excerpt">凌晨四點的採收，與時間賽跑的芬芳。三噸花瓣萃取一公斤精油的珍貴...</p>
-      <p class="featured-meta">2026-03-28 · 產區尋香 / 歐洲</p>
-    </a>
-    
-    <!-- Featured 2 -->
-    <a href="helichrysum.html?paywall=true" class="featured-card" data-category="botany" data-date="2026-03-20">
-      <div class="featured-image">
-        <!-- 待替換：科西嘉永久花實際照片 CDN -->
-        <img src="https://images.unsplash.com/photo-1596438459194-f275867a5c8b?w=600" alt="科西嘉永久花">
-      </div>
-      <div class="featured-badges">
-        <span class="badge badge-category">植物誌</span>
-        <span class="badge badge-premium">Premium</span>
-      </div>
-      <h3 class="featured-title">科西嘉永久花</h3>
-      <p class="featured-excerpt">不凋謝的金色太陽。在地中海的岩石縫隙中，永久花綻放著永恆的光芒...</p>
-      <p class="featured-meta">2026-03-20 · 植物誌 / 花香</p>
-    </a>
-    
-    <!-- Featured 3 -->
-    <a href="oud-time.html?paywall=true" class="featured-card" data-category="philosophy" data-date="2026-03-15">
-      <div class="featured-image">
-        <!-- 待替換：沉香實際照片 CDN -->
-        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600" alt="沉香與時間">
-      </div>
-      <div class="featured-badges">
-        <span class="badge badge-category" style="border-color: var(--philosophy); color: var(--philosophy);">香氣哲思</span>
-        <span class="badge badge-premium">Premium</span>
-      </div>
-      <h3 class="featured-title">沉香與時間</h3>
-      <p class="featured-excerpt">傷痕如何成為芬芳。沉香的形成需要數十年，這是大自然的療癒哲學...</p>
-      <p class="featured-meta">2026-03-15 · 香氣哲思</p>
-    </a>
-    
-  </div>
+<section class="featured-articles" id="section-featured">
+  <div class="featured-grid" id="grid-featured"></div>
 </section>
 
 <!-- ═══════════════════════════════════════
-     ARTICLE LIST
+     所有文章（由 JS 動態生成）
      ═══════════════════════════════════════ -->
-<div class="section-header">
+<div class="section-header" id="header-list">
   <p class="section-label">所有文章</p>
 </div>
-
-<section class="article-list">
-  
-  <a href="blue-spruce.html" class="article-list-item" data-category="botany" data-date="2026-03-10">
-    <div class="article-list-info">
-      <div class="article-list-badges">
-        <span class="badge badge-category">植物誌</span>
-      </div>
-      <h3 class="article-list-title">藍雲杉</h3>
-      <p class="article-list-excerpt">科羅拉多高原的清涼氣息，針葉間的寧靜冥想...</p>
-    </div>
-    <p class="article-list-meta">2026-03-10</p>
-    <span class="article-list-arrow">→</span>
-  </a>
-  
-  <a href="rosewood.html" class="article-list-item" data-category="botany" data-date="2026-03-05">
-    <div class="article-list-info">
-      <div class="article-list-badges">
-        <span class="badge badge-category">植物誌</span>
-      </div>
-      <h3 class="article-list-title">花梨木</h3>
-      <p class="article-list-excerpt">亞馬遜雨林的珍貴禮物，玫瑰與森林的相遇...</p>
-    </div>
-    <p class="article-list-meta">2026-03-05</p>
-    <span class="article-list-arrow">→</span>
-  </a>
-  
-  <a href="desert-spirit.html" class="article-list-item" data-category="philosophy" data-date="2026-02-28">
-    <div class="article-list-info">
-      <div class="article-list-badges">
-        <span class="badge badge-category" style="border-color: var(--philosophy); color: var(--philosophy);">香氣哲思</span>
-      </div>
-      <h3 class="article-list-title">沙漠之靈</h3>
-      <p class="article-list-excerpt">歐姬芙的新墨西哥，在乾燥的空氣中尋找生命的香氣...</p>
-    </div>
-    <p class="article-list-meta">2026-02-28</p>
-    <span class="article-list-arrow">→</span>
-  </a>
-  
-  <a href="vietnam-oud.html?paywall=true" class="article-list-item is-premium" data-category="journey" data-date="2026-02-20">
-    <div class="article-list-info">
-      <div class="article-list-badges">
-        <span class="badge badge-category" style="border-color: var(--journey); color: var(--journey);">產區尋香</span>
-        <span class="badge badge-premium">Premium</span>
-      </div>
-      <h3 class="article-list-title">越南芽莊沉香</h3>
-      <p class="article-list-excerpt">Trang 夫人的家族傳承，三代人守護的蒸餾工藝...</p>
-    </div>
-    <p class="article-list-meta">2026-02-20</p>
-    <span class="article-list-arrow">→</span>
-  </a>
-  
-  <a href="frankincense.html?paywall=true" class="article-list-item is-premium" data-category="botany" data-date="2026-02-15">
-    <div class="article-list-info">
-      <div class="article-list-badges">
-        <span class="badge badge-category">植物誌</span>
-        <span class="badge badge-premium">Premium</span>
-      </div>
-      <h3 class="article-list-title">阿曼乳香</h3>
-      <p class="article-list-excerpt">沙漠中的神聖之淚，古老貿易路線上的白色黃金...</p>
-    </div>
-    <p class="article-list-meta">2026-02-15</p>
-    <span class="article-list-arrow">→</span>
-  </a>
-  
-</section>
+<section class="article-list" id="section-list"></section>
 
 <!-- ═══════════════════════════════════════
      FOOTER
@@ -879,92 +739,292 @@ img { max-width: 100%; display: block; }
      JAVASCRIPT
      ═══════════════════════════════════════ -->
 <script>
-(function() {
+(function () {
 
-  // ── NEW 標籤自動判斷（30天內自動顯示，無需手動管理）──
-  // 使用方式：在文章元素加上 data-date="YYYY-MM-DD"
-  const today = new Date();
-  document.querySelectorAll('[data-date]').forEach(function(el) {
-    const d = new Date(el.dataset.date);
-    const days = (today - d) / (1000 * 60 * 60 * 24);
-    if (days <= 30) {
-      const badgesEl = el.querySelector('.new-article-badges, .featured-badges, .article-list-badges');
-      if (badgesEl && !badgesEl.querySelector('.badge-new')) {
-        const badge = document.createElement('span');
-        badge.className = 'badge badge-new';
-        badge.textContent = 'New';
-        badgesEl.prepend(badge);
-      }
-    }
-  });
+  // ── 分類設定 ──────────────────────────────────
+  const CAT = {
+    botany:    { label: '植物誌',  color: '#2D4A3E' },
+    journey:   { label: '產區尋香', color: '#8B5A3C' },
+    philosophy:{ label: '香氣哲思', color: '#B8965A' },
+    blending:  { label: '調香手記', color: '#3D4A6B' }
+  };
+  const IMAGE_BASE = 'https://feyond.muzen.store/images/';
 
-  // ── Category Tab 篩選 ──
-  const tabs = document.querySelectorAll('.category-tab');
-  const subcategoryBotany = document.getElementById('subcategory-botany');
-  const subcategoryJourney = document.getElementById('subcategory-journey');
-
-  // Section 節點（用於整區顯示/隱藏）
-  const sectionHeaders = document.querySelectorAll('.section-header');
-  const sectionNew = document.getElementById('section-new-article');
-  const sectionFeatured = document.querySelector('.featured-articles');
-  const sectionList = document.querySelector('.article-list');
-
-  function filterArticles(category) {
-    // 最新文章區（單篇）
-    const newCard = sectionNew ? sectionNew.querySelector('[data-category]') : null;
-    if (newCard) {
-      const show = category === 'all' || newCard.dataset.category === category;
-      sectionNew.style.display = show ? '' : 'none';
-      if (sectionHeaders[0]) sectionHeaders[0].style.display = show ? '' : 'none';
-    }
-
-    // 精選文章（3欄 grid，個別顯示）
-    let featuredCount = 0;
-    document.querySelectorAll('.featured-card').forEach(function(card) {
-      const show = category === 'all' || card.dataset.category === category;
-      card.style.display = show ? '' : 'none';
-      if (show) featuredCount++;
-    });
-    if (sectionFeatured) sectionFeatured.style.display = featuredCount > 0 ? '' : 'none';
-    if (sectionHeaders[1]) sectionHeaders[1].style.display = featuredCount > 0 ? '' : 'none';
-
-    // 所有文章列表
-    let listCount = 0;
-    document.querySelectorAll('.article-list-item').forEach(function(item) {
-      const show = category === 'all' || item.dataset.category === category;
-      item.style.display = show ? '' : 'none';
-      if (show) listCount++;
-    });
-    if (sectionList) sectionList.style.display = listCount > 0 ? '' : 'none';
-    if (sectionHeaders[2]) sectionHeaders[2].style.display = listCount > 0 ? '' : 'none';
+  // ── 工具函數 ──────────────────────────────────
+  function isNew(dateStr) {
+    return (new Date() - new Date(dateStr)) / 86400000 <= 30;
   }
 
-  tabs.forEach(function(tab) {
-    tab.addEventListener('click', function() {
-      tabs.forEach(function(t) { t.classList.remove('active'); });
-      this.classList.add('active');
+  function catBadge(category) {
+    const c = CAT[category] || { label: category, color: '#7A756D' };
+    return `<span class="badge badge-category" style="border-color:${c.color};color:${c.color};">${c.label}</span>`;
+  }
 
-      const category = this.dataset.category;
+  function premiumBadge(premium) {
+    return premium ? `<span class="badge badge-premium">Premium</span>` : '';
+  }
 
-      // 子分類顯示切換（原有邏輯保留）
-      subcategoryBotany.classList.remove('active');
-      subcategoryJourney.classList.remove('active');
-      if (category === 'botany') subcategoryBotany.classList.add('active');
-      else if (category === 'journey') subcategoryJourney.classList.add('active');
+  function newBadge(dateStr) {
+    return isNew(dateStr) ? `<span class="badge badge-new">New</span>` : '';
+  }
 
-      filterArticles(category);
+  function href(article) {
+    return article.file + (article.premium ? '?paywall=true' : '');
+  }
+
+  function imgSrc(image) {
+    return image ? IMAGE_BASE + image : '';
+  }
+
+  // ── 最新文章卡片（大卡，左圖右文）──────────────
+  function renderNew(article) {
+    const img = imgSrc(article.image);
+    const imgEl = img
+      ? `<img src="${img}" alt="${article.title}">`
+      : `<div style="width:100%;height:100%;background:linear-gradient(135deg,#3D4A6B,#2C3A5A);"></div>`;
+    return `
+      <a href="${href(article)}" class="new-article-card"
+         data-category="${article.category}" data-date="${article.date}">
+        <div class="new-article-image">${imgEl}</div>
+        <div class="new-article-content">
+          <div class="new-article-badges">
+            ${newBadge(article.date)}
+            ${catBadge(article.category)}
+            ${premiumBadge(article.premium)}
+          </div>
+          <h2 class="new-article-title">${article.title}</h2>
+          ${article.subtitle ? `<p class="new-article-subtitle">${article.subtitle}</p>` : ''}
+          <p class="new-article-excerpt">${article.excerpt}</p>
+          <p class="new-article-meta">${article.date.replace(/-/g,'.')} · ${CAT[article.category]?.label || ''}</p>
+          <span class="read-more">閱讀全文 →</span>
+        </div>
+      </a>`;
+  }
+
+  // ── 精選文章卡片（三欄小卡）──────────────────
+  function renderFeatured(article) {
+    const img = imgSrc(article.image);
+    const imgEl = img
+      ? `<img src="${img}" alt="${article.title}">`
+      : `<div style="width:100%;height:100%;background:linear-gradient(135deg,#4A4540,#252220);"></div>`;
+    return `
+      <a href="${href(article)}" class="featured-card"
+         data-category="${article.category}" data-date="${article.date}">
+        <div class="featured-image">${imgEl}</div>
+        <div class="featured-badges">
+          ${catBadge(article.category)}
+          ${premiumBadge(article.premium)}
+        </div>
+        <h3 class="featured-title">${article.title}</h3>
+        <p class="featured-excerpt">${article.excerpt}</p>
+        <p class="featured-meta">${article.date} · ${CAT[article.category]?.label || ''}</p>
+      </a>`;
+  }
+
+  // ── 所有文章列表項目 ──────────────────────────
+  function renderListItem(article) {
+    const premiumClass = article.premium ? ' is-premium' : '';
+    return `
+      <a href="${href(article)}" class="article-list-item${premiumClass}"
+         data-category="${article.category}" data-date="${article.date}">
+        <div class="article-list-info">
+          <div class="article-list-badges">
+            ${newBadge(article.date)}
+            ${catBadge(article.category)}
+            ${premiumBadge(article.premium)}
+          </div>
+          <h3 class="article-list-title">${article.title}</h3>
+          <p class="article-list-excerpt">${article.excerpt}</p>
+        </div>
+        <p class="article-list-meta">${article.date}</p>
+        <span class="article-list-arrow">→</span>
+      </a>`;
+  }
+
+  // ── 篩選邏輯 ──────────────────────────────────
+  function filterByCategory(category) {
+    // 最新文章
+    const secNew = document.getElementById('section-new');
+    const hdNew  = document.getElementById('header-new');
+    const newCard = secNew.querySelector('[data-category]');
+    const showNew = newCard && (category === 'all' || newCard.dataset.category === category);
+    secNew.style.display = showNew ? '' : 'none';
+    hdNew.style.display  = showNew ? '' : 'none';
+
+    // 精選文章
+    const secFeat = document.getElementById('section-featured');
+    const hdFeat  = document.getElementById('header-featured');
+    let visibleFeat = 0;
+    secFeat.querySelectorAll('[data-category]').forEach(card => {
+      const show = category === 'all' || card.dataset.category === category;
+      card.style.display = show ? '' : 'none';
+      if (show) visibleFeat++;
     });
-  });
+    secFeat.style.display = visibleFeat > 0 ? '' : 'none';
+    hdFeat.style.display  = visibleFeat > 0 ? '' : 'none';
 
-  // Subcategory chip selection（原有邏輯保留）
-  const chips = document.querySelectorAll('.subcategory-chip');
-  chips.forEach(function(chip) {
-    chip.addEventListener('click', function() {
-      const siblings = this.parentElement.querySelectorAll('.subcategory-chip');
-      siblings.forEach(function(s) { s.classList.remove('active'); });
-      this.classList.add('active');
+    // 所有文章
+    const secList = document.getElementById('section-list');
+    const hdList  = document.getElementById('header-list');
+    let visibleList = 0;
+    secList.querySelectorAll('[data-category]').forEach(item => {
+      const show = category === 'all' || item.dataset.category === category;
+      item.style.display = show ? '' : 'none';
+      if (show) visibleList++;
     });
-  });
+    secList.style.display = visibleList > 0 ? '' : 'none';
+    hdList.style.display  = visibleList > 0 ? '' : 'none';
+  }
+
+  // ── Tab 點擊 ──────────────────────────────────
+  function initTabs() {
+    const tabs = document.querySelectorAll('.category-tab');
+    const subBotany  = document.getElementById('subcategory-botany');
+    const subJourney = document.getElementById('subcategory-journey');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', function () {
+        tabs.forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        const category = this.dataset.category;
+        subBotany.classList.toggle('active',  category === 'botany');
+        subJourney.classList.toggle('active', category === 'journey');
+        filterByCategory(category);
+      });
+    });
+
+    // 子分類 chips
+    document.querySelectorAll('.subcategory-chip').forEach(chip => {
+      chip.addEventListener('click', function () {
+        this.parentElement.querySelectorAll('.subcategory-chip')
+          .forEach(s => s.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  }
+
+  // ── 主程式 ────────────────────────────────────
+  // 文章資料直接內嵌於此（與根目錄的 articles.json 保持同步）
+  // 新增文章時：① 在下方陣列最前面加一筆 ② 同步更新 articles.json
+  const ARTICLES = [
+    {
+      title: "薜琉璃調香創作",
+      subtitle: "從企業修羅場到東方淨琉璃光",
+      file: "vaidurya.html",
+      category: "blending",
+      date: "2025-11-16",
+      excerpt: "2025年菩薩寺藥師法會的供養藥油誕生之前，正是調香師對芳療產業感到極度茫然之時。從《藥師經》梵文讚詞中擷取的「薜琉璃」，是以願力為載體的調香創作，也是在放棄的盡頭重拾本願的法藥...",
+      image: "薜 靛藍調油.jpg",
+      premium: false
+    },
+    {
+      title: "月光下的華韻香 — 白玉蘭",
+      subtitle: "Michelia alba",
+      file: "michelia-alba.html",
+      category: "journey",
+      date: "2022-08-28",
+      excerpt: "大武山下的玉蘭田，與農民潘北北合作十年，從無毒栽種到安寧照護的臨床奇蹟，這是台灣在地純露萃取的芳香農業實踐之路...",
+      image: "白玉蘭主圖.jpg",
+      premium: false
+    },
+    {
+      title: "保加利亞玫瑰特輯報導",
+      subtitle: "",
+      file: "bulgarian-rose.html",
+      category: "journey",
+      date: "2013-06-25",
+      excerpt: "凌晨四點的採收，與時間賽跑的芬芳。三噸花瓣萃取一公斤精油的珍貴記錄...",
+      image: "盛綻的保加利亞玫瑰.jpg",
+      premium: true
+    },
+    {
+      title: "科西嘉永久花",
+      subtitle: "Helichrysum italicum",
+      file: "helichrysum.html",
+      category: "botany",
+      date: "2026-03-20",
+      excerpt: "不凋謝的金色太陽。在地中海的岩石縫隙中，永久花綻放著永恆的光芒...",
+      image: "",
+      premium: true
+    },
+    {
+      title: "沉香與時間",
+      subtitle: "",
+      file: "oud-time.html",
+      category: "philosophy",
+      date: "2026-03-15",
+      excerpt: "傷痕如何成為芬芳。沉香的形成需要數十年，這是大自然的療癒哲學...",
+      image: "",
+      premium: true
+    },
+    {
+      title: "藍雲杉",
+      subtitle: "Picea pungens",
+      file: "blue-spruce.html",
+      category: "botany",
+      date: "2026-03-10",
+      excerpt: "科羅拉多高原的清涼氣息，針葉間的寧靜冥想...",
+      image: "",
+      premium: false
+    },
+    {
+      title: "花梨木",
+      subtitle: "Aniba rosaeodora",
+      file: "rosewood.html",
+      category: "botany",
+      date: "2026-03-05",
+      excerpt: "亞馬遜雨林的珍貴禮物，玫瑰與森林的相遇...",
+      image: "",
+      premium: false
+    },
+    {
+      title: "沙漠之靈",
+      subtitle: "",
+      file: "desert-spirit.html",
+      category: "philosophy",
+      date: "2026-02-28",
+      excerpt: "歐姬芙的新墨西哥，在乾燥的空氣中尋找生命的香氣...",
+      image: "",
+      premium: false
+    },
+    {
+      title: "越南芽莊沉香",
+      subtitle: "",
+      file: "vietnam-oud.html",
+      category: "journey",
+      date: "2026-02-20",
+      excerpt: "Trang 夫人的家族傳承，三代人守護的蒸餾工藝...",
+      image: "",
+      premium: true
+    },
+    {
+      title: "阿曼乳香",
+      subtitle: "Boswellia sacra",
+      file: "frankincense.html",
+      category: "botany",
+      date: "2026-02-15",
+      excerpt: "沙漠中的神聖之淚，古老貿易路線上的白色黃金...",
+      image: "",
+      premium: true
+    }
+  ];
+
+  // 依日期排序（最新在前）
+  ARTICLES.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  // 最新文章 = 第 1 篇
+  document.getElementById('section-new').innerHTML = renderNew(ARTICLES[0]);
+
+  // 精選文章 = 第 2–4 篇
+  document.getElementById('grid-featured').innerHTML =
+    ARTICLES.slice(1, 4).map(renderFeatured).join('');
+
+  // 所有文章 = 全部
+  document.getElementById('section-list').innerHTML =
+    ARTICLES.map(renderListItem).join('');
+
+  // Tab 篩選啟動
+  initTabs();
 
 })();
 </script>
