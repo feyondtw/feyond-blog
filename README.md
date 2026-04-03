@@ -55,25 +55,36 @@ CATEGORY TABS（水平 tab，4大分類 + 全部）
 FOOTER
 ```
 
-### 新增文章的 SOP
+### 新增文章的 SOP（v2.4 起改為 JSON 驅動）
 
-1. 把新文章卡片的 HTML 放進對應的 section 最上方
-2. 舊的最新文章移降到「精選文章」或「所有文章」
-3. 在文章元素上加上以下 data 屬性：
+**只需動兩個檔案，`index.html` 不用碰：**
 
-```html
-data-category="botany"      ← 四大分類之一（見下表）
-data-date="2026-04-03"      ← 文章日期，格式 YYYY-MM-DD
+**Step 1：上傳文章 HTML**（放根目錄）
+
+**Step 2：在 `index.html` 的 `ARTICLES` 陣列最頂端加一筆**
+
+```js
+{
+  title: "主標題",
+  subtitle: "副標題（選填）",
+  file: "檔名.html",
+  category: "blending",       // 四大分類之一
+  date: "2026-04-03",         // 控制排序，最大日期 = 最新文章
+  excerpt: "摘要文字...",
+  image: "照片檔名.jpg",       // 空字串 "" 則顯示純色佔位
+  premium: false               // true = 加 ?paywall=true + Premium badge
+},
 ```
 
-**分類對應表：**
+> ⚠️ `date` 欄位控制顯示順序，不一定要是真實發布日。  
+> 想讓某篇排第一，就給它最大的日期值。
 
-| data-category | 中文顯示 | 色碼 |
-|------|------|------|
-| `botany` | 植物誌 | `#2D4A3E` |
-| `journey` | 產區尋香 | `#8B5A3C` |
-| `philosophy` | 香氣哲思 | `#B8965A` |
-| `blending` | 調香手記 | `#3D4A6B` |
+**自動處理項目（不需手動）：**
+- 第 1 篇 → 最新文章大卡
+- 第 2–4 篇 → 精選文章三欄
+- 全部 → 所有文章列表
+- 30 天內自動顯示 NEW 標籤
+- Tab 篩選同步生效
 
 ### NEW 標籤自動化機制
 
@@ -300,17 +311,19 @@ FOOTER
 
 | 文章 | 檔名 | 日期 | 分類 | 類型 |
 |------|------|------|------|------|
-| 月光下的華韻香 — 白玉蘭 | `michelia-alba.html` | 2022.08.28 | journey | 免費 |
-| 保加利亞玫瑰特輯報導 | `bulgarian-rose.html?paywall=true` | 2013.06.25 | journey | Premium |
-| 科西嘉永久花 | `helichrysum.html?paywall=true` | - | botany | Premium |
-| 沉香與時間 | `oud-time.html?paywall=true` | - | philosophy | Premium |
-| 藍雲杉 | `blue-spruce.html` | - | botany | 免費 |
-| 花梨木 | `rosewood.html` | - | botany | 免費 |
-| 沙漠之靈 | `desert-spirit.html` | - | philosophy | 免費 |
-| 越南芽莊沉香 | `vietnam-oud.html?paywall=true` | - | journey | Premium |
-| 阿曼乳香 | `frankincense.html?paywall=true` | - | botany | Premium |
+| 從企業修羅場到東方淨琉璃光 | `vaidurya.html` | 2026-04-03 | blending | 免費 |
+| 月光下的華韻香 — 白玉蘭 | `michelia-alba.html` | 2022-08-28 | journey | 免費 |
+| 保加利亞玫瑰特輯報導 | `bulgarian-rose.html` | 2013-06-25 | journey | Premium |
+| 科西嘉永久花 | `helichrysum.html` | — | botany | Premium |
+| 沉香與時間 | `oud-time.html` | — | philosophy | Premium |
+| 藍雲杉 | `blue-spruce.html` | — | botany | 免費 |
+| 花梨木 | `rosewood.html` | — | botany | 免費 |
+| 沙漠之靈 | `desert-spirit.html` | — | philosophy | 免費 |
+| 越南芽莊沉香 | `vietnam-oud.html` | — | journey | Premium |
+| 阿曼乳香 | `frankincense.html` | — | botany | Premium |
 
-> **注意**：所有文章 HTML 檔案皆放在**根目錄**，不使用 `articles/` 資料夾。
+> **注意**：所有文章 HTML 檔案皆放在**根目錄**，不使用 `articles/` 資料夾。  
+> Premium 文章連結加 `?paywall=true`，免費文章不加。
 
 ---
 
@@ -325,6 +338,7 @@ FOOTER
 
 | 版本 | 日期 | 變更 |
 |------|------|------|
+| v2.4 | 2026-04-03 | 新增薜琉璃文章（調香手記）、首頁改為 JSON 驅動動態生成、新增 articles.json、SOP 更新為只改 ARTICLES 陣列 |
 | v2.3 | 2026-04-03 | 加入首頁功能規範、Claude 操作原則、NEW 自動標籤、Tab 篩選、Premium 視覺規範 |
 | v2.2 | 2026-04-03 | 新增白玉蘭文章、更新文章連結清單 |
 | v2.1 | 2026-04-02 | 新增製作流程、照片規範、會員機制 |
