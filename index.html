@@ -281,25 +281,31 @@ img { max-width: 100%; display: block; }
 }
 
 /* ═══════════════════════════════════════
-   SECTION HEADERS
+   NEW ARTICLE (Featured - Left Image, Right Text)
    ═══════════════════════════════════════ */
 .section-header {
   max-width: 960px;
-  margin: 48px auto 24px;
-  padding: 0 24px;
+  margin: 0 auto;
+  padding: 48px 24px 24px;
 }
 .section-label {
   font-family: var(--font-sans);
   font-size: 11px;
   font-weight: 400;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: var(--ink-faint);
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--sand);
 }
 
-/* ═══════════════════════════════════════
-   NEW ARTICLE (Hero Card)
-   ═══════════════════════════════════════ */
 .new-article {
   max-width: 960px;
   margin: 0 auto 48px;
@@ -323,13 +329,14 @@ img { max-width: 100%; display: block; }
   width: 100%;
   height: 100%;
   object-fit: cover;
+  filter: saturate(0.75) contrast(0.9);
   transition: transform 0.5s;
 }
 .new-article-card:hover .new-article-image img {
-  transform: scale(1.05);
+  transform: scale(1.03);
 }
 .new-article-content {
-  padding: 48px 48px 48px 0;
+  padding: 40px 40px 40px 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -344,7 +351,7 @@ img { max-width: 100%; display: block; }
   font-family: var(--font-sans);
   font-size: 10px;
   font-weight: 400;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
 }
 .badge-new {
@@ -356,17 +363,17 @@ img { max-width: 100%; display: block; }
   color: var(--botany);
 }
 .badge-premium {
-  border: 1px solid var(--gold);
-  color: var(--gold);
+  border: 1px solid var(--ink-faint);
+  color: var(--ink-muted);
 }
 .new-article-title {
   font-family: var(--font-display);
   font-size: 32px;
   font-weight: 400;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   line-height: 1.4;
   color: var(--ink);
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 .new-article-subtitle {
   font-family: var(--font-display);
@@ -374,29 +381,36 @@ img { max-width: 100%; display: block; }
   font-weight: 300;
   font-style: italic;
   color: var(--ink-muted);
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 .new-article-excerpt {
-  font-family: var(--font-body);
-  font-size: 15px;
+  font-family: var(--font-sans);
+  font-size: 14px;
   font-weight: 300;
   line-height: 1.9;
   color: var(--ink-soft);
-  margin-bottom: 16px;
+  margin-bottom: 24px;
 }
 .new-article-meta {
   font-family: var(--font-sans);
   font-size: 12px;
+  letter-spacing: 0.1em;
   color: var(--ink-faint);
-  letter-spacing: 0.05em;
-  margin-bottom: 20px;
 }
 .read-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-family: var(--font-sans);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 400;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   color: var(--gold);
+  margin-top: 20px;
+  transition: gap 0.3s;
+}
+.read-more:hover {
+  gap: 12px;
 }
 
 /* ═══════════════════════════════════════
@@ -404,7 +418,7 @@ img { max-width: 100%; display: block; }
    ═══════════════════════════════════════ */
 .featured-articles {
   max-width: 960px;
-  margin: 0 auto 48px;
+  margin: 0 auto 60px;
   padding: 0 24px;
 }
 .featured-grid {
@@ -413,7 +427,8 @@ img { max-width: 100%; display: block; }
   gap: 32px;
 }
 .featured-card {
-  display: block;
+  display: flex;
+  flex-direction: column;
   transition: transform 0.3s;
 }
 .featured-card:hover {
@@ -422,12 +437,13 @@ img { max-width: 100%; display: block; }
 .featured-image {
   aspect-ratio: 4/3;
   overflow: hidden;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 .featured-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  filter: saturate(0.75) contrast(0.9);
   transition: transform 0.5s;
 }
 .featured-card:hover .featured-image img {
@@ -448,18 +464,19 @@ img { max-width: 100%; display: block; }
   margin-bottom: 8px;
 }
 .featured-excerpt {
-  font-family: var(--font-body);
-  font-size: 14px;
+  font-family: var(--font-sans);
+  font-size: 13px;
   font-weight: 300;
   line-height: 1.8;
-  color: var(--ink-soft);
+  color: var(--ink-muted);
   margin-bottom: 12px;
+  flex: 1;
 }
 .featured-meta {
   font-family: var(--font-sans);
   font-size: 11px;
+  letter-spacing: 0.1em;
   color: var(--ink-faint);
-  letter-spacing: 0.05em;
 }
 
 /* ═══════════════════════════════════════
@@ -467,25 +484,22 @@ img { max-width: 100%; display: block; }
    ═══════════════════════════════════════ */
 .article-list {
   max-width: 960px;
-  margin: 0 auto 80px;
-  padding: 0 24px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
 }
 .article-list-item {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 24px;
   padding: 24px 0;
   border-bottom: 1px solid var(--sand);
-  transition: background 0.3s;
+  transition: padding-left 0.3s;
 }
 .article-list-item:hover {
-  background: var(--parchment);
-  margin: 0 -16px;
-  padding: 24px 16px;
+  padding-left: 12px;
 }
 .article-list-info {
-  min-width: 0;
+  flex: 1;
 }
 .article-list-badges {
   display: flex;
@@ -501,29 +515,28 @@ img { max-width: 100%; display: block; }
   margin-bottom: 4px;
 }
 .article-list-excerpt {
-  font-family: var(--font-body);
-  font-size: 14px;
+  font-family: var(--font-sans);
+  font-size: 13px;
   font-weight: 300;
   color: var(--ink-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 .article-list-meta {
   font-family: var(--font-sans);
   font-size: 12px;
+  letter-spacing: 0.1em;
   color: var(--ink-faint);
-  letter-spacing: 0.05em;
-  white-space: nowrap;
+  text-align: right;
 }
 .article-list-arrow {
+  font-family: var(--font-display);
   font-size: 18px;
-  color: var(--ink-faint);
-  transition: color 0.3s, transform 0.3s;
+  color: var(--gold);
+  margin-left: 24px;
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 .article-list-item:hover .article-list-arrow {
-  color: var(--gold);
-  transform: translateX(4px);
+  opacity: 1;
 }
 
 /* ═══════════════════════════════════════
@@ -549,55 +562,40 @@ img { max-width: 100%; display: block; }
 }
 
 /* ═══════════════════════════════════════
-   RWD
+   RESPONSIVE
    ═══════════════════════════════════════ */
 @media (max-width: 768px) {
   html { font-size: 16px; }
   
-  .nav {
+  .nav { 
     padding: 20px 24px;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 16px;
   }
-  .nav-links {
-    order: 3;
-    width: 100%;
-    justify-content: center;
-  }
+  .nav-logo span { display: block; margin: 8px 0 0; }
   
-  .hero {
-    padding: 60px 24px 48px;
-  }
-  .hero-title {
-    font-size: 36px;
-  }
+  .hero { padding: 60px 24px 40px; }
+  .hero-title { font-size: 36px; }
   
   .author-section {
     flex-direction: column;
     text-align: center;
-    padding: 32px 24px;
-  }
-  .author-cta {
-    margin-top: 16px;
+    padding: 28px 24px;
   }
   
   .category-tabs {
     flex-wrap: wrap;
+    justify-content: center;
   }
-  .category-tab {
-    padding: 12px 20px;
-  }
+  .category-tab { padding: 12px 16px; }
   
   .new-article-card {
     grid-template-columns: 1fr;
-    gap: 0;
   }
   .new-article-content {
-    padding: 32px 24px;
+    padding: 28px;
   }
-  .new-article-title {
-    font-size: 26px;
-  }
+  .new-article-title { font-size: 26px; }
   
   .featured-grid {
     grid-template-columns: 1fr;
@@ -605,11 +603,12 @@ img { max-width: 100%; display: block; }
   }
   
   .article-list-item {
-    grid-template-columns: 1fr auto;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
   }
-  .article-list-meta {
-    display: none;
-  }
+  .article-list-meta { text-align: left; }
+  .article-list-arrow { display: none; }
 }
 </style>
 </head>
@@ -619,10 +618,15 @@ img { max-width: 100%; display: block; }
      NAV
      ═══════════════════════════════════════ -->
 <nav class="nav">
-  <a href="index.html" class="nav-logo">飛揚細籽 <span>FEYOND</span></a>
+  <a href="index.html" class="nav-logo">
+    FEYOND
+    <span>在香氣中找到自己的語言</span>
+  </a>
   <div class="nav-links">
-    <a href="about.html" class="nav-link">關於</a>
-    <a href="https://dhyana.store/products/feyond-membership" class="nav-subscribe" target="_blank">訂閱</a>
+    <a href="about.html" class="nav-link">關於作者</a>
+    <a href="https://dhyana.store/products/feyond-membership" class="nav-subscribe" target="_blank">
+      訂閱會員
+    </a>
   </div>
 </nav>
 
@@ -687,7 +691,7 @@ img { max-width: 100%; display: block; }
 </div>
 
 <!-- ═══════════════════════════════════════
-     NEW ARTICLE - 白玉蘭
+     NEW ARTICLE
      ═══════════════════════════════════════ -->
 <div class="section-header">
   <p class="section-label">最新文章</p>
@@ -724,37 +728,24 @@ img { max-width: 100%; display: block; }
 <section class="featured-articles">
   <div class="featured-grid">
     
-    <!-- Featured 1: 台灣紅檜（原最新文章移至此） -->
-    <a href="hinoki.html?paywall=true" class="featured-card">
+    <!-- Featured 1 -->
+    <a href="articles/bulgarian-rose.html?paywall=true" class="featured-card">
       <div class="featured-image">
-        <img src="https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?w=600" alt="台灣紅檜">
-      </div>
-      <div class="featured-badges">
-        <span class="badge badge-category">植物誌</span>
-        <span class="badge badge-premium">Premium</span>
-      </div>
-      <h3 class="featured-title">台灣紅檜</h3>
-      <p class="featured-excerpt">千年巨木的沉靜之香。在阿里山的雲霧中，紅檜緩慢生長，每一道年輪都記錄著這座島嶼的歲月...</p>
-      <p class="featured-meta">2026-04-01 · 植物誌 / 針葉木</p>
-    </a>
-    
-    <!-- Featured 2: 保加利亞玫瑰谷 -->
-    <a href="bulgarian-rose.html?paywall=true" class="featured-card">
-      <div class="featured-image">
-        <img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=600" alt="保加利亞玫瑰谷">
+        <img src="https://feyond.muzen.store/images/盛綻的保加利亞玫瑰.jpg" alt="保加利亞玫瑰特輯報導">
       </div>
       <div class="featured-badges">
         <span class="badge badge-category" style="border-color: var(--journey); color: var(--journey);">產區尋香</span>
         <span class="badge badge-premium">Premium</span>
       </div>
-      <h3 class="featured-title">保加利亞玫瑰谷</h3>
+      <h3 class="featured-title">保加利亞玫瑰特輯報導</h3>
       <p class="featured-excerpt">凌晨四點的採收，與時間賽跑的芬芳。三噸花瓣萃取一公斤精油的珍貴...</p>
       <p class="featured-meta">2026-03-28 · 產區尋香 / 歐洲</p>
     </a>
     
-    <!-- Featured 3: 科西嘉永久花 -->
-    <a href="helichrysum.html?paywall=true" class="featured-card">
+    <!-- Featured 2 -->
+    <a href="articles/helichrysum.html?paywall=true" class="featured-card">
       <div class="featured-image">
+        <!-- 待替換：科西嘉永久花實際照片 CDN -->
         <img src="https://images.unsplash.com/photo-1596438459194-f275867a5c8b?w=600" alt="科西嘉永久花">
       </div>
       <div class="featured-badges">
@@ -764,6 +755,21 @@ img { max-width: 100%; display: block; }
       <h3 class="featured-title">科西嘉永久花</h3>
       <p class="featured-excerpt">不凋謝的金色太陽。在地中海的岩石縫隙中，永久花綻放著永恆的光芒...</p>
       <p class="featured-meta">2026-03-20 · 植物誌 / 花香</p>
+    </a>
+    
+    <!-- Featured 3 -->
+    <a href="articles/oud-time.html?paywall=true" class="featured-card">
+      <div class="featured-image">
+        <!-- 待替換：沉香實際照片 CDN -->
+        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600" alt="沉香與時間">
+      </div>
+      <div class="featured-badges">
+        <span class="badge badge-category" style="border-color: var(--philosophy); color: var(--philosophy);">香氣哲思</span>
+        <span class="badge badge-premium">Premium</span>
+      </div>
+      <h3 class="featured-title">沉香與時間</h3>
+      <p class="featured-excerpt">傷痕如何成為芬芳。沉香的形成需要數十年，這是大自然的療癒哲學...</p>
+      <p class="featured-meta">2026-03-15 · 香氣哲思</p>
     </a>
     
   </div>
@@ -778,20 +784,7 @@ img { max-width: 100%; display: block; }
 
 <section class="article-list">
   
-  <a href="oud-time.html?paywall=true" class="article-list-item">
-    <div class="article-list-info">
-      <div class="article-list-badges">
-        <span class="badge badge-category" style="border-color: var(--philosophy); color: var(--philosophy);">香氣哲思</span>
-        <span class="badge badge-premium">Premium</span>
-      </div>
-      <h3 class="article-list-title">沉香與時間</h3>
-      <p class="article-list-excerpt">傷痕如何成為芬芳。沉香的形成需要數十年，這是大自然的療癒哲學...</p>
-    </div>
-    <p class="article-list-meta">2026-03-15</p>
-    <span class="article-list-arrow">→</span>
-  </a>
-  
-  <a href="blue-spruce.html" class="article-list-item">
+  <a href="articles/blue-spruce.html" class="article-list-item">
     <div class="article-list-info">
       <div class="article-list-badges">
         <span class="badge badge-category">植物誌</span>
@@ -803,7 +796,7 @@ img { max-width: 100%; display: block; }
     <span class="article-list-arrow">→</span>
   </a>
   
-  <a href="rosewood.html" class="article-list-item">
+  <a href="articles/rosewood.html" class="article-list-item">
     <div class="article-list-info">
       <div class="article-list-badges">
         <span class="badge badge-category">植物誌</span>
@@ -815,7 +808,7 @@ img { max-width: 100%; display: block; }
     <span class="article-list-arrow">→</span>
   </a>
   
-  <a href="desert-spirit.html" class="article-list-item">
+  <a href="articles/desert-spirit.html" class="article-list-item">
     <div class="article-list-info">
       <div class="article-list-badges">
         <span class="badge badge-category" style="border-color: var(--philosophy); color: var(--philosophy);">香氣哲思</span>
@@ -827,7 +820,7 @@ img { max-width: 100%; display: block; }
     <span class="article-list-arrow">→</span>
   </a>
   
-  <a href="vietnam-oud.html?paywall=true" class="article-list-item">
+  <a href="articles/vietnam-oud.html?paywall=true" class="article-list-item">
     <div class="article-list-info">
       <div class="article-list-badges">
         <span class="badge badge-category" style="border-color: var(--journey); color: var(--journey);">產區尋香</span>
@@ -840,7 +833,7 @@ img { max-width: 100%; display: block; }
     <span class="article-list-arrow">→</span>
   </a>
   
-  <a href="frankincense.html?paywall=true" class="article-list-item">
+  <a href="articles/frankincense.html?paywall=true" class="article-list-item">
     <div class="article-list-info">
       <div class="article-list-badges">
         <span class="badge badge-category">植物誌</span>
