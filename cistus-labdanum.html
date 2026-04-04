@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>慈悲的淚珠｜岩玫瑰｜飛揚細籽 FEYOND</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+TC:wght@300;400;500&family=Noto+Sans+TC:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #FFFEF8;
+  --sand: #EDE6D6;
+  --parchment: #F5F0E3;
+  --ink: #252220;
+  --ink-soft: #4A4540;
+  --ink-muted: #7A756D;
+  --ink-faint: #A8A29A;
+  --gold: #B8965A;
+  --gold-light: #D4B87A;
+  --journey: #8B5A3C;
+  --font-display: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+  --font-body: 'Noto Serif TC', Georgia, serif;
+  --font-sans: 'Noto Sans TC', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 17px; }
+body {
+  font-family: var(--font-body);
+  background: var(--cream);
+  color: var(--ink);
+  line-height: 2;
+  font-weight: 300;
+}
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+
+/* NAV */
+.nav {
+  padding: 28px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--sand);
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  color: var(--ink);
+}
+.nav-back {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  transition: color 0.3s;
+}
+.nav-back:hover { color: var(--ink); }
+
+/* ARTICLE HEADER */
+.article-header {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 80px 24px 48px;
+  text-align: center;
+}
+.article-category {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--journey);
+  margin-bottom: 24px;
+}
+.article-title {
+  font-family: var(--font-display);
+  font-size: 42px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+.article-title-en {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.12em;
+  color: var(--ink-muted);
+  margin-bottom: 20px;
+}
+.article-subtitle {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  margin-bottom: 32px;
+}
+.article-meta {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--ink-faint);
+}
+
+/* HERO IMAGE */
+.article-hero {
+  max-width: 960px;
+  margin: 0 auto 80px;
+  padding: 0 24px;
+}
+.article-hero img {
+  width: 100%;
+  aspect-ratio: 16/10;
+  object-fit: cover;
+  filter: saturate(0.75) contrast(0.9);
+}
+.article-hero figcaption {
+  margin-top: 12px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--ink-faint);
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+/* INTRO */
+.intro-section {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+.intro-section p {
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 2.2;
+  color: var(--ink-soft);
+  margin-bottom: 1.8em;
+  letter-spacing: 0.02em;
+}
+.intro-section p:first-child::first-letter {
+  font-family: var(--font-display);
+  font-size: 4em;
+  font-weight: 400;
+  float: left;
+  line-height: 0.85;
+  margin-right: 0.08em;
+  margin-top: 0.05em;
+  color: var(--journey);
+}
+
+/* TWO COLUMN */
+.content-section {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+.two-col {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 60px;
+  padding: 48px 0;
+  border-top: 1px solid var(--sand);
+}
+.two-col:first-of-type { border-top: none; padding-top: 0; }
+
+.col-left {
+  position: sticky;
+  top: 100px;
+  align-self: start;
+}
+.col-left h2 {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  line-height: 1.5;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+.col-left .summary {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--ink-muted);
+  letter-spacing: 0.02em;
+}
+.col-left .label {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--journey);
+  margin-bottom: 12px;
+  display: block;
+}
+
+.col-right p {
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 2.2;
+  color: var(--ink-soft);
+  margin-bottom: 1.8em;
+  letter-spacing: 0.02em;
+}
+.col-right p:last-child { margin-bottom: 0; }
+
+.col-right blockquote {
+  margin: 2em 0;
+  padding: 1.5em 2em;
+  background: var(--parchment);
+  border-left: 3px solid var(--journey);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-style: italic;
+  line-height: 2;
+  color: var(--ink-soft);
+}
+
+/* SPECIES GRID */
+.species-note {
+  margin: 1.5em 0;
+  padding: 1.2em 1.6em;
+  background: var(--parchment);
+  border-left: 2px solid var(--sand);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  line-height: 1.9;
+  color: var(--ink-muted);
+  font-style: italic;
+}
+
+/* DIVIDER */
+.section-divider {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px;
+  border-top: 1px solid var(--sand);
+}
+
+/* PAYWALL */
+.paywall-wrapper {
+  position: relative;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.content-preview {
+  position: relative;
+  padding: 40px 0;
+  color: var(--ink-muted);
+  font-size: 1rem;
+  line-height: 2.2;
+}
+.content-preview::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 120px;
+  background: linear-gradient(to bottom, transparent, var(--cream));
+  pointer-events: none;
+}
+.content-preview p { filter: blur(4px); user-select: none; }
+
+.paywall-cta {
+  position: relative;
+  margin-top: -40px;
+  padding: 48px 40px;
+  background: var(--parchment);
+  border-left: 3px solid var(--gold);
+  text-align: center;
+}
+.cta-tagline {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+.cta-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.cta-subtitle {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-style: italic;
+  color: var(--ink-muted);
+  margin-bottom: 32px;
+}
+.cta-benefits {
+  list-style: none;
+  margin-bottom: 36px;
+  text-align: left;
+  display: inline-block;
+}
+.cta-benefits li {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--ink-soft);
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+  padding-left: 20px;
+  position: relative;
+}
+.cta-benefits li::before {
+  content: '✦';
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+  font-size: 9px;
+  top: 3px;
+}
+.cta-btn {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  padding: 14px 40px;
+  border: 1px solid var(--gold);
+  transition: all 0.3s;
+  margin-bottom: 24px;
+  cursor: pointer;
+}
+.cta-btn:hover { background: var(--gold); color: var(--cream); }
+.cta-password-area { margin-top: 8px; }
+.cta-password-label {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--ink-faint);
+  letter-spacing: 0.06em;
+  margin-bottom: 12px;
+  display: block;
+}
+.cta-password-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+.cta-password-input {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  padding: 10px 16px;
+  border: 1px solid var(--sand);
+  background: var(--cream);
+  color: var(--ink);
+  outline: none;
+  width: 180px;
+}
+.cta-password-submit {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cream);
+  background: var(--ink-soft);
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.cta-password-submit:hover { background: var(--ink); }
+.cta-error {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: #B85A5A;
+  margin-top: 10px;
+  display: none;
+}
+
+/* FULL CONTENT (members) */
+.full-content { display: none; }
+
+/* ARTICLE FOOTER */
+.article-footer {
+  max-width: 680px;
+  margin: 60px auto 0;
+  padding: 40px 24px;
+  border-top: 1px solid var(--sand);
+  text-align: center;
+}
+.article-footer p {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--ink-faint);
+  letter-spacing: 0.1em;
+  margin-bottom: 24px;
+}
+.back-link {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  padding: 14px 32px;
+  border: 1px solid var(--gold);
+  transition: all 0.3s;
+}
+.back-link:hover { background: var(--gold); color: var(--cream); }
+
+/* DISCLAIMER */
+.disclaimer {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 24px 24px 60px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--ink-faint);
+  line-height: 1.9;
+  letter-spacing: 0.03em;
+}
+
+/* SITE FOOTER */
+.site-footer {
+  background: var(--ink);
+  padding: 56px 24px;
+  text-align: center;
+}
+.footer-brand {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  color: var(--cream);
+  margin-bottom: 8px;
+}
+.footer-copy {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: rgba(255,254,248,0.4);
+}
+
+/* RWD */
+@media (max-width: 768px) {
+  html { font-size: 16px; }
+  .nav { padding: 20px 24px; }
+  .article-header { padding: 60px 20px 40px; }
+  .article-title { font-size: 32px; }
+  .two-col { grid-template-columns: 1fr; gap: 24px; }
+  .col-left { position: static; border-bottom: 1px solid var(--sand); padding-bottom: 24px; }
+  .paywall-cta { padding: 36px 24px; }
+  .cta-password-row { flex-direction: column; align-items: center; }
+  .cta-password-input { width: 100%; max-width: 260px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="https://feyond.muzen.store" class="nav-back">← 返回</a>
+  <a href="https://feyond.muzen.store" class="nav-logo">飛揚細籽 FEYOND</a>
+</nav>
+
+<!-- HEADER -->
+<header class="article-header">
+  <p class="article-category">香旅 · Journey</p>
+  <h1 class="article-title">慈悲的淚珠</h1>
+  <p class="article-title-en">Tears of Compassion</p>
+  <p class="article-subtitle">岩玫瑰 · 安達盧西亞的凝脂傳說</p>
+  <p class="article-meta">2024 · FEYOND</p>
+</header>
+
+<!-- HERO IMAGE -->
+<figure class="article-hero">
+  <img src="https://feyond.muzen.store/images/cistus.jpg"
+       onerror="this.style.background='#EDE6D6';this.style.aspectRatio='16/10';this.removeAttribute('src')"
+       alt="安達盧西亞岩玫瑰">
+  <figcaption>西班牙安達盧西亞，盛開中的岩玫瑰 Cistus ladaniferus</figcaption>
+</figure>
+
+<!-- INTRO -->
+<section class="intro-section">
+  <p>與義大利亞平寧半島、東歐巴爾幹半島並列南歐三大半島的伊比利半島，是歐洲最先迎來春天的地方。藝術建築、佛朗明歌、古典吉他、塞萬堤斯筆下最浪漫的唐吉柯德——文化底蘊不凡的這片土地，還藏著眾多令人醉心的芳香植物。</p>
+  <p>進入到安達盧西亞的三、四月，在許多丘陵處會披上一層印著紅、黃點的白衣，仿若一襲白雪。這是岩玫瑰盛綻的景況——五瓣白花近花蕊心處都有一個墨紅點，繞著中心的一圈金黃色雄蕊，構成了一幅精美而震攝人心的外觀。</p>
+</section>
+
+<!-- FREE SECTIONS -->
+<div class="content-section">
+
+  <!-- Section 1 -->
+  <div class="two-col">
+    <div class="col-left">
+      <span class="label">產地</span>
+      <h2>半島的白色精靈</h2>
+      <p class="summary">岩玫瑰是地中海沿岸都能視其芳踪的植物，以希臘克里特島、西班牙、葡萄牙、摩洛哥和黎巴嫩為主要產地。</p>
+    </div>
+    <div class="col-right">
+      <p>整個安達盧西亞包括 Almeria 阿爾梅里亞、Malaga 馬拉加、Cordoba 哥多華都有商業栽種及零星的岩玫瑰田。岩玫瑰花色有數十款，白及粉紅二款都有用於芳療及香水使用。目前有萃取精油的品種以 <em>C. ladanifer</em>、<em>C. laurifolius</em>、<em>C. clusii</em>、<em>C. ladaniferus var maculatus</em> 和 <em>C. albidus</em>、<em>C. incanus ssp. creticus</em> 為主。</p>
+      <p>身約 1.5–2 米高的灌木，長矛狀深綠葉片，隨著樹脂的分泌而轉為灰綠或鉛灰色。凝結的香脂在夏季陽光下透著晶亮。在地人稱為「基督的淚珠」，古埃及人則認為此為自天降落來療癒人間的溫暖樹脂，故稱為「Tears of Osiris ——奧西里斯之淚」。</p>
+      <p>喜酸性土壤的它，極易生長於野地及岩石斜坡上。開著纖柔如棉紙般的白花瓣，雖然花期僅有數日，但整個丘陵地拂來一陣陣魔幻又迷醉的香氣。25世紀前，Theophrastus 曾稱岩玫瑰為 Kistos（意為囊果），也許與岩玫瑰球狀果實內充滿小種籽的形態有關。</p>
+    </div>
+  </div>
+
+  <!-- Section 2 -->
+  <div class="two-col">
+    <div class="col-left">
+      <span class="label">人物</span>
+      <h2>貝克爾家族的傳承</h2>
+      <p class="summary">住在塞維利亞和韋爾瓦中間地區的小農西里洛，是我們親密的岩玫瑰供應農家之一。</p>
+    </div>
+    <div class="col-right">
+      <p>Cirilo Pío Bécquer（西里洛·皮奧·貝克爾）從葡萄牙家族分支移民至此後，依舊守著傳家的岩玫瑰採集事業。從小貝克爾先生就被教育要尊重及欣賞大自然賜予的一切臻寶。自小生活在葡萄牙就與岩玫瑰相處的他，深深以能與此世界少有的魔幻又助益人的藥草為終生志業為榮。</p>
+      <blockquote>
+        雖然僅熟西語系的貝克爾家族，長期以來靠的是我美國的乾女兒隔海以西班牙語居中交流，但在每年一回的岩玫瑰採購，我們會針對批次採購氣味、色澤探索當年植物生長及採收狀況。
+      </blockquote>
+      <p>就這樣往返數年後，也學習到許多貝克爾先生不吝分享的岩玫瑰珍貴資訊。在安達盧西亞的多數岩玫瑰農工多以吉普賽人為主，但貝克爾家族則與幾戶麥士帝索家族打了長期的農工契約，略為高大的麥士帝索人工資也較高，但在鐮刀的安全性顧及及採集速度也讓貝克爾家族較為放心。</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- PAYWALL -->
+<div id="paywall-section">
+  <div class="paywall-wrapper">
+    <div class="content-preview">
+      <p>採集工程結束之後，另一個緊接在後的繁複萃取工程又是另一個考驗，為了完全萃取出岩玫瑰完整成份，也得對採收後的植物有不同的前處理，依著處理方式差異而產生了「岩玫瑰」與「勞丹脂」二個名稱差異的原料。仿間可以買到的岩玫瑰萃取物型態極多樣式，劑型差異很大……</p>
+    </div>
+
+    <div class="paywall-cta">
+      <p class="cta-tagline">Feyond Membership</p>
+      <h2 class="cta-title">解鎖完整文章</h2>
+      <p class="cta-subtitle">Unlock the full story</p>
+      <ul class="cta-benefits">
+        <li>萃取工法全解析——岩玫瑰 vs 勞丹脂的差異</li>
+        <li>古老採收工具 Ladanisterion 的歷史</li>
+        <li>在調香與香水工業中的核心地位</li>
+        <li>台灣醫療與芳療的止血應用實證</li>
+        <li>香氣哲思——岩玫瑰與生命傷口的修復</li>
+      </ul>
+      <a href="https://dhyana.store" class="cta-btn" target="_blank">立即訂閱 · Subscribe</a>
+      <div class="cta-password-area">
+        <span class="cta-password-label">已是會員？輸入專屬密碼</span>
+        <div class="cta-password-row">
+          <input type="password" class="cta-password-input" id="pwInput" placeholder="會員密碼">
+          <button class="cta-password-submit" onclick="checkPW()">進入</button>
+        </div>
+        <p class="cta-error" id="pwError">密碼不正確，請確認後再試</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FULL CONTENT (members only) -->
+<div class="full-content" id="full-content">
+<div class="content-section">
+
+  <!-- Section 3 -->
+  <div class="two-col">
+    <div class="col-left">
+      <span class="label">採收工法</span>
+      <h2>傳統與現代的採集智慧</h2>
+      <p class="summary">從古埃及的皮革刮脂法，到安達盧西亞現代鐮刀採收——岩玫瑰香脂的取得，從來都不容易。</p>
+    </div>
+    <div class="col-right">
+      <p>自古開始，安達盧西亞的羊群及牧羊人夜歸時，全身都會沾滿岩玫瑰脂。要一一將山羊毛髮中的膠脂拔除實為難事，所以在去除附著在羊毛上的凝脂同時也發展出能收集膠脂的獨有傳統採收工具，克里特島人稱為 ladanisterion——傳統以木棍綁著長皮革編綁的木架，將沾滿公羊或牧羊人一身的岩玫瑰膠脂，再以小鐮刀刮掉皮革上的樹脂後揉成圓珠狀收集起來焚燒。</p>
+      <p>安達盧西亞目前發展出現代式農工採收工具，是使用帶有鋸齒及保有韌性的鐮刀，人工採收時間會在七、八月高溫時進行——越熱時，岩玫瑰香脂分泌越豐富，但採集工作必須在清早氣候帶有涼氣時進行。採集部位以灌木上的嫩葉新芽所分泌的膠脂為主，切割下的樹葉（莖、葉、花、脂）用棉線綑成束，由驢拖拉至蒸餾場，先晾乾一段時間再行萃取。</p>
+    </div>
+  </div>
+
+  <!-- Section 4 -->
+  <div class="two-col">
+    <div class="col-left">
+      <span class="label">萃取知識</span>
+      <h2>岩玫瑰 vs 勞丹脂<br>一株植物，兩種面貌</h2>
+      <p class="summary">同樣來自岩玫瑰，名稱卻不同——差別只在萃取方式與萃取部位。</p>
+    </div>
+    <div class="col-right">
+      <p>仿間可以買到的岩玫瑰萃取物型態極多樣式，劑型差異很大：蒸餾精油的色澤有無色、有深棕色；原精也有濃稠液狀、脂膏狀、偏紅棕色澤流動性的液狀等等不同樣貌。</p>
+      <p>常令學生困惑的是：Cistus 與 Labdanum 究竟是來自二種品種，或是同一植物的不同萃取？答案是——均來自同一株岩玫瑰，差異只在萃取方式與萃取部份：</p>
+      <div class="species-note">
+        以未經任何處理的岩玫瑰全株萃取，不論是溶劑或蒸餾萃取，稱為「岩玫瑰精油」或「岩玫瑰原精」。若先以加熱鹼水熬煮方式先分離出葉脂上的凝脂，再以此被分離出的凝脂進行蒸餾或溶劑萃取，則稱為「勞丹脂精油」或「勞丹脂原精」。
+      </div>
+      <p>再將勞丹脂原精以特殊程序去色後，呈現如蜂蜜般黏稠及琥珀色澤的油液，即稱為龍涎香醇——明亮的香階帶著果香與木質調，讓此成為香水界最常使用的東方調或琥珀香調的高級原料。</p>
+    </div>
+  </div>
+
+  <!-- Section 5 -->
+  <div class="two-col">
+    <div class="col-left">
+      <span class="label">調香應用</span>
+      <h2>琥珀香的靈魂原料</h2>
+      <p class="summary">勞丹脂至今已是許多調香師調和「琥珀、龍涎香」的主調來源之一，自舊約時代即有其香氣記錄。</p>
+    </div>
+    <div class="col-right">
+      <p>岩玫瑰溫暖勾動著全球無數調香師的心弦，也躍身成為許多國際精品香水的主要配方，更成為芳香療法裡不可或缺的呵膚靈藥。比起岩玫瑰精油的色澤及黏稠度，在調香上勞丹脂琥珀金透的色澤深受調香師喜愛，而氣味有著無法言喻的皮革與木質、動物氣息與溫熱的脂香的魅力與華麗感。</p>
+      <blockquote>
+        自舊約時代即有它的香氣記錄，珍貴的凝脂香時而輕盈時而濃郁，猶如古老時光在蒸餾槽內經過水火淬煉冷凝後，再沈浸於陳年橡木桶百年後，散著馥郁又微濕又深沉遠古的木香調性。
+      </blockquote>
+      <p>這個香氣並非是近代時尚香氣，所謂琥珀香繁複取得程序也是近代萃取技術的考驗。岩玫瑰的香氣來源並非來自於花朵，而是夏初丘陵高溫為了免被炙熱烈陽曬傷、防止水份過度散失，植物的嫩葉新芽分泌的防護香脂。</p>
+    </div>
+  </div>
+
+  <!-- Section 6 -->
+  <div class="two-col">
+    <div class="col-left">
+      <span class="label">療癒哲思</span>
+      <h2>縫合生命的大小傷口</h2>
+      <p class="summary">岩玫瑰有很好的收斂作用，自古是牧羊人用來做傷口修復的傳統藥草，在台灣醫療與芳療的連結上也有珍貴的實證。</p>
+    </div>
+    <div class="col-right">
+      <p>關於岩玫瑰純露在台灣醫學的止血應用緣份，起自於2005年高雄醫學院心圓安寧病房的醫護人員吳珍珍實證，因為不忍患者面臨止血劑使用到最高劑量卻仍出血不止的疼痛，本著護理的慈心，尋求芳療的一絲生機。豈料成效卓然顯著的岩玫瑰純露在強勢的主流醫學領域中靜默地展現自然界療癒之力。</p>
+      <p>就此開啟了台灣南部醫學與芳療連結的可能。謝謝至今持續應用此芳露的高醫心圓安寧病房蘇芳玉、賴麗琴、中華醫事大學資深老師方妙君等醫護人員，傳承了慈心相映、胸懷大悲的芳香信念。</p>
+      <p>岩玫瑰純露與精油成份中雙萜醇與多酚，是賦與它天性溫暖的重要成份。除了心理實際的傷口，面對無預期「生命災難」而造成的大出血的心傷——也許是親人的驟逝，也許是情感的被背叛而撕裂的情緒傷口——都能藉著岩玫瑰與生的修護力而獲得療癒。</p>
+      <blockquote>
+        這串由岩玫瑰串起的慈悲淚珠，凝煉而得溫暖又神秘的柔軟凝脂液裡，再鋼硬的世間難關，也能化為繞指柔。
+      </blockquote>
+    </div>
+  </div>
+
+</div>
+</div><!-- end full-content -->
+
+<!-- DISCLAIMER -->
+<div class="disclaimer">
+  ※ 免責聲明：芳香療法為輔助療法，涉及醫療使用劑量及精油種類，請在專業的醫師護理師及資深芳療師指導下使用。
+</div>
+
+<!-- ARTICLE FOOTER -->
+<div class="article-footer">
+  <p>感謝閱讀 · Thank you for reading</p>
+  <a href="https://feyond.muzen.store" class="back-link">返回文章列表</a>
+</div>
+
+<!-- SITE FOOTER -->
+<footer class="site-footer">
+  <p class="footer-brand">飛揚細籽 · FEYOND</p>
+  <p class="footer-copy">© 2024 Dhyana Aromatherapy · All rights reserved</p>
+</footer>
+
+<script>
+const CORRECT_PW = 'FEYOND2024';
+
+function checkPW() {
+  const input = document.getElementById('pwInput').value.trim();
+  const errorEl = document.getElementById('pwError');
+  if (input === CORRECT_PW) {
+    localStorage.setItem('feyondMember', 'true');
+    unlockContent();
+  } else {
+    errorEl.style.display = 'block';
+    document.getElementById('pwInput').value = '';
+  }
+}
+
+function unlockContent() {
+  document.getElementById('paywall-section').style.display = 'none';
+  document.getElementById('full-content').style.display = 'block';
+}
+
+// 檢查 URL 參數
+const urlParams = new URLSearchParams(window.location.search);
+const isPaywall = urlParams.get('paywall') === 'true';
+const isMember = localStorage.getItem('feyondMember') === 'true';
+
+if (!isPaywall) {
+  // 免費文章，直接顯示全文
+  document.getElementById('paywall-section').style.display = 'none';
+  document.getElementById('full-content').style.display = 'block';
+} else if (isMember) {
+  // 已是會員
+  unlockContent();
+}
+// 否則顯示 paywall（預設狀態）
+
+// Enter 鍵送出
+document.addEventListener('DOMContentLoaded', function() {
+  const input = document.getElementById('pwInput');
+  if (input) {
+    input.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') checkPW();
+    });
+  }
+});
+</script>
+</body>
+</html>
