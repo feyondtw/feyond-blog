@@ -795,7 +795,7 @@ img { max-width: 100%; display: block; }
           <h2 class="new-article-title">${article.title}</h2>
           ${article.subtitle ? `<p class="new-article-subtitle">${article.subtitle}</p>` : ''}
           <p class="new-article-excerpt">${article.excerpt}</p>
-          <p class="new-article-meta">${article.date.replace(/-/g,'.')} · ${CAT[article.category]?.label || ''}</p>
+          <p class="new-article-meta">${(article.written || article.date).replace(/-/g,'.')} · ${CAT[article.category]?.label || ''}</p>
           <span class="read-more">閱讀全文 →</span>
         </div>
       </a>`;
@@ -817,7 +817,7 @@ img { max-width: 100%; display: block; }
         </div>
         <h3 class="featured-title">${article.title}</h3>
         <p class="featured-excerpt">${article.excerpt}</p>
-        <p class="featured-meta">${article.date} · ${CAT[article.category]?.label || ''}</p>
+        <p class="featured-meta">${(article.written || article.date)} · ${CAT[article.category]?.label || ''}</p>
       </a>`;
   }
 
@@ -836,7 +836,7 @@ img { max-width: 100%; display: block; }
           <h3 class="article-list-title">${article.title}</h3>
           <p class="article-list-excerpt">${article.excerpt}</p>
         </div>
-        <p class="article-list-meta">${article.date}</p>
+        <p class="article-list-meta">${article.written || article.date}</p>
         <span class="article-list-arrow">→</span>
       </a>`;
   }
@@ -907,6 +907,17 @@ img { max-width: 100%; display: block; }
   // 文章資料直接內嵌於此（與根目錄的 articles.json 保持同步）
   // 新增文章時：① 在下方陣列最前面加一筆 ② 同步更新 articles.json
   const ARTICLES = [
+    {
+      title: "慈悲的淚珠",
+      subtitle: "岩玫瑰 · 安達盧西亞的凝脂傳說",
+      file: "cistus-labdanum.html",
+      category: "journey",
+      date: "2026-04-05",
+      written: "2024-06-01",
+      excerpt: "在地人稱為「基督的淚珠」，古埃及人稱為「奧西里斯之淚」。從安達盧西亞丘陵的白色花海，到貝克爾家族守護的傳統採集，再到台灣安寧病房的止血實證...",
+      image: "",
+      premium: true
+    },
     {
       title: "從企業修羅場到東方淨琉璃光",
       subtitle: "薜琉璃調香創作",
