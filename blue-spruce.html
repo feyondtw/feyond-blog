@@ -71,8 +71,8 @@ img { max-width: 100%; display: block; }
 .intro-section p:first-of-type::first-letter { font-family: var(--font-display); font-size: 4em; float: left; line-height: 0.85; margin: 6px 16px 0 0; color: var(--theme-accent); font-weight: 400; }
 
 /* IMAGES */
-.img-full { max-width: 960px; margin: 40px auto 60px; padding: 0 24px; }
-.img-full img { width: 100%; filter: saturate(0.75) contrast(0.9) brightness(0.95); }
+.img-full { max-width: 760px; margin: 40px auto 60px; padding: 0 24px; }
+.img-full img { width: 100%; aspect-ratio: 4/3; object-fit: cover; filter: saturate(0.75) contrast(0.9) brightness(0.95); }
 .img-full figcaption { margin-top: 12px; font-family: var(--font-sans); font-size: 12px; color: var(--ink-faint); text-align: center; }
 .img-pair { max-width: 960px; margin: 40px auto 60px; padding: 0 24px; }
 .img-pair-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
