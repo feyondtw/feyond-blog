@@ -3,179 +3,366 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>藍雲杉：在自己的土地上靜靜站立｜飛揚細籽</title>
+<title>藍雲杉：在自己的土地上靜靜站立｜飛揚細籽 FEYOND</title>
 <meta name="description" content="藍雲杉與現代人的界線清理之道。每一株藍雲杉，都是為了記得我們忘了的事而存在。">
 <link rel="canonical" href="https://feyond.muzen.store/blue-spruce.html">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Noto+Serif+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+TC:wght@300;400;500&family=Noto+Sans+TC:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #FFFEF8;
+  --sand: #EDE6D6;
+  --parchment: #F5F0E3;
+  --ink: #252220;
+  --ink-soft: #4A4540;
+  --ink-muted: #7A756D;
+  --ink-faint: #A8A29A;
+  --gold: #B8965A;
+  --gold-light: #D4B87A;
+  /* 靛藍主題色 — 藍雲杉 */
+  --theme-accent: #3D4A6B;
+  --theme-quote-bg: #E8EDF5;
+  --theme-quote-border: #8A9BBF;
+  --theme-quote-text: #2A3550;
+  --font-display: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+  --font-body: 'Noto Serif TC', Georgia, serif;
+  --font-sans: 'Noto Sans TC', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 17px; }
+body { font-family: var(--font-body); background: var(--cream); color: var(--ink); line-height: 2; font-weight: 300; }
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+
+/* NAV */
+.nav { padding: 28px 48px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--sand); }
+.nav-logo { font-family: var(--font-display); font-size: 18px; font-weight: 400; letter-spacing: 0.15em; color: var(--ink); }
+.nav-back { font-family: var(--font-sans); font-size: 13px; letter-spacing: 0.08em; color: var(--ink-muted); transition: color 0.3s; }
+.nav-back:hover { color: var(--ink); }
+
+/* HEADER */
+.article-header { max-width: 680px; margin: 0 auto; padding: 80px 24px 48px; text-align: center; }
+.article-category { font-family: var(--font-sans); font-size: 11px; font-weight: 400; letter-spacing: 0.25em; text-transform: uppercase; color: var(--theme-accent); margin-bottom: 24px; }
+.article-title { font-family: var(--font-display); font-size: 42px; font-weight: 400; letter-spacing: 0.06em; line-height: 1.4; color: var(--ink); margin-bottom: 16px; }
+.article-subtitle { font-family: var(--font-display); font-size: 18px; font-weight: 300; font-style: italic; letter-spacing: 0.08em; color: var(--ink-muted); margin-bottom: 32px; }
+.article-meta { font-family: var(--font-sans); font-size: 12px; letter-spacing: 0.12em; color: var(--ink-faint); }
+
+/* HERO IMAGE */
+.article-hero { max-width: 960px; margin: 0 auto 80px; padding: 0 24px; }
+.article-hero img { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: var(--sand); filter: saturate(0.75) contrast(0.9) brightness(0.95); }
+.article-hero figcaption { margin-top: 12px; font-family: var(--font-sans); font-size: 12px; color: var(--ink-faint); text-align: center; letter-spacing: 0.05em; }
+
+/* TWO-COL LAYOUT */
+.content-section { max-width: 960px; margin: 0 auto; padding: 0 24px 60px; }
+.two-col { display: grid; grid-template-columns: 280px 1fr; gap: 60px; padding: 48px 0; border-top: 1px solid var(--sand); }
+.two-col:first-of-type { border-top: none; padding-top: 0; }
+.col-left { position: sticky; top: 100px; align-self: start; }
+.col-left h2 { font-family: var(--font-display); font-size: 24px; font-weight: 400; letter-spacing: 0.06em; line-height: 1.5; color: var(--ink); margin-bottom: 16px; }
+.col-left .summary { font-family: var(--font-sans); font-size: 13px; font-weight: 300; line-height: 1.9; color: var(--ink-muted); letter-spacing: 0.02em; }
+.col-right p { font-size: 1rem; font-weight: 300; line-height: 2.2; color: var(--ink-soft); margin-bottom: 1.8em; letter-spacing: 0.02em; }
+.col-right p:last-child { margin-bottom: 0; }
+.col-right blockquote { margin: 2em 0; padding: 1.5em 2em; background: var(--theme-quote-bg); border-left: 3px solid var(--theme-quote-border); font-family: var(--font-display); font-size: 1.1rem; font-style: italic; line-height: 2; color: var(--theme-quote-text); }
+.col-right blockquote cite { display: block; margin-top: 12px; font-family: var(--font-sans); font-size: 12px; font-style: normal; letter-spacing: 0.1em; color: var(--ink-muted); }
+.col-right ul { padding-left: 1.2em; margin-bottom: 1.8em; }
+.col-right ul li { font-size: 1rem; font-weight: 300; line-height: 2.2; color: var(--ink-soft); letter-spacing: 0.02em; }
+
+/* INTRO SECTION */
+.intro-section { max-width: 680px; margin: 0 auto; padding: 0 24px 60px; }
+.intro-section p { font-size: 1rem; font-weight: 300; line-height: 2.2; color: var(--ink-soft); margin-bottom: 1.8em; letter-spacing: 0.02em; }
+.intro-section p:first-of-type::first-letter { font-family: var(--font-display); font-size: 4em; float: left; line-height: 0.85; margin: 6px 16px 0 0; color: var(--theme-accent); font-weight: 400; }
+
+/* IMAGES */
+.img-full { max-width: 960px; margin: 40px auto 60px; padding: 0 24px; }
+.img-full img { width: 100%; filter: saturate(0.75) contrast(0.9) brightness(0.95); }
+.img-full figcaption { margin-top: 12px; font-family: var(--font-sans); font-size: 12px; color: var(--ink-faint); text-align: center; }
+.img-pair { max-width: 960px; margin: 40px auto 60px; padding: 0 24px; }
+.img-pair-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.img-pair-item img { width: 100%; aspect-ratio: 4/3; object-fit: cover; background: var(--sand); filter: saturate(0.75) contrast(0.9) brightness(0.95); }
+.img-pair figcaption { margin-top: 12px; font-family: var(--font-sans); font-size: 12px; color: var(--ink-faint); text-align: center; }
+
+/* 圓環圖 */
+.donut-wrap { display: flex; align-items: center; gap: 40px; margin: 2em 0; flex-wrap: wrap; }
+.donut-svg-wrap { position: relative; width: 200px; height: 200px; flex-shrink: 0; }
+.donut-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; pointer-events: none; }
+.donut-center-name { font-family: var(--font-display); font-style: italic; font-size: 13px; color: var(--theme-accent); transition: all 0.3s; }
+.donut-center-pct { font-family: var(--font-display); font-size: 26px; font-weight: 300; color: var(--ink); line-height: 1.2; transition: all 0.3s; }
+.donut-center-role { font-family: var(--font-sans); font-size: 10px; letter-spacing: 1.5px; color: var(--ink-muted); margin-top: 2px; transition: all 0.3s; }
+.donut-legend { display: flex; flex-direction: column; gap: 12px; }
+.donut-legend-item { display: flex; align-items: center; gap: 10px; cursor: pointer; transition: opacity 0.2s; }
+.donut-legend-item:hover { opacity: 0.7; }
+.donut-legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.donut-legend-name { font-family: var(--font-display); font-style: italic; font-size: 14px; color: var(--ink-soft); min-width: 120px; }
+.donut-legend-pct { font-family: var(--font-sans); font-size: 12px; color: var(--ink-muted); }
+
+/* 儀式配方 */
+.ritual-box { margin: 1.8em 0; padding: 20px 24px; background: var(--parchment); border-left: 3px solid var(--gold); }
+.ritual-box-label { font-family: var(--font-sans); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+.ritual-box-formula { font-family: var(--font-body); font-size: 14px; font-weight: 300; color: var(--ink-soft); line-height: 2; }
+.mantra-box { margin: 1.8em 0; padding: 20px 24px; background: var(--theme-quote-bg); border-left: 3px solid var(--theme-quote-border); font-family: var(--font-display); font-style: italic; font-size: 1rem; line-height: 2.2; color: var(--theme-quote-text); }
+
+/* FOOTER */
+.article-footer { max-width: 680px; margin: 0 auto; padding: 48px 24px; border-top: 1px solid var(--sand); text-align: center; }
+.article-footer p { font-size: 14px; color: var(--ink-muted); margin-bottom: 32px; }
+.back-link { display: inline-block; font-family: var(--font-sans); font-size: 13px; letter-spacing: 0.12em; color: var(--gold); padding: 14px 32px; border: 1px solid var(--gold); transition: all 0.3s; }
+.back-link:hover { background: var(--gold); color: var(--cream); }
+.site-footer { background: var(--ink); padding: 56px 24px; text-align: center; }
+.footer-brand { font-family: var(--font-display); font-size: 18px; font-weight: 300; letter-spacing: 0.15em; color: var(--cream); margin-bottom: 8px; }
+.footer-copy { font-size: 11px; letter-spacing: 0.1em; color: rgba(255,254,248,0.4); }
+
+/* RWD */
+@media (max-width: 768px) {
+  html { font-size: 16px; }
+  .nav { padding: 20px 24px; }
+  .article-header { padding: 60px 20px 40px; }
+  .article-title { font-size: 32px; }
+  .two-col { grid-template-columns: 1fr; gap: 24px; }
+  .col-left { position: static; border-bottom: 1px solid var(--sand); padding-bottom: 24px; }
+  .img-pair-grid { grid-template-columns: 1fr; gap: 12px; }
+  .donut-wrap { flex-direction: column; align-items: flex-start; }
+}
+</style>
 </head>
-<body data-theme="indigo">
+<body>
 
-<!-- 導覽列 -->
-<nav class="site-nav">
-  <div class="nav-inner">
-    <a href="index.html" class="nav-logo">
-      飛揚細籽 <span>FEYOND</span>
-    </a>
-    <button class="nav-toggle" onclick="this.nextElementSibling.classList.toggle('open')">
-      <span></span><span></span><span></span>
-    </button>
-    <ul class="nav-menu">
-      <li><a href="index.html">所有文章</a></li>
-      <li><a href="index.html" class="active">心覺</a></li>
-      <li><a href="index.html">身覺</a></li>
-      <li><a href="index.html">香旅</a></li>
-      <li><a href="https://www.dhyana.store" target="_blank">根本芳療</a></li>
-    </ul>
-  </div>
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html" class="nav-back">← 返回文章列表</a>
+  <a href="index.html" class="nav-logo">飛揚細籽 FEYOND</a>
 </nav>
 
-<!-- Hero -->
-<section class="hero-text">
-  <p class="hero-category">精油與植物專欄 · 心覺</p>
-  <h1 class="hero-title">藍雲杉：在自己的土地上靜靜站立</h1>
-  <p class="hero-subtitle">藍雲杉與現代人的界線清理之道</p>
+<!-- HEADER -->
+<header class="article-header">
+  <p class="article-category">植物誌 · Botany</p>
+  <h1 class="article-title">藍雲杉</h1>
+  <p class="article-subtitle">在自己的土地上靜靜站立</p>
+  <p class="article-meta">Feyond · 2026</p>
+</header>
+
+<!-- HERO IMAGE -->
+<figure class="article-hero">
+  <img src="https://cdn-next.cybassets.com/s/files/17640/ckeditor/pictures/content_5c33e3d1-2fbe-4449-b693-11a911d6b644.png" alt="藍雲杉">
+  <figcaption>Picea pungens · 洛磯山脈，科羅拉多州</figcaption>
+</figure>
+
+<!-- INTRO（單欄開場）-->
+<section class="intro-section">
+  <p>在夏季的東北美洲，一道道銀藍色的針葉閃耀在陽光下，如星辰落入林地，那是藍雲杉的呼吸。<em>Picea pungens</em>，以其獨特的藍綠色至銀藍色針葉而聞名，針葉表面的蠟質層，在陽光下會反射出閃光效果。</p>
+
+  <p>藍雲杉於 1879 年由植物學家啓治・恩格爾曼首次進行有效科學描述。"pungens" 意為「尖銳的」，指的正是那一根根帶著防禦性美感的針葉——藍雲杉最誠實的自我表達。</p>
 </section>
 
-<!-- Meta -->
-<div class="meta-bar">
-  <span>Feyond</span>
-  <span class="divider">·</span>
-  <span>2024</span>
-</div>
+<!-- TWO COLUMN SECTIONS -->
+<div class="content-section">
 
-<!-- 引言 -->
-<section class="quote-light fade-in">
-  <blockquote>
-    在夏季的東北美洲，一道道銀藍色的針葉閃耀在陽光下，如星辰落入林地，那是藍雲杉的呼吸。
-  </blockquote>
-</section>
-
-<!-- 內文 -->
-<article class="article-content">
-
-<p class="fade-in drop-cap"><em>Picea pungens</em>，以其獨特的藍綠色至銀藍色針葉而聞名，針葉表面的蠟質層，在陽光下會反射出閃光效果。藍雲杉於 1879年由植物學家啓治.恩格爾曼（George Engelmanm)首次進行有效科學描述。</p>
-
-<p class="fade-in">樹形呈錐形或金字塔形，樹冠密集，枝條水平伸展，樹幹呈紅色或灰紅色。樹皮薄而鱗片狀，幼樹時呈灰色，成熟後轉為紅褐色。是一種極富存在感的針葉樹，以其冷冽的藍綠葉色、剛勁直立的姿態，以及粗壯的紅褐色樹幹著稱，是一種深具象徵意義的北美原生植物。</p>
-
-<p class="fade-in">原生於美國西部洛磯山脈，藍雲杉是科羅拉多州的官方州樹（自 1939 年起），象徵洛磯山脈的野性美麗和堅韌精神。</p>
-
-<p class="fade-in">藍雲杉不僅是自然界的標誌性植物，還在北美文化中佔有重要地位。尤其是原住民保留區，特別是納瓦霍（Navajo）人，和凱雷斯（Keres）美洲原住民，會剪下象徵聖潔的枝葉做為贈禮，他們相信能為人帶來保護與好運。</p>
-
-<p class="fade-in">循著這個有趣的儀式感，我探索到了一則來自高原，靜默守護藍雲杉的故事。在科羅拉多州的高原上，冬季來臨時，萬物歸於沉靜，白雪覆蓋大地。唯有藍雲杉，挺立在寒風中，葉色更顯冷冽。當地的一位納瓦霍年長女性，名叫Yazhi，她是部族中代代相傳的療癒者。她常說：</p>
-
-</article>
-
-<!-- 深色引言 -->
-<section class="quote-dark fade-in">
-  <blockquote>
-    「每一株藍雲杉，都是為了記得我們忘了的事而存在——如何站穩腳步，如何在寒冷中不凋，如何靜默卻堅定地，活著。」
-  </blockquote>
-  <cite>— Yazhi，納瓦霍族療癒者</cite>
-</section>
-
-<article class="article-content">
-
-<p class="fade-in">多年來，她會在冬至前夕，帶領族人走進山林，摘取藍雲杉的枝葉，在火中緩慢地熏香。煙霧升起時，人們低頭祈禱，將一年中未能說出口的痛苦、疲憊、羞愧或渴望，一點一滴地交還給風。Yazhi會將針葉蒸餾成精油，滴入熱水中，為那些心神紊亂、失眠多夢的年輕人沐浴。她說藍雲杉精油能：</p>
-
-<ul class="fade-in">
-  <li><strong>守住靈魂的邊界</strong>，排列有序的針葉，讓自己與世界有個彼此尊重的距離</li>
-  <li><strong>喚醒內在的陽性力量</strong>，幫助人在混亂中重新找回內在的秩序</li>
-  <li><strong>修補「能量洩漏」的破口</strong>，讓人在情緒依附、過度付出或長期壓抑後，回到自己的中心</li>
-</ul>
-
-</article>
-
-<!-- 淺色引言 -->
-<section class="quote-light fade-in">
-  <blockquote>
-    界線（Boundary）常指的是個體與外界之間，身心與能量的自然邊界。好的界線，像森林的樹幹，既能讓陽光穿透，也不讓雜草入侵。
-  </blockquote>
-</section>
-
-<article class="article-content">
-
-<p class="fade-in">精油的淨化力，像極了高山晨曦的空氣，也像一層保護膜，讓人與世界有個「剛好」的距離，這樣能作為「界線清理」的植物精油，也適合高敏族群使用。</p>
-
-</article>
-
-<!-- 儀式區塊 -->
-<section class="ritual-section">
-  <div class="ritual-inner">
-    <h3 class="ritual-title">每日香氣儀式：啟動藍雲杉「界線清理」</h3>
-    
-    <div class="ritual-card fade-in">
-      <h4>I 擴香冥想法</h4>
-      <div class="recipe">藍雲杉精油2滴 + 粉紅胡椒精油1滴 + 索馬利蘭乳香精油1滴</div>
-      <p>滴入擴香器中，或以純油閉眼深呼吸3次。意念想像一層藍光如雲杉針葉的凝脂香包覆著，靜默以下語句：</p>
-      <blockquote>「我尊重自己的界線。我不吸收他人的情緒與投射。我可以共感，但我也有權選擇保留能量。今天，我與我自己在一起。」</blockquote>
+  <!-- Section 1：植物學身分 -->
+  <div class="two-col">
+    <div class="col-left">
+      <h2>植物學身分</h2>
+      <p class="summary">錐形樹冠、銀藍針葉，科羅拉多州官方州樹，深具象徵意義的北美原生植物。</p>
     </div>
-    
-    <div class="ritual-card fade-in">
-      <h4>II 正氣能量回歸 5%按摩法</h4>
-      <div class="recipe">基底油15ml + 藍雲杉4滴 + 岩蘭草2滴 + 杜松漿果2滴 + 花梨木4滴 + 真正薰衣草3滴</div>
-      <p>搭配基底油按摩太陽神經叢與心輪，或滴入擴香器中。</p>
-      <blockquote>「允許自己回到自己的能量場中，放下不屬於我的情緒與責任，靜靜站在我自己的土地上。」</blockquote>
+    <div class="col-right">
+      <p>樹形呈錐形或金字塔形，樹冠密集，枝條水平伸展，樹幹呈紅色或灰紅色，樹皮薄而鱗片狀——幼樹時呈灰色，成熟後轉為紅褐色。以其冷冽的藍綠葉色、剛勁直立的姿態著稱，是一種極富存在感的北美原生植物。</p>
+      <p>原生於美國西部洛磯山脈，藍雲杉是科羅拉多州的官方州樹（自 1939 年起），象徵洛磯山脈的野性美麗和堅韌精神。在海拔 1,800–3,300 公尺的山地森林裡，以及居家庭園中，都有它的蹤跡。</p>
+      <p>藍雲杉不僅是自然界的標誌性植物，還在北美文化中佔有重要地位。尤其是納瓦霍（Navajo）人和凱雷斯（Keres）美洲原住民，會剪下象徵聖潔的枝葉做為贈禮，他們相信能為人帶來保護與好運。</p>
     </div>
   </div>
-</section>
 
-<!-- 結尾 -->
-<section class="closing fade-in">
-  <p class="closing-text">
-    靜靜站在你自己的土地上，<br>
-    已經是一種力量。
-  </p>
-</section>
+  <!-- Section 2：療癒者的故事 -->
+  <div class="two-col">
+    <div class="col-left">
+      <h2>療癒者的故事</h2>
+      <p class="summary">科羅拉多高原，納瓦霍療癒者 Yazhi 與冬至熏香儀式的傳承。</p>
+    </div>
+    <div class="col-right">
+      <p>循著這個有趣的儀式感，我探索到了一則來自高原，靜默守護藍雲杉的故事。</p>
+      <p>在科羅拉多州的高原上，冬季來臨時，萬物歸於沉靜，白雪覆蓋大地。唯有藍雲杉，挺立在寒風中，葉色更顯冷冽。當地的一位納瓦霍年長女性，名叫 Yazhi，她是部族中代代相傳的療癒者。她常說：</p>
+      <blockquote>
+        「每一株藍雲杉，都是為了記得我們忘了的事而存在——如何站穩腳步，如何在寒冷中不凋，如何靜默卻堅定地，活著。」
+        <cite>— Yazhi，納瓦霍族療癒者</cite>
+      </blockquote>
+      <p>多年來，她會在冬至前夕，帶領族人走進山林，摘取藍雲杉的枝葉，在火中緩慢地熏香。煙霧升起時，人們低頭祈禱，將一年中未能說出口的痛苦、疲憊、羞愧或渴望，一點一滴地交還給風。她會將針葉蒸餾成精油，滴入熱水中，為那些心神紊亂、失眠多夢的年輕人沐浴。</p>
+    </div>
+  </div>
 
-<!-- 文章導覽 -->
-<nav class="article-nav">
-  <a href="helichrysum.html" class="article-nav-item prev">
-    <p class="article-nav-label">上一篇</p>
-    <p class="article-nav-title">巴爾幹半島｜摺痕大地綻出的不凋花</p>
-  </a>
-  <a href="rosewood.html" class="article-nav-item next">
-    <p class="article-nav-label">下一篇</p>
-    <p class="article-nav-title">雨林裡的芳香守護職人</p>
-  </a>
-</nav>
+  <!-- Section 3：精油化學輪廓（圓環圖）-->
+  <div class="two-col">
+    <div class="col-left">
+      <h2>精油化學輪廓</h2>
+      <p class="summary">針葉、枝條、樹幹蒸餾提取，清新木質與香脂調的精油，萃率 0.5–1%。</p>
+    </div>
+    <div class="col-right">
+      <p>藍雲杉精油從針葉、枝條和樹幹蒸餾提取，呈現清新、木質與香脂的綠色微琥珀調。主要成份的協同作用，賦予它在現代芳療中獨特的功效定位。</p>
 
-<!-- 標籤 -->
-<div class="tags fade-in">
-  <a href="#">藍雲杉</a>
-  <a href="#">界線清理</a>
-  <a href="#">納瓦霍</a>
-  <a href="#">精油儀式</a>
+      <!-- 互動圓環圖 -->
+      <div class="donut-wrap">
+        <div class="donut-svg-wrap">
+          <svg id="donutSvg" viewBox="0 0 200 200" width="200" height="200"></svg>
+          <div class="donut-center">
+            <div class="donut-center-name" id="donutName">藍雲杉精油</div>
+            <div class="donut-center-pct" id="donutPct">5 種</div>
+            <div class="donut-center-role" id="donutRole">主要成份</div>
+          </div>
+        </div>
+        <div class="donut-legend" id="donutLegend"></div>
+      </div>
+
+      <p>這組成份協同出的精油特質，能幫助身體內小宇宙在周期混亂時恢復平衡感，特別在更年期症狀管理上表現優異。精油的淨化力像極了高山晨曦的空氣，也像一層保護膜，讓人與世界有個「剛好」的距離，適合高敏族群使用。</p>
+    </div>
+  </div>
+
+  <!-- Section 4：界線清理 -->
+  <div class="two-col">
+    <div class="col-left">
+      <h2>界線清理之道</h2>
+      <p class="summary">藍雲杉排列有序的針葉，呈現一種防禦性的美感，教我們如何與世界保持「剛好」的距離。</p>
+    </div>
+    <div class="col-right">
+      <p>她說藍雲杉精油能：</p>
+      <ul>
+        <li><strong>守住靈魂的邊界</strong>——排列有序的針葉，讓自己與世界有個彼此尊重的距離</li>
+        <li><strong>喚醒內在的陽性力量</strong>——幫助人在混亂中重新找回內在的秩序；那不是侵略性的掌控，而是沉穩的自我主權</li>
+        <li><strong>修補能量洩漏的破口</strong>——讓人在情緒依附、過度付出或長期壓抑後，回到自己的中心</li>
+      </ul>
+      <p>Yazhi 說我們確實活在一個界線感不易清楚、能量容易交錯與洩漏的時代。不懂拒絕、對他人情緒高度共感；頻繁捲入他人的煩惱；長期照顧他人後失去自我感——這些都是現代人常有的能量洩漏症狀。</p>
+      <p>藍雲杉葉面上的蠟質，隔絕過多水份蒸發，具有封存能量與自我保護的能力。冷靜的藍綠針葉，帶來清明、收斂力——正是現代人最需要的那份內在秩序。</p>
+    </div>
+  </div>
+
+  <!-- Section 5：每日香氣儀式 -->
+  <div class="two-col">
+    <div class="col-left">
+      <h2>每日香氣儀式</h2>
+      <p class="summary">兩款啟動界線清理的日常儀式配方，以及 Yazhi 傳授的靜默語句。</p>
+    </div>
+    <div class="col-right">
+      <p>我們也可以透過每日小小香氣儀式，啟動藍雲杉的「界線清理」。</p>
+
+      <div class="ritual-box">
+        <div class="ritual-box-label">Ritual I · 擴香冥想法</div>
+        <div class="ritual-box-formula">
+          藍雲杉精油 2 滴<br>
+          粉紅胡椒精油 1 滴<br>
+          索馬利蘭乳香精油 1 滴
+        </div>
+      </div>
+      <p>滴入擴香器中，或以純油閉眼深呼吸 3 次。意念想像一層藍光如雲杉針葉的凝脂香包覆著，靜默以下語句：</p>
+      <div class="mantra-box">
+        「我尊重自己的界線。<br>
+        我不吸收他人的情緒與投射。<br>
+        我可以共感，但我也有權選擇保留能量。<br>
+        今天，我與我自己在一起。」
+      </div>
+
+      <div class="ritual-box">
+        <div class="ritual-box-label">Ritual II · 正氣能量回歸 5% 按摩法</div>
+        <div class="ritual-box-formula">
+          基底油 15ml<br>
+          藍雲杉 4 滴 · 岩蘭草 2 滴<br>
+          杜松漿果 2 滴 · 花梨木 4 滴<br>
+          真正薰衣草 3 滴
+        </div>
+      </div>
+      <p>搭配基底油按摩太陽神經叢與心輪，或滴入擴香器中。閉眼深呼吸 3 次，靜默以下語句：</p>
+      <div class="mantra-box">
+        「允許自己回到自己的能量場中，<br>
+        放下不屬於我的情緒與責任，<br>
+        靜靜站在我自己的土地上。」
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 6：結語 -->
+  <div class="two-col">
+    <div class="col-left">
+      <h2>與藍雲杉<br>並肩而立</h2>
+      <p class="summary">穩定，不是僵硬，而是一種深深扎根的溫柔力量。</p>
+    </div>
+    <div class="col-right">
+      <p>在這個界線模糊、聲音嘈雜、節奏過快的世界裡，藍雲杉不是要我們逃避、封閉或築起高牆。它只是以自己的方式提醒我們：穩定，不是僵硬，而是一種深深扎根的溫柔力量。</p>
+      <p>每一次與藍雲杉的接觸——無論是香氣、精油、儀式、或是一段靜默的呼吸——都是一次與自己界線重逢的旅程。那不是劃開與他人之間的隔閡，而是重建一條你與世界能和平共處的通道。</p>
+      <blockquote>
+        「靜靜站在你自己的土地上，已經是一種力量。」
+        <cite>— Yazhi，納瓦霍族療癒者</cite>
+      </blockquote>
+      <p>讓藍雲杉陪你站在自己的土地上，即使風起雲湧，也能守住心的邊界，靜默而堅定地活著。</p>
+    </div>
+  </div>
+
 </div>
 
-<!-- 頁尾 -->
+<!-- ARTICLE FOOTER -->
+<div class="article-footer">
+  <p>感謝閱讀</p>
+  <a href="index.html" class="back-link">返回文章列表</a>
+</div>
+
+<!-- SITE FOOTER -->
 <footer class="site-footer">
-  <p class="footer-brand">飛揚細籽</p>
-  <p class="footer-tagline">FEYOND · 25年芳療文章匯集</p>
-  <div class="footer-links">
-    <a href="https://www.dhyana.store" target="_blank">根本芳療 DHYANA</a>
-    <a href="index.html">返回文章列表</a>
-  </div>
-  <p class="footer-copy">© 2024 Feyond. All rights reserved.</p>
+  <p class="footer-brand">飛揚細籽 · FEYOND</p>
+  <p class="footer-copy">© 2026 Dhyana Aromatherapy</p>
 </footer>
 
-<!-- 返回頂端 -->
-<button class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})"></button>
-
 <script>
-// 淡入動畫
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) entry.target.classList.add('visible');
-  });
-}, { threshold: 0.1 });
-document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+// 圓環圖
+const compounds = [
+  { name: 'alpha-pinene',   label: '主成份',   pct: 30, display: '20–40%', color: '#2a4a6e' },
+  { name: 'limonene',       label: '次成份',   pct: 15, display: '10–20%', color: '#4a6a90' },
+  { name: 'bornyl acetate', label: '關鍵成份', pct: 20, display: '~20%',   color: '#7a9abc' },
+  { name: 'beta-pinene',    label: '協同成份', pct: 18, display: '~18%',   color: '#9ab4cc' },
+  { name: 'camphene',       label: '協同成份', pct: 17, display: '~17%',   color: '#b8cce0' },
+];
+const svg = document.getElementById('donutSvg');
+const legend = document.getElementById('donutLegend');
+const cx = 100, cy = 100, R = 84, r = 56;
+const gap = 0.025;
+const total = compounds.reduce((s, c) => s + c.pct, 0);
+let startAngle = -Math.PI / 2;
 
-// 返回頂端
-window.addEventListener('scroll', () => {
-  document.querySelector('.back-to-top').classList.toggle('visible', window.scrollY > 400);
+function polarToXY(a, radius) {
+  return { x: cx + radius * Math.cos(a), y: cy + radius * Math.sin(a) };
+}
+function makeArc(s, e, oR, iR) {
+  const o1 = polarToXY(s, oR), o2 = polarToXY(e, oR);
+  const i1 = polarToXY(e, iR), i2 = polarToXY(s, iR);
+  const lg = (e - s) > Math.PI ? 1 : 0;
+  return `M ${o1.x} ${o1.y} A ${oR} ${oR} 0 ${lg} 1 ${o2.x} ${o2.y} L ${i1.x} ${i1.y} A ${iR} ${iR} 0 ${lg} 0 ${i2.x} ${i2.y} Z`;
+}
+
+const paths = [];
+compounds.forEach((c, i) => {
+  const slice = (c.pct / total) * 2 * Math.PI - gap;
+  const end = startAngle + slice;
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  path.setAttribute('d', makeArc(startAngle + gap / 2, end, R, r));
+  path.setAttribute('fill', c.color);
+  path.setAttribute('stroke', '#FFFEF8');
+  path.setAttribute('stroke-width', '2');
+  path.style.cursor = 'pointer';
+  path.style.transition = 'transform 0.25s, opacity 0.25s';
+  path.style.transformOrigin = `${cx}px ${cy}px`;
+  path.addEventListener('mouseenter', () => {
+    document.getElementById('donutName').textContent = c.name;
+    document.getElementById('donutPct').textContent  = c.display;
+    document.getElementById('donutRole').textContent = c.label;
+    paths.forEach((p, j) => p.style.opacity = j === i ? '1' : '0.35');
+    path.style.transform = 'scale(1.05)';
+  });
+  path.addEventListener('mouseleave', () => {
+    document.getElementById('donutName').textContent = '藍雲杉精油';
+    document.getElementById('donutPct').textContent  = '5 種';
+    document.getElementById('donutRole').textContent = '主要成份';
+    paths.forEach(p => { p.style.opacity = '1'; p.style.transform = 'scale(1)'; });
+  });
+  svg.appendChild(path);
+  paths.push(path);
+
+  const li = document.createElement('div');
+  li.className = 'donut-legend-item';
+  li.innerHTML = `<div class="donut-legend-dot" style="background:${c.color}"></div><div class="donut-legend-name">${c.name}</div><div class="donut-legend-pct">${c.display}</div>`;
+  li.addEventListener('mouseenter', () => path.dispatchEvent(new Event('mouseenter')));
+  li.addEventListener('mouseleave', () => path.dispatchEvent(new Event('mouseleave')));
+  legend.appendChild(li);
+  startAngle = end + gap;
 });
 </script>
-
 </body>
 </html>
