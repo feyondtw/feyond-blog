@@ -631,7 +631,7 @@ img { max-width: 100%; display: block; }
 <nav class="nav">
   <a href="index.html" class="nav-logo">
     FEYOND
-    <span>在香氣中找到生命的根本</span>
+    <span>在香氣中找到自己的語言</span>
   </a>
   <div class="nav-links">
     <a href="about.html" class="nav-link">關於作者</a>
@@ -795,7 +795,7 @@ img { max-width: 100%; display: block; }
           <h2 class="new-article-title">${article.title}</h2>
           ${article.subtitle ? `<p class="new-article-subtitle">${article.subtitle}</p>` : ''}
           <p class="new-article-excerpt">${article.excerpt}</p>
-          <p class="new-article-meta">${(article.written || article.date).replace(/-/g,'.')} · ${CAT[article.category]?.label || ''}</p>
+          <p class="new-article-meta">${article.date.replace(/-/g,'.')} · ${CAT[article.category]?.label || ''}</p>
           <span class="read-more">閱讀全文 →</span>
         </div>
       </a>`;
@@ -817,7 +817,7 @@ img { max-width: 100%; display: block; }
         </div>
         <h3 class="featured-title">${article.title}</h3>
         <p class="featured-excerpt">${article.excerpt}</p>
-        <p class="featured-meta">${(article.written || article.date)} · ${CAT[article.category]?.label || ''}</p>
+        <p class="featured-meta">${article.date} · ${CAT[article.category]?.label || ''}</p>
       </a>`;
   }
 
@@ -836,7 +836,7 @@ img { max-width: 100%; display: block; }
           <h3 class="article-list-title">${article.title}</h3>
           <p class="article-list-excerpt">${article.excerpt}</p>
         </div>
-        <p class="article-list-meta">${article.written || article.date}</p>
+        <p class="article-list-meta">${article.date}</p>
         <span class="article-list-arrow">→</span>
       </a>`;
   }
@@ -908,15 +908,14 @@ img { max-width: 100%; display: block; }
   // 新增文章時：① 在下方陣列最前面加一筆 ② 同步更新 articles.json
   const ARTICLES = [
     {
-      title: "慈悲的淚珠",
-      subtitle: "岩玫瑰 · 安達盧西亞的凝脂傳說",
-      file: "cistus-labdanum.html",
-      category: "journey",
-      date: "2026-04-05",
-      written: "2024-06-01",
-      excerpt: "在地人稱為「基督的淚珠」，古埃及人稱為「奧西里斯之淚」。從安達盧西亞丘陵的白色花海，到貝克爾家族守護的傳統採集，再到台灣安寧病房的止血實證...",
-      image: "岩_岩玫瑰主圖.webp",
-      premium: true
+      title: "收攝",
+      subtitle: "Pratyahara · 感官的歸返",
+      file: "pratyahara.html",
+      category: "philosophy",
+      date: "2026-04-10",
+      excerpt: "春光灑進橡木林裡的玻璃屋，我忽然明白，什麼叫做「恰好的透明」。這是一篇關於 Pratyahara 感官收攝的旅途書寫——關於停止解釋，關於歸返自己。",
+      image: "pratyahara_main.jpg",
+      premium: false
     },
     {
       title: "從企業修羅場到東方淨琉璃光",
@@ -974,8 +973,8 @@ img { max-width: 100%; display: block; }
       file: "blue-spruce.html",
       category: "botany",
       date: "2026-03-10",
-      excerpt: "在夏季的東北美洲，一道道銀藍色的針葉閃耀在陽光下，如星辰落入林地，那是藍雲杉的呼吸。",
-  image: "藍杉_Main.avif",
+      excerpt: "科羅拉多高原的清涼氣息，針葉間的寧靜冥想...",
+      image: "",
       premium: false
     },
     {
