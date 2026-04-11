@@ -824,6 +824,21 @@ img { max-width: 100%; display: block; }
   // ── 所有文章列表項目 ──────────────────────────
   function renderListItem(article) {
     const premiumClass = article.premium ? ' is-premium' : '';
+    if (article.locked) {
+      return `
+        <div class="article-list-item${premiumClass}" style="cursor:default;opacity:0.6;"
+             data-category="${article.category}" data-date="${article.date}">
+          <div class="article-list-info">
+            <div class="article-list-badges">
+              ${catBadge(article.category)}
+              <span class="badge" style="border:1px solid #A8A29A;color:#A8A29A;">等候解鎖</span>
+            </div>
+            <h3 class="article-list-title">${article.title}</h3>
+            <p class="article-list-excerpt">${article.excerpt}</p>
+          </div>
+          <p class="article-list-meta">${article.date}</p>
+        </div>`;
+    }
     return `
       <a href="${href(article)}" class="article-list-item${premiumClass}"
          data-category="${article.category}" data-date="${article.date}">
@@ -964,8 +979,9 @@ img { max-width: 100%; display: block; }
       category: "philosophy",
       date: "2026-03-15",
       excerpt: "傷痕如何成為芬芳。沉香的形成需要數十年，這是大自然的療癒哲學...",
-      image: "",
-      premium: true
+      image: "沉香.jpg",
+      premium: true,
+      locked: true
     },
     {
       title: "藍雲杉",
@@ -985,7 +1001,8 @@ img { max-width: 100%; display: block; }
       date: "2026-03-05",
       excerpt: "亞馬遜雨林的珍貴禮物，玫瑰與森林的相遇...",
       image: "",
-      premium: false
+      premium: false,
+      locked: true
     },
     {
       title: "沙漠之靈",
@@ -995,7 +1012,8 @@ img { max-width: 100%; display: block; }
       date: "2026-02-28",
       excerpt: "歐姬芙的新墨西哥，在乾燥的空氣中尋找生命的香氣...",
       image: "",
-      premium: false
+      premium: false,
+      locked: true
     },
     {
       title: "越南芽莊沉香",
@@ -1005,7 +1023,8 @@ img { max-width: 100%; display: block; }
       date: "2026-02-20",
       excerpt: "Trang 夫人的家族傳承，三代人守護的蒸餾工藝...",
       image: "",
-      premium: true
+      premium: true,
+      locked: true
     },
     {
       title: "阿曼乳香",
@@ -1015,7 +1034,8 @@ img { max-width: 100%; display: block; }
       date: "2026-02-15",
       excerpt: "沙漠中的神聖之淚，古老貿易路線上的白色黃金...",
       image: "",
-      premium: true
+      premium: true,
+      locked: true
     }
   ];
 
