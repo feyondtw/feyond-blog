@@ -225,6 +225,24 @@ img { max-width: 100%; display: block; }
   text-align: center;
 }
 
+/* 中型圖 */
+.img-medium {
+  max-width: 560px;
+  margin: 40px auto 60px;
+  padding: 0 24px;
+}
+.img-medium img {
+  width: 100%;
+  filter: saturate(0.75) contrast(0.9) brightness(0.97);
+}
+.img-medium figcaption {
+  margin-top: 12px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--ink-faint);
+  text-align: center;
+}
+
 /* ARTICLE FOOTER */
 .article-footer {
   max-width: 680px;
@@ -322,6 +340,12 @@ img { max-width: 100%; display: block; }
   <p>透過玻璃，春色與室內的暖光融在一起。我在這裡坐了很久。</p>
 </section>
 
+<!-- Intro 後插圖 -->
+<figure class="img-medium">
+  <img src="https://feyond.muzen.store/images/pratyahara03.jpg" alt="玻璃屋內光影與植栽">
+  <figcaption>春光透過玻璃灑落，陰影在地板上寫字</figcaption>
+</figure>
+
 <!-- TWO COLUMN SECTIONS -->
 <div class="content-section">
 
@@ -356,7 +380,7 @@ img { max-width: 100%; display: block; }
 </div>
 
 <!-- 中段照片 -->
-<figure class="img-full">
+<figure class="img-medium">
   <img src="https://feyond.muzen.store/images/pratyahara 02.jpg" alt="林間玻璃屋側影">
   <figcaption>橡木林間，另一個角度的透明</figcaption>
 </figure>
@@ -395,8 +419,14 @@ img { max-width: 100%; display: block; }
 
 </div>
 
+<!-- 精實的密度後插圖 -->
+<figure class="img-medium">
+  <img src="https://feyond.muzen.store/images/pratyahara04.jpg" alt="玻璃屋內望向橡木林">
+  <figcaption>透過玻璃框架望向林間——通透，卻有所守</figcaption>
+</figure>
+
 <!-- 結尾照片 -->
-<figure class="img-full">
+<figure class="img-medium">
   <img src="https://feyond.muzen.store/images/pratyahara01.jpg" alt="玻璃屋內，紅酒與麵包">
   <figcaption>玻璃屋內的從容——紅酒、麵包，與一種不需要解釋的安靜</figcaption>
 </figure>
