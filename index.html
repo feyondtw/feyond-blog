@@ -790,6 +790,23 @@ img { max-width: 100%; display: block; }
     const imgEl = img
       ? `<img src="${img}" alt="${article.title}">`
       : `<div style="width:100%;height:100%;background:linear-gradient(135deg,#3D4A6B,#2C3A5A);"></div>`;
+    if (article.locked) {
+      return `
+        <div class="new-article-card" style="cursor:default;"
+             data-category="${article.category}" data-date="${article.date}">
+          <div class="new-article-image">${imgEl}</div>
+          <div class="new-article-content">
+            <div class="new-article-badges">
+              ${catBadge(article.category)}
+              <span class="badge" style="border:1px solid #A8A29A;color:#A8A29A;">等候解鎖</span>
+            </div>
+            <h2 class="new-article-title">${article.title}</h2>
+            ${article.subtitle ? `<p class="new-article-subtitle">${article.subtitle}</p>` : ''}
+            <p class="new-article-excerpt">${article.excerpt}</p>
+            <p class="new-article-meta">${article.date.replace(/-/g,'.')} · ${CAT[article.category]?.label || ''}</p>
+          </div>
+        </div>`;
+    }
     return `
       <a href="${href(article)}" class="new-article-card"
          data-category="${article.category}" data-date="${article.date}">
@@ -815,6 +832,20 @@ img { max-width: 100%; display: block; }
     const imgEl = img
       ? `<img src="${img}" alt="${article.title}">`
       : `<div style="width:100%;height:100%;background:linear-gradient(135deg,#4A4540,#252220);"></div>`;
+    if (article.locked) {
+      return `
+        <div class="featured-card" style="cursor:default;opacity:0.6;"
+             data-category="${article.category}" data-date="${article.date}">
+          <div class="featured-image">${imgEl}</div>
+          <div class="featured-badges">
+            ${catBadge(article.category)}
+            <span class="badge" style="border:1px solid #A8A29A;color:#A8A29A;">等候解鎖</span>
+          </div>
+          <h3 class="featured-title">${article.title}</h3>
+          <p class="featured-excerpt">${article.excerpt}</p>
+          <p class="featured-meta">${article.date} · ${CAT[article.category]?.label || ''}</p>
+        </div>`;
+    }
     return `
       <a href="${href(article)}" class="featured-card"
          data-category="${article.category}" data-date="${article.date}">
