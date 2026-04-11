@@ -309,7 +309,7 @@ img { max-width: 100%; display: block; }
 
 <!-- HERO IMAGE -->
 <figure class="article-hero">
-  <img src="https://feyond.muzen.store/images/pratyahara_main.jpg" alt="橡木林裡的玻璃屋，維吉尼亞州春日">
+  <img src="https://feyond.muzen.store/images/pratyahara main.jpg" alt="橡木林裡的玻璃屋，維吉尼亞州春日">
   <figcaption>Virginia · 橡木林中的玻璃屋，春光灑落</figcaption>
 </figure>
 
@@ -357,7 +357,7 @@ img { max-width: 100%; display: block; }
 
 <!-- 中段照片 -->
 <figure class="img-full">
-  <img src="https://feyond.muzen.store/images/pratyahara_02.jpg" alt="林間玻璃屋側影">
+  <img src="https://feyond.muzen.store/images/pratyahara 02.jpg" alt="林間玻璃屋側影">
   <figcaption>橡木林間，另一個角度的透明</figcaption>
 </figure>
 
