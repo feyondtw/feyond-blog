@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>收攝 · Pratyahara｜飛揚細籽 FEYOND</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+TC:wght@300;400;500&family=Noto+Sans+TC:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #FFFEF8;
+  --sand: #EDE6D6;
+  --parchment: #F5F0E3;
+  --ink: #252220;
+  --ink-soft: #4A4540;
+  --ink-muted: #7A756D;
+  --ink-faint: #A8A29A;
+  --gold: #B8965A;
+  --font-display: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+  --font-body: 'Noto Serif TC', Georgia, serif;
+  --font-sans: 'Noto Sans TC', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 17px; }
+body {
+  font-family: var(--font-body);
+  background: var(--cream);
+  color: var(--ink);
+  line-height: 2;
+  font-weight: 300;
+}
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+
+/* NAV */
+.nav {
+  padding: 28px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--sand);
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  color: var(--ink);
+}
+.nav-back {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  transition: color 0.3s;
+}
+.nav-back:hover { color: var(--ink); }
+
+/* ARTICLE HEADER */
+.article-header {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 80px 24px 48px;
+  text-align: center;
+}
+.article-category {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 24px;
+}
+.article-title {
+  font-family: var(--font-display);
+  font-size: 42px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+.article-subtitle {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  margin-bottom: 32px;
+}
+.article-meta {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--ink-faint);
+}
+
+/* HERO IMAGE */
+.article-hero {
+  max-width: 960px;
+  margin: 0 auto 80px;
+  padding: 0 24px;
+}
+.article-hero img {
+  width: 100%;
+  aspect-ratio: 16/10;
+  object-fit: cover;
+  filter: saturate(0.75) contrast(0.9) brightness(0.97);
+}
+.article-hero figcaption {
+  margin-top: 12px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--ink-faint);
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+/* TWO COLUMN LAYOUT */
+.content-section {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 60px;
+  padding: 48px 0;
+  border-top: 1px solid var(--sand);
+}
+
+.two-col:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.col-left {
+  position: sticky;
+  top: 100px;
+  align-self: start;
+}
+.col-left h2 {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  line-height: 1.5;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+.col-left .summary {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--ink-muted);
+  letter-spacing: 0.02em;
+}
+
+.col-right p {
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 2.2;
+  color: var(--ink-soft);
+  margin-bottom: 1.8em;
+  letter-spacing: 0.02em;
+}
+.col-right p:last-child { margin-bottom: 0; }
+
+.col-right blockquote {
+  margin: 2em 0;
+  padding: 1.5em 2em;
+  background: var(--parchment);
+  border-left: 3px solid var(--gold);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-style: italic;
+  line-height: 2;
+  color: var(--ink-soft);
+}
+
+/* INTRO（單欄開場）*/
+.intro-section {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+.intro-section p {
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 2.2;
+  color: var(--ink-soft);
+  margin-bottom: 1.8em;
+  letter-spacing: 0.02em;
+}
+.intro-section p:first-of-type::first-letter {
+  font-family: var(--font-display);
+  font-size: 4em;
+  float: left;
+  line-height: 0.85;
+  margin: 6px 16px 0 0;
+  color: var(--ink);
+  font-weight: 400;
+}
+
+/* 全幅圖 */
+.img-full {
+  max-width: 960px;
+  margin: 40px auto 60px;
+  padding: 0 24px;
+}
+.img-full img {
+  width: 100%;
+  filter: saturate(0.75) contrast(0.9) brightness(0.97);
+}
+.img-full figcaption {
+  margin-top: 12px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--ink-faint);
+  text-align: center;
+}
+
+/* ARTICLE FOOTER */
+.article-footer {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 48px 24px;
+  border-top: 1px solid var(--sand);
+  text-align: center;
+}
+.article-footer p {
+  font-size: 14px;
+  color: var(--ink-muted);
+  margin-bottom: 32px;
+}
+.back-link {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+  padding: 14px 32px;
+  border: 1px solid var(--gold);
+  transition: all 0.3s;
+}
+.back-link:hover {
+  background: var(--gold);
+  color: var(--cream);
+}
+
+/* SITE FOOTER */
+.site-footer {
+  background: var(--ink);
+  padding: 56px 24px;
+  text-align: center;
+}
+.footer-brand {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  color: var(--cream);
+  margin-bottom: 8px;
+}
+.footer-copy {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: rgba(255,254,248,0.4);
+}
+
+/* RWD */
+@media (max-width: 768px) {
+  html { font-size: 16px; }
+  .nav { padding: 20px 24px; }
+  .article-header { padding: 60px 20px 40px; }
+  .article-title { font-size: 32px; }
+  .two-col {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .col-left {
+    position: static;
+    border-bottom: 1px solid var(--sand);
+    padding-bottom: 24px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html" class="nav-back">← 返回</a>
+  <a href="index.html" class="nav-logo">飛揚細籽 FEYOND</a>
+</nav>
+
+<!-- HEADER -->
+<header class="article-header">
+  <p class="article-category">香氣哲思 · Philosophy</p>
+  <h1 class="article-title">收攝</h1>
+  <p class="article-subtitle">Pratyahara · 感官的歸返</p>
+  <p class="article-meta">2026.04.10</p>
+</header>
+
+<!-- HERO IMAGE -->
+<figure class="article-hero">
+  <img src="https://feyond.muzen.store/images/pratyahara_main.jpg" alt="橡木林裡的玻璃屋，維吉尼亞州春日">
+  <figcaption>Virginia · 橡木林中的玻璃屋，春光灑落</figcaption>
+</figure>
+
+<!-- INTRO（單欄開場）-->
+<section class="intro-section">
+  <p>春光灑進橡木林裡的玻璃屋，我忽然明白，什麼叫做「恰好的透明」。</p>
+
+  <p>這座屋子沒有招牌。從肯塔基的威士忌焦糖，一路開到維吉尼亞的葡萄酒鄉，我在一處沒有坐標的林間找到了它。主人是義大利釀酒師，被在地酒廠從舊世界遠聘而來，在異國土地上固執地紮根，不逐流、不稀釋自己。他沒有解釋任何事情。他只是在這裡，釀著屬於自己的靈魂。</p>
+
+  <p>透過玻璃，春色與室內的暖光融在一起。我在這裡坐了很久。</p>
+</section>
+
+<!-- TWO COLUMN SECTIONS -->
+<div class="content-section">
+
+  <!-- Section 1 -->
+  <div class="two-col">
+    <div class="col-left">
+      <h2>Pratyahara</h2>
+      <p class="summary">感官收攝，八支瑜伽行法的第五支——介於外在動作與內在專注之間的歸返。</p>
+    </div>
+    <div class="col-right">
+      <p>在瑜伽的古典語彙中，有一個詞叫做 Pratyahara——感官收攝。它是八支瑜伽行法的第五支，介於外在的動作練習與內在的專注之間。修習者在這裡學習一件事：把向外奔流的感官之河，轉回自身的源頭。</p>
+      <blockquote>
+        不是封閉。是歸返。
+      </blockquote>
+      <p>我花了二十多年才真正理解這個動作。</p>
+    </div>
+  </div>
+
+  <!-- Section 2 -->
+  <div class="two-col">
+    <div class="col-left">
+      <h2>平行線的兩端</h2>
+      <p class="summary">早年習慣把能量向外澆灌，直到站在認知落差的邊緣，才終於停止了解釋。</p>
+    </div>
+    <div class="col-right">
+      <p>早年的我，習慣把能量向外澆灌——澆向學生、澆向合作夥伴、澆向所有我以為「只差一點就能開竅」的人。我把自己調成最高頻的訊號，以為只要夠清晰、夠耐心，終究可以穿透任何的接收器。</p>
+      <p>我錯了。不是訊號不夠好。是某些接收器，天生就不是為了接收這個頻率而造的。這不是任何人的罪，只是宇宙配置的事實。我站在那道認知落差的邊緣，終於停止了解釋。</p>
+      <p>停止的那一刻，意外地輕。</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- 中段照片 -->
+<figure class="img-full">
+  <img src="https://feyond.muzen.store/images/pratyahara_02.jpg" alt="林間玻璃屋側影">
+  <figcaption>橡木林間，另一個角度的透明</figcaption>
+</figure>
+
+<!-- 繼續 TWO COLUMN -->
+<div class="content-section">
+
+  <!-- Section 3 -->
+  <div class="two-col">
+    <div class="col-left">
+      <h2>數位覺醒</h2>
+      <p class="summary">SA 靈魂的歸位——帶著生命厚度的系統架構師，進入高效能的隱居。</p>
+    </div>
+    <div class="col-right">
+      <p>那段時間，Cindy 一直在說：用 AI、組數位團隊、這個世界正在巨變。出身資管的她，永遠比我更早嗅到環境的位移。我當時只是聽著，尚未準備好讓自己安靜下來。</p>
+      <p>直到那段時差顛倒的日子，我才終於進入了「時間的富人」才有的狀態——全然安靜，與世隔絕，只有創作。過去那個系統架構師的靈魂，帶著這二十多年的厚度，悄悄歸位。</p>
+      <p>我把它稱為「高效能的隱居」。</p>
+      <blockquote>
+        當期待不再與他人的表現掛鉤，自由便隨之而來。
+      </blockquote>
+    </div>
+  </div>
+
+  <!-- Section 4 -->
+  <div class="two-col">
+    <div class="col-left">
+      <h2>精實的密度</h2>
+      <p class="summary">感官收攝不是縮減，而是找回密度——讓意識重新站到它本來站的地方。</p>
+    </div>
+    <div class="col-right">
+      <p>無論是調香還是經營，我始終是個精實主義者。當我感覺臃腫之時，無論是執行團隊還是身體，我都會啟動精準的架構重組。在瑜伽墊上，我實踐著 Pratyahara——將過去揮灑在「討好市場」與「卑微管理」上的能量，一一往內收回。</p>
+      <p>與其費力「帶領」他人，不如轉身高效地執行自我。讓同事聽懂我的語言，是我的責任；但選擇跟隨與否，是他們的自由意志。</p>
+      <p>橡木林裡，那位義大利釀酒師和他的夥伴在從容地烤麵包、倒紅酒。他們不解釋自己的選擇，不試圖讓所有人都懂。他們只是在這裡，把事情做到剛好。</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- 結尾照片 -->
+<figure class="img-full">
+  <img src="https://feyond.muzen.store/images/pratyahara01.jpg" alt="玻璃屋內，紅酒與麵包">
+  <figcaption>玻璃屋內的從容——紅酒、麵包，與一種不需要解釋的安靜</figcaption>
+</figure>
+
+<!-- 尾段 TWO COLUMN -->
+<div class="content-section">
+
+  <!-- Section 5 -->
+  <div class="two-col">
+    <div class="col-left">
+      <h2>香氣的共鳴</h2>
+      <p class="summary">有些連結，需要等待對頻的人。Pratyahara 不是終點，是所有深度工作的起點。</p>
+    </div>
+    <div class="col-right">
+      <p>我忽然想起那些嗅覺難以言說的瞬間——當一款精油的氣味碰到某個人的嗅覺記憶，那種共鳴的發生，從來不是解釋出來的。它只發生在準備好的感官之上。</p>
+      <p>有些連結，需要等待對頻的人。有些創作，需要先收回自己。</p>
+      <p>我在玻璃屋裡喝了一杯維吉尼亞的紅酒，帶著義大利釀酒師的驕傲與安靜。窗外的橡木林沐在春光裡，從不為誰解釋自己的高大。</p>
+      <blockquote>
+        那一刻，我聞到了一種氣味——不是葡萄酒的，而是屬於「做自己」這件事的——沉穩、乾淨，帶著時間的重量，又出奇地輕盈。
+      </blockquote>
+      <p>Pratyahara 不是終點，它是所有深度工作的起點。</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ARTICLE FOOTER -->
+<div class="article-footer">
+  <p>感謝閱讀</p>
+  <a href="index.html" class="back-link">返回文章列表</a>
+</div>
+
+<!-- SITE FOOTER -->
+<footer class="site-footer">
+  <p class="footer-brand">飛揚細籽 · FEYOND</p>
+  <p class="footer-copy">© 2026 Dhyana Aromatherapy</p>
+</footer>
+
+</body>
+</html>
