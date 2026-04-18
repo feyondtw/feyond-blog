@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>聯絡 Feyond｜飛揚細籽 FEYOND</title>
+<meta name="description" content="與 Feyond 老師聯絡——無論您想預約會員訂閱、詢問課程、或分享一段關於香氣的故事。">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+TC:wght@300;400;500&family=Noto+Sans+TC:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #FFFEF8;
+  --sand: #EDE6D6;
+  --parchment: #F5F0E3;
+  --ink: #252220;
+  --ink-soft: #4A4540;
+  --ink-muted: #7A756D;
+  --ink-faint: #A8A29A;
+  --gold: #B8965A;
+  --gold-light: #D4B87A;
+  --font-display: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+  --font-body: 'Noto Serif TC', Georgia, serif;
+  --font-sans: 'Noto Sans TC', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 17px; }
+body {
+  font-family: var(--font-body);
+  background: var(--cream);
+  color: var(--ink);
+  line-height: 1.9;
+  font-weight: 300;
+}
+a { color: inherit; text-decoration: none; }
+
+/* NAV */
+.nav {
+  padding: 28px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--sand);
+}
+.nav-back {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  transition: color 0.3s;
+}
+.nav-back:hover { color: var(--ink); }
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  color: var(--ink);
+}
+
+/* HERO */
+.contact-hero {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 96px 24px 48px;
+  text-align: center;
+}
+.contact-eyebrow {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+.contact-title {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  line-height: 1.3;
+  color: var(--ink);
+  margin-bottom: 20px;
+}
+.contact-subtitle {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  margin-bottom: 32px;
+}
+.contact-intro {
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--ink-soft);
+  line-height: 2;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* DIVIDER */
+.divider-dot {
+  text-align: center;
+  margin: 48px 0 0;
+  color: var(--ink-faint);
+  letter-spacing: 0.4em;
+  font-size: 14px;
+}
+
+/* FORM */
+.form-section {
+  max-width: 580px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+.form-intro {
+  font-family: var(--font-body);
+  text-align: center;
+  font-size: 14px;
+  color: var(--ink-muted);
+  margin-bottom: 40px;
+}
+
+.form-group {
+  margin-bottom: 28px;
+}
+.form-label {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  color: var(--ink-muted);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.form-input,
+.form-textarea,
+.form-select {
+  width: 100%;
+  padding: 14px 18px;
+  background: var(--cream);
+  border: 1px solid var(--sand);
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--ink);
+  font-weight: 300;
+  transition: border-color 0.3s;
+  letter-spacing: 0.03em;
+}
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+  outline: none;
+  border-color: var(--gold);
+  background: #FFFEF8;
+}
+.form-textarea {
+  min-height: 140px;
+  resize: vertical;
+  line-height: 1.8;
+  font-family: var(--font-body);
+}
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1L6 6L11 1' stroke='%237A756D' stroke-width='1.2' fill='none'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 18px center;
+  padding-right: 44px;
+  cursor: pointer;
+}
+
+/* SUBMIT BUTTON */
+.form-submit {
+  display: block;
+  width: 100%;
+  padding: 16px 32px;
+  background: var(--ink);
+  color: var(--cream);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-top: 16px;
+}
+.form-submit:hover {
+  background: var(--gold);
+}
+
+/* ALTERNATE CONTACT */
+.alt-contact {
+  max-width: 580px;
+  margin: 0 auto;
+  padding: 56px 24px;
+  border-top: 1px solid var(--sand);
+  text-align: center;
+}
+.alt-contact-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  margin-bottom: 20px;
+}
+.alt-contact-list {
+  list-style: none;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--ink-muted);
+  line-height: 2.4;
+}
+.alt-contact-list a {
+  color: var(--ink-soft);
+  transition: color 0.3s;
+  border-bottom: 1px solid transparent;
+}
+.alt-contact-list a:hover {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+.alt-contact-label {
+  color: var(--gold);
+  margin-right: 12px;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+}
+
+/* 成功訊息（預設隱藏） */
+.form-success {
+  display: none;
+  background: var(--parchment);
+  border-left: 3px solid var(--gold);
+  padding: 32px 28px;
+  text-align: center;
+  margin-bottom: 32px;
+}
+.form-success.active { display: block; }
+.form-success h3 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--ink);
+  margin-bottom: 12px;
+  letter-spacing: 0.04em;
+}
+.form-success p {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.9;
+}
+
+/* SITE FOOTER */
+.site-footer {
+  background: var(--ink);
+  padding: 56px 24px;
+  text-align: center;
+}
+.footer-brand {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  color: var(--cream);
+  margin-bottom: 8px;
+}
+.footer-copy {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: rgba(255,254,248,0.4);
+}
+
+/* RWD */
+@media (max-width: 768px) {
+  html { font-size: 16px; }
+  .nav { padding: 20px 24px; }
+  .contact-hero { padding: 72px 20px 40px; }
+  .contact-title { font-size: 36px; }
+  .contact-subtitle { font-size: 17px; }
+  .form-section { padding: 32px 20px 60px; }
+  .alt-contact { padding: 48px 20px; }
+}
+</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NPM5W1XHKG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-NPM5W1XHKG');
+</script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html" class="nav-back">← 返回首頁</a>
+  <a href="index.html" class="nav-logo">飛揚細籽 FEYOND</a>
+</nav>
+
+<!-- HERO -->
+<header class="contact-hero">
+  <p class="contact-eyebrow">Contact</p>
+  <h1 class="contact-title">聯絡 Feyond</h1>
+  <p class="contact-subtitle">每一封信，都會被我親自讀過</p>
+  <p class="contact-intro">
+    無論您想預約會員訂閱、詢問課程與精油配方，<br>
+    或只是想分享一段關於香氣的故事——<br>
+    請在下方留下您的訊息，我會盡快親自回覆。
+  </p>
+  <div class="divider-dot">· · ·</div>
+</header>
+
+<!-- FORM -->
+<section class="form-section">
+
+  <!-- 成功訊息（JS 觸發） -->
+  <div class="form-success" id="successMsg">
+    <h3>訊息已送出</h3>
+    <p>感謝您的聯絡，我會盡快親自回覆您。<br>請留意您的信箱（也可能在垃圾郵件裡）。</p>
+  </div>
+
+  <form id="contactForm" action="https://formsubmit.co/feyond@muzen.store" method="POST">
+
+    <!-- FormSubmit 設定：隱藏欄位 -->
+    <input type="hidden" name="_subject" value="【飛揚細籽】新訊息">
+    <input type="hidden" name="_template" value="table">
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_next" value="https://feyond.muzen.store/contact.html?sent=1">
+
+    <div class="form-group">
+      <label class="form-label" for="name">稱呼您</label>
+      <input class="form-input" type="text" id="name" name="您的稱呼" placeholder="例如：陳小姐 / 王老師" required>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="email">Email</label>
+      <input class="form-input" type="email" id="email" name="Email" placeholder="your@email.com" required>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="subject">來信主題</label>
+      <select class="form-select" id="subject" name="來信主題" required>
+        <option value="">請選擇⋯</option>
+        <option value="會員訂閱">預約會員訂閱</option>
+        <option value="課程諮詢">課程/工作坊諮詢</option>
+        <option value="精油配方">精油/配方討論</option>
+        <option value="合作提案">合作/邀約</option>
+        <option value="讀者回饋">讀者回饋</option>
+        <option value="其他">其他</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="message">您的訊息</label>
+      <textarea class="form-textarea" id="message" name="訊息內容" placeholder="請簡單描述您想聯絡的內容⋯" required></textarea>
+    </div>
+
+    <button type="submit" class="form-submit">送出訊息</button>
+
+  </form>
+
+</section>
+
+<!-- 其他聯絡方式 -->
+<section class="alt-contact">
+  <h2 class="alt-contact-title">或透過以下方式聯絡</h2>
+  <ul class="alt-contact-list">
+    <li>
+      <span class="alt-contact-label">EMAIL</span>
+      <a href="mailto:feyond@muzen.store">feyond@muzen.store</a>
+    </li>
+    <li>
+      <span class="alt-contact-label">STORE</span>
+      <a href="https://dhyana.store" target="_blank">根本芳療全球電商 dhyana.store</a>
+    </li>
+  </ul>
+</section>
+
+<!-- SITE FOOTER -->
+<footer class="site-footer">
+  <p class="footer-brand">飛揚細籽 · FEYOND</p>
+  <p class="footer-copy">© 2026 Dhyana Aromatherapy</p>
+</footer>
+
+<script>
+// 若 URL 帶 ?sent=1 則顯示成功訊息並隱藏表單
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('sent') === '1') {
+    document.getElementById('successMsg').classList.add('active');
+    document.getElementById('contactForm').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+})();
+</script>
+
+</body>
+</html>
