@@ -301,6 +301,22 @@ img { max-width: 100%; display: block; }
   margin: 24px 0;
   line-height: 1.8;
 }
+/* 右欄內嵌圖：讓圖與內文節奏一致 */
+.col-right-img {
+  margin: 32px 0;
+}
+.col-right-img img {
+  width: 100%;
+  filter: saturate(0.75) contrast(0.9) brightness(0.97);
+}
+.col-right-img figcaption {
+  margin-top: 12px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--ink-faint);
+  text-align: center;
+  line-height: 1.7;
+}
 
 /* 中型圖 */
 .img-medium {
@@ -620,12 +636,6 @@ img { max-width: 100%; display: block; }
   <blockquote>但從這些訊息卻是超越語言，如實存在。</blockquote>
 </section>
 
-<!-- 中段圖：銅製蒸餾器（第五節前，對應「兩個都在變化中的物質真的交會」） -->
-<figure class="img-medium">
-  <img src="https://feyond.muzen.store/images/geranium-bourbon-02.jpg" alt="銅製蒸餾器：特定溫度與壓力下的臨界萃取" onerror="this.parentElement.style.display='none'">
-  <figcaption>特定溫度與壓力下的臨界點——兩個都在變化中的物質，在這一刻真的交會</figcaption>
-</figure>
-
 <!-- 五、2020 年，另一個版本的原初感知 -->
 <section class="narrative-section">
   <h2>五、2020 年，另一個版本的原初感知</h2>
@@ -672,12 +682,6 @@ img { max-width: 100%; display: block; }
      空的定義 / 為什麼是天竺葵
      ═══════════════════════════════════════ -->
 
-<!-- 中段圖：葉脈（第六節「空」前，對應「拆開來，你找不到一個核心的它」） -->
-<figure class="img-medium">
-  <img src="https://feyond.muzen.store/images/geranium-bourbon-04.jpg" alt="葉脈特寫：植物內在的網絡結構" onerror="this.parentElement.style.display='none'">
-  <figcaption>葉脈裡的宇宙神聖秩序——拆開來，你找不到一個核心的「它」</figcaption>
-</figure>
-
 <div class="content-section">
 
   <!-- Section 6：空 -->
@@ -702,6 +706,12 @@ img { max-width: 100%; display: block; }
       <p>「空 śūnyatā」是——</p>
 
       <blockquote><strong>沒有任何物質，是一個獨立的、固定不變的「它」。</strong></blockquote>
+
+      <!-- 葉脈圖：內嵌於 col-right，對應「拆開來，你找不到一個核心的它」 -->
+      <figure class="col-right-img">
+        <img src="https://feyond.muzen.store/images/geranium-bourbon-04.jpg" alt="葉脈特寫：植物內在的網絡結構">
+        <figcaption>葉脈裡的宇宙神聖秩序——拆開來，你找不到一個核心的「它」</figcaption>
+      </figure>
 
       <p>一朵花不是因為有「花性」所以是花。它是種子、土壤、水、陽光、時間、甚至你那雙看見它的眼睛——暫時聚合的一個現象。拆開來，你找不到一個核心的「花」。</p>
 
@@ -757,6 +767,12 @@ img { max-width: 100%; display: block; }
       <p>到了 1870 年，波旁島天竺葵（Géranium Bourbon）已經成了全球精油市場的新標準。今天市面上的「Bourbon geranium」大多已經不是從留尼旺島來的了——主要產區早就移到馬達加斯加。但「Bourbon」這個字還在。那是一個殖民時代的名字、一座火山島的名字、一個法國王朝的名字——全部壓在一瓶精油的標籤上。</p>
 
       <p>天竺葵的萃率並不高，農家們清晨摘取 500 KG 的葉片，才能萃得 1 KG 的精油。但這 1 公斤裡，有那片高原那一年的雨量、有那一日的煦光、那位農夫片刻的心情。<strong>整個夏天、整座山、整片風——都濃縮在這瓶的淡金黃液體裡。</strong></p>
+
+      <!-- 蒸餾器圖：內嵌於 col-right，對應「法國調香師的蒸餾器」 -->
+      <figure class="col-right-img">
+        <img src="https://feyond.muzen.store/images/geranium-bourbon-02.jpg" alt="銅製蒸餾器：法國調香師的蒸餾之器">
+        <figcaption>銅製蒸餾器——幾十年累積的金屬記憶，把整個夏天、整座山、整片風，濃縮成一瓶淡金黃</figcaption>
+      </figure>
 
       <h3>所以漢內斯窗台上那一盆</h3>
 
@@ -819,12 +835,6 @@ img { max-width: 100%; display: block; }
      第三部分：回收單欄（菩提樹 / 虛空 / 結語）
      ═══════════════════════════════════════ -->
 
-<!-- 中段圖：抱樹雙手（第八節「菩提樹下」前） -->
-<figure class="img-medium">
-  <img src="https://feyond.muzen.store/images/geranium-bourbon-03.jpg" alt="森林裡擁抱樹幹的雙手" onerror="this.parentElement.style.display='none'">
-  <figcaption>菩提樹沒有發光，菩提樹沒有說話——它只是站在那裡，讓一個人可以坐下來，坐到看穿自己為止</figcaption>
-</figure>
-
 <!-- 菩提樹 -->
 <section class="narrative-section">
   <h2>八、菩提樹下</h2>
@@ -835,6 +845,15 @@ img { max-width: 100%; display: block; }
 
   <p>菩提樹能讓佛陀成道，是因為<strong>它沒有執著於「我是菩提樹」這件事。</strong></p>
 
+</section>
+
+<!-- 中段圖：菩提樹（接在「我是菩提樹」之後，視覺給詩意收束） -->
+<figure class="img-medium">
+  <img src="https://feyond.muzen.store/images/geranium-bourbon-03.jpg" alt="菩提樹——沒有發光、沒有說話，只是站在那裡" onerror="this.parentElement.style.display='none'">
+  <figcaption>菩提樹沒有發光，菩提樹沒有說話——它只是站在那裡，讓一個人可以坐下來，坐到看穿自己為止</figcaption>
+</figure>
+
+<section class="narrative-section" style="padding-top: 24px;">
   <div class="divider">· · ·</div>
 
   <p>「虛空」聽起來像一個飄的詞。但它其實是最踏實的東西。</p>
