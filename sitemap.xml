@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- ═══════════════════════════════════════
+       首頁與功能頁
+       ═══════════════════════════════════════ -->
+  <url>
+    <loc>https://feyond.muzen.store/</loc>
+    <lastmod>2026-04-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://feyond.muzen.store/about.html</loc>
+    <lastmod>2026-04-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://feyond.muzen.store/contact.html</loc>
+    <lastmod>2026-04-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- ═══════════════════════════════════════
+       文章頁（依時間由新到舊）
+       ═══════════════════════════════════════ -->
+
+  <!-- 從銀杏到天竺葵：空不是虛無 -->
+  <url>
+    <loc>https://feyond.muzen.store/geranium-bourbon.html</loc>
+    <lastmod>2026-04-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- 收攝 Pratyahara -->
+  <url>
+    <loc>https://feyond.muzen.store/pratyahara.html</loc>
+    <lastmod>2026-04-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- 慈悲的淚珠：岩玫瑰 -->
+  <url>
+    <loc>https://feyond.muzen.store/cistus-labdanum.html</loc>
+    <lastmod>2026-04-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- 薜琉璃調香創作 -->
+  <url>
+    <loc>https://feyond.muzen.store/vaidurya.html</loc>
+    <lastmod>2026-04-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- 藍雲杉 -->
+  <url>
+    <loc>https://feyond.muzen.store/blue-spruce.html</loc>
+    <lastmod>2026-03-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- 月光下的華韻香：白玉蘭 -->
+  <url>
+    <loc>https://feyond.muzen.store/michelia-alba.html</loc>
+    <lastmod>2026-03-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- 保加利亞玫瑰特輯 -->
+  <url>
+    <loc>https://feyond.muzen.store/bulgarian-rose.html</loc>
+    <lastmod>2026-03-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+</urlset>

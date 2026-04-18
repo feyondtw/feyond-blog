@@ -1,0 +1,8 @@
+# robots.txt for feyond.muzen.store
+# 飛揚細籽 · FEYOND
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://feyond.muzen.store/sitemap.xml
