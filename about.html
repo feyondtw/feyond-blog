@@ -221,65 +221,6 @@ img { max-width: 100%; display: block; }
 }
 
 /* ═══════════════════════════════════════
-   FOOTPRINT (根本芳療的版圖)
-   ═══════════════════════════════════════ */
-.footprint-section {
-  background: var(--parchment);
-  padding: 72px 24px;
-  margin-bottom: 60px;
-}
-.footprint-inner {
-  max-width: 960px;
-  margin: 0 auto;
-}
-.footprint-header {
-  text-align: center;
-  margin-bottom: 48px;
-}
-.footprint-header h2 {
-  font-family: var(--font-display);
-  font-size: 28px;
-  font-weight: 300;
-  letter-spacing: 0.08em;
-  color: var(--ink);
-  margin-bottom: 10px;
-}
-.footprint-header p {
-  font-family: var(--font-sans);
-  font-size: 13px;
-  font-weight: 300;
-  letter-spacing: 0.1em;
-  color: var(--ink-muted);
-}
-.footprint-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 24px;
-}
-.footprint-item {
-  text-align: center;
-  padding: 28px 16px;
-  background: var(--cream);
-  border-top: 2px solid var(--gold);
-}
-.footprint-number {
-  font-family: var(--font-display);
-  font-size: 48px;
-  font-weight: 300;
-  color: var(--gold);
-  line-height: 1;
-  margin-bottom: 10px;
-}
-.footprint-label {
-  font-family: var(--font-sans);
-  font-size: 12px;
-  font-weight: 400;
-  letter-spacing: 0.06em;
-  color: var(--ink-soft);
-  line-height: 1.6;
-}
-
-/* ═══════════════════════════════════════
    BRAND WORK
    ═══════════════════════════════════════ */
 .brand-section {
@@ -407,6 +348,94 @@ img { max-width: 100%; display: block; }
   font-weight: 300;
   color: var(--ink-muted);
   line-height: 1.8;
+}
+
+/* ═══════════════════════════════════════
+   CREATOR INTRO（創作者介紹 — 品牌實績區後）
+   ═══════════════════════════════════════ */
+.creator-section {
+  background: var(--ink);
+  padding: 80px 24px 100px;
+  border-top: 1px solid rgba(184, 150, 90, 0.15);
+}
+.creator-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 64px;
+  align-items: center;
+}
+.creator-portrait {
+  width: 340px;
+  height: 340px;
+  overflow: hidden;
+  border-radius: 4px;
+}
+.creator-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.85) contrast(0.95);
+}
+.creator-content .creator-tagline {
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 18px;
+}
+.creator-content h2 {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+  color: var(--cream);
+  margin-bottom: 8px;
+}
+.creator-content .creator-en {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-style: italic;
+  letter-spacing: 0.06em;
+  color: rgba(255,254,248,0.5);
+  margin-bottom: 28px;
+}
+.creator-content p {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 2;
+  color: rgba(255,254,248,0.78);
+  margin-bottom: 1em;
+  letter-spacing: 0.02em;
+}
+.creator-content p:last-child {
+  margin-bottom: 0;
+}
+.creator-content .creator-line {
+  display: inline-block;
+  width: 60px;
+  height: 1px;
+  background: var(--gold);
+  margin: 20px 0 24px;
+}
+@media (max-width: 768px) {
+  .creator-section { padding: 60px 24px 80px; }
+  .creator-inner {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    text-align: center;
+  }
+  .creator-portrait {
+    width: 240px;
+    height: 240px;
+    margin: 0 auto;
+  }
+  .creator-content h2 { font-size: 28px; }
+  .creator-content .creator-line { margin: 16px auto 20px; }
 }
 
 /* ═══════════════════════════════════════
@@ -538,21 +567,13 @@ img { max-width: 100%; display: block; }
   padding: 56px 24px;
   text-align: center;
 }
-.footer-master {
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 300;
-  letter-spacing: 0.2em;
-  color: var(--cream);
-  margin-bottom: 12px;
-}
 .footer-brand {
   font-family: var(--font-display);
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 300;
-  letter-spacing: 0.12em;
-  color: rgba(255,254,248,0.7);
-  margin-bottom: 16px;
+  letter-spacing: 0.15em;
+  color: var(--cream);
+  margin-bottom: 8px;
 }
 .footer-copy {
   font-size: 11px;
@@ -591,12 +612,6 @@ img { max-width: 100%; display: block; }
   .brand-grid {
     grid-template-columns: 1fr;
   }
-
-  .footprint-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-  }
-  .footprint-number { font-size: 38px; }
 }
 </style>
 </head>
@@ -616,28 +631,18 @@ img { max-width: 100%; display: block; }
     <img src="https://feyond.muzen.store/images/feyond-avatar.jpg" alt="Feyond 顏憶萍">
   </div>
   <div class="hero-content">
-    <p class="hero-eyebrow">MUZEN Journal · 創辦人手記</p>
+    <p class="hero-eyebrow">About the Author</p>
     <h1 class="hero-name">顏憶萍</h1>
-    <p class="hero-name-en">Feyond Yen · 創辦人</p>
+    <p class="hero-name-en">Feyond Yen</p>
     <p class="hero-title">
-      根本芳療國際（股）公司 創辦人<br>
+      根本芳療國際（股）公司 創始人<br>
       根本 MUZEN 全球營運執行長<br>
-      德國芳療協會認證國際芳療師<br>
-      ICATS 培訓國際調香師<br>
-      IFEAT 國際精油貿易協會會員
+      德國芳療協會認證芳療師<br>
+      ICATS 培訓國際調香師
     </p>
     <div class="hero-intro">
       <p>
-        自 2001 年踏入芳香療法的世界，我便開始了一段與植物香氣相伴的旅程。身為德國芳療協會認證的國際芳療師、ICATS 培訓的國際調香師，以及 IFEAT 國際精油貿易協會會員，我在芳療師、調香師與尋香者三個身份之間來回，不斷被植物帶往更深的地方。
-      </p>
-      <p>
-        2002 年，我創辦了根本芳療 DHYANA（MUZEN）——一家以植物原料為本、堅持從產地到香氣全程親訪的芳療品牌。二十多年來，我們在台灣經營兩處自營有機農場、一間僅以精油為主體的保養品工廠，以及一間香氣旗艦館；在全球，我們與 179 處合作農家長期往來，並在台灣輔導 27 處在地農家一同種植、蒸餾與萃取。
-      </p>
-      <p>
-        我也受諸多國際品牌委任，為它們創作天然精油香氛，從芳療身心系列、阿育吠陀精油保養、居家芳療經典到品牌核心香型研發，累計調香作品已超過 1000 件。每一瓶香氣背後，都是一場與原料、土地與人的對話。
-      </p>
-      <p>
-        二十多年來走訪超過 20 個國家的精油產地，從南法普羅旺斯到印度檀香森林，從摩洛哥玫瑰谷到越南沉香產區——每一次的產地探訪，都讓我更深刻地理解：精油不只是瓶中的液體，而是土地、氣候、人文與時間的結晶。
+        自 2001 年踏入芳香療法的世界，我便開始了一段與植物香氣相伴的旅程。二十多年來走訪超過 20 個國家的精油產地，從南法普羅旺斯到印度檀香森林，從摩洛哥玫瑰谷到越南沉香產區——每一次的產地探訪，都讓我更深刻地理解：精油不只是瓶中的液體，而是土地、氣候、人文與時間的結晶。
       </p>
       <p>
         「飛揚細籽」是我記錄這一路所見所聞的園地，願這些文字能成為你探索香氣世界的地圖。
@@ -654,46 +659,12 @@ img { max-width: 100%; display: block; }
     <span class="section-label">現任職務</span>
   </div>
   <div class="roles-grid">
-    <div class="role-item"><span class="credential-highlight">根本芳療國際（股）公司</span> 創辦人</div>
+    <div class="role-item"><span class="credential-highlight">根本芳療國際（股）公司</span> 創始人</div>
     <div class="role-item"><span class="credential-highlight">根本 MUZEN</span> 全球營運執行長</div>
     <div class="role-item"><span class="credential-highlight">日本根本芳療（株）会社</span> 社長</div>
     <div class="role-item"><span class="credential-highlight">上海磐余杉</span> 執行長（IFRA 亞太企業會員）</div>
     <div class="role-item"><span class="credential-highlight">根本 DPSL 植物香氣實驗室</span> 計劃主持人</div>
     <div class="role-item"><span class="credential-highlight">深根大地有機農場</span> 大地除草園丁</div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════
-     根本芳療的版圖
-     ═══════════════════════════════════════ -->
-<section class="footprint-section">
-  <div class="footprint-inner">
-    <div class="footprint-header">
-      <h2>根本芳療的版圖</h2>
-      <p>From Farm to Fragrance · 從產地到香氣的完整鏈結</p>
-    </div>
-    <div class="footprint-grid">
-      <div class="footprint-item">
-        <div class="footprint-number">2</div>
-        <div class="footprint-label">自營<br>有機農場</div>
-      </div>
-      <div class="footprint-item">
-        <div class="footprint-number">1</div>
-        <div class="footprint-label">精油為主體的<br>保養品工廠</div>
-      </div>
-      <div class="footprint-item">
-        <div class="footprint-number">1</div>
-        <div class="footprint-label">香氣<br>旗艦館</div>
-      </div>
-      <div class="footprint-item">
-        <div class="footprint-number">179</div>
-        <div class="footprint-label">全球<br>合作農家</div>
-      </div>
-      <div class="footprint-item">
-        <div class="footprint-number">27</div>
-        <div class="footprint-label">台灣輔導<br>在地農家</div>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -761,20 +732,20 @@ img { max-width: 100%; display: block; }
   <div class="brand-inner">
     <div class="brand-header">
       <h2>品牌創作調香實績</h2>
-      <p>20 年以上精油香粧品牌創作調香經驗</p>
+      <p>15 年以上精油香粧品牌創作調香經驗</p>
     </div>
     
     <div class="brand-stats">
       <div class="stat-item">
-        <div class="stat-number">1000+</div>
-        <div class="stat-label">調香作品</div>
+        <div class="stat-number">200+</div>
+        <div class="stat-label">香型系列</div>
       </div>
       <div class="stat-item">
-        <div class="stat-number">20+</div>
+        <div class="stat-number">10+</div>
         <div class="stat-label">合作品牌</div>
       </div>
       <div class="stat-item">
-        <div class="stat-number">20+</div>
+        <div class="stat-number">15+</div>
         <div class="stat-label">年資歷</div>
       </div>
     </div>
@@ -805,6 +776,25 @@ img { max-width: 100%; display: block; }
         <p class="brand-desc">諸多委任品牌核心香型研發調香</p>
         <span class="brand-count">30+ 系列</span>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     創作者介紹（Creator Intro）
+     ═══════════════════════════════════════ -->
+<section class="creator-section">
+  <div class="creator-inner">
+    <div class="creator-portrait">
+      <img src="https://feyond.muzen.store/images/feyond-portrait.jpg" alt="Feyond Yen 顏憶萍 — 飛揚細籽創辦人">
+    </div>
+    <div class="creator-content">
+      <div class="creator-tagline">The Creator</div>
+      <h2>顏憶萍 Feyond Yen</h2>
+      <div class="creator-en">根本芳療｜飛揚細籽 創辦人</div>
+      <p>國際芳療師、ICATS 認證調香師、IFEAT 會員。從 2002 年創立根本芳療至今，以 25 年的時間，走進世界各地的精油原料產地，與植物、職人、土地對話。</p>
+      <span class="creator-line"></span>
+      <p>飛揚細籽 FEYOND JOURNAL 是一個慢文字平台。在這裡，我記錄尋香的足跡，書寫芳療的哲思，分享 1,000+ 香方背後的故事——關於植物、土地、人，以及一切讓香氣得以存在的根本。</p>
     </div>
   </div>
 </section>
@@ -883,9 +873,8 @@ img { max-width: 100%; display: block; }
 
 <!-- FOOTER -->
 <footer class="site-footer">
-  <p class="footer-master">MUZEN · 根本芳療</p>
-  <p class="footer-brand">飛揚細籽 FEYOND JOURNAL · A journal by Feyond Yen</p>
-  <p class="footer-copy">© 2026 根本芳療國際股份有限公司 · All Rights Reserved</p>
+  <p class="footer-brand">飛揚細籽 · FEYOND</p>
+  <p class="footer-copy">© 2026 Dhyana Aromatherapy · 根本芳療</p>
 </footer>
 
 </body>
