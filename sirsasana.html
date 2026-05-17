@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Śīrṣāsana：翻轉，才是回家｜飛揚細籽 FEYOND</title>
+<meta name="description" content="《薄伽梵歌》說：根在上，枝在下。從艾揚格頭倒立練習，看見世界本來的樣子。一個推廣艾揚格瑜伽的經營者，在七次師資訓練後寫下的修行筆記。">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+TC:wght@300;400;500&family=Noto+Sans+TC:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #FFFEF8;
+  --sand: #EDE6D6;
+  --parchment: #F5F0E3;
+  --ink: #252220;
+  --ink-soft: #4A4540;
+  --ink-muted: #7A756D;
+  --ink-faint: #A8A29A;
+  --gold: #B8965A;
+  --gold-light: #D4B87A;
+
+  /* 身覺 · K 鼠尾 Sage 主題色 — 艾草銀綠、淨化靈性 */
+  --sage-deep: #4A6358;       /* 深鼠尾 — 主題色 */
+  --sage: #6B8478;            /* 標準鼠尾綠 */
+  --sage-light: #95A89B;      /* 淺鼠尾 */
+  --sage-mist: #DFE7E1;       /* 淡霧綠 — 引言背景 */
+  --sage-pale: #EEF2EE;       /* 極淡綠 — 區塊背景 */
+
+  --font-display: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+  --font-body: 'Noto Serif TC', Georgia, serif;
+  --font-sans: 'Noto Sans TC', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 17px; }
+body {
+  font-family: var(--font-body);
+  background: var(--cream);
+  color: var(--ink);
+  line-height: 2;
+  font-weight: 300;
+}
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+
+/* NAV */
+.nav {
+  padding: 28px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--sand);
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  color: var(--ink);
+}
+.nav-back {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  transition: color 0.3s;
+}
+.nav-back:hover { color: var(--ink); }
+
+/* ARTICLE HEADER */
+.article-header {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 80px 24px 48px;
+  text-align: center;
+}
+.article-category {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--sage-deep);
+  margin-bottom: 28px;
+}
+.article-category::before,
+.article-category::after {
+  content: '·';
+  margin: 0 12px;
+  color: var(--sage-light);
+}
+.article-title {
+  font-family: var(--font-display);
+  font-size: 44px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  line-height: 1.35;
+  color: var(--ink);
+  margin-bottom: 20px;
+}
+.article-title .sanskrit {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--sage-deep);
+}
+.article-subtitle {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.05em;
+  color: var(--ink-muted);
+  margin-bottom: 36px;
+  line-height: 1.7;
+}
+.article-meta {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  color: var(--ink-faint);
+}
+.article-meta .sep { margin: 0 10px; color: var(--sand); }
+
+/* HERO IMAGE — 人像型 hero（直幅照片置中，左右奶油色留白）*/
+.article-hero {
+  max-width: 960px;
+  margin: 0 auto 80px;
+  padding: 0 24px;
+  text-align: center;
+  background: var(--cream);
+}
+.article-hero .hero-portrait {
+  display: inline-block;
+  max-width: 520px;
+  width: 100%;
+}
+.article-hero img {
+  width: 100%;
+  height: auto;
+  max-height: 720px;
+  object-fit: contain;
+  filter: saturate(0.85) contrast(0.95) brightness(1.0);
+}
+.article-hero figcaption {
+  max-width: 520px;
+  margin: 18px auto 0;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--ink-faint);
+  text-align: center;
+  letter-spacing: 0.08em;
+  line-height: 1.8;
+}
+.article-hero figcaption .sep {
+  margin: 0 10px;
+  color: var(--sand);
+}
+
+@media (max-width: 768px) {
+  .article-hero .hero-portrait { max-width: 100%; }
+  .article-hero img { max-height: 560px; }
+}
+
+/* READING TIME TAG（hero 後、序段前的標示）*/
+.reading-tag {
+  max-width: 320px;
+  margin: 0 auto 60px;
+  padding: 16px 32px;
+  background: var(--parchment);
+  border-left: 3px solid var(--sage-deep);
+  text-align: center;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  color: var(--ink-soft);
+}
+.reading-tag .sep {
+  margin: 0 12px;
+  color: var(--sage-light);
+}
+
+/* INTRO（單欄開場）*/
+.intro-section {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+.intro-section h2 {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: var(--sage-deep);
+  margin-bottom: 32px;
+  text-align: center;
+  font-style: italic;
+}
+.intro-section p {
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 2.2;
+  color: var(--ink-soft);
+  margin-bottom: 1.6em;
+  letter-spacing: 0.02em;
+}
+.intro-section p:first-of-type::first-letter {
+  font-family: var(--font-display);
+  font-size: 4em;
+  float: left;
+  line-height: 0.85;
+  margin: 6px 16px 0 0;
+  color: var(--sage-deep);
+  font-weight: 400;
+}
+.intro-section .divider {
+  text-align: center;
+  margin: 2em 0;
+  color: var(--sage-light);
+  letter-spacing: 0.5em;
+  font-size: 13px;
+}
+
+/* TWO-COLUMN SECTIONS */
+.content-section {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+.two-col {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 60px;
+  padding: 56px 0;
+  border-top: 1px solid var(--sand);
+}
+.two-col:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+.col-left {
+  position: sticky;
+  top: 100px;
+  align-self: start;
+}
+.col-left h2 {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  line-height: 1.5;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+.col-left .summary {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--ink-muted);
+  letter-spacing: 0.02em;
+}
+
+.col-right p {
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 2.2;
+  color: var(--ink-soft);
+  margin-bottom: 1.6em;
+  letter-spacing: 0.02em;
+}
+.col-right p:last-child { margin-bottom: 0; }
+
+.col-right blockquote {
+  margin: 2em 0;
+  padding: 1.5em 2em;
+  background: var(--sage-mist);
+  border-left: 3px solid var(--sage-deep);
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-style: italic;
+  line-height: 2;
+  color: var(--ink-soft);
+  letter-spacing: 0.02em;
+}
+.col-right blockquote .sanskrit {
+  display: block;
+  margin-top: 0.6em;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--sage-deep);
+  letter-spacing: 0.04em;
+}
+
+/* 小標 within col-right */
+.col-right h3 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 0.04em;
+  color: var(--sage-deep);
+  margin: 2em 0 1em;
+  padding-left: 14px;
+  border-left: 2px solid var(--sage-light);
+}
+
+/* 內文獨立短句（重音句） */
+.col-right .accent {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--sage-deep);
+  text-align: center;
+  margin: 1.5em 0;
+  letter-spacing: 0.05em;
+}
+
+/* divider 區塊（段落間呼吸符號）*/
+.col-right .pause {
+  text-align: center;
+  margin: 1.5em 0;
+  color: var(--sage-light);
+  letter-spacing: 0.5em;
+  font-size: 13px;
+}
+
+/* ═══════════════════════════════════════
+   PAYWALL（會員付費牆）
+   ═══════════════════════════════════════ */
+.paywall-wrapper {
+  position: relative;
+  max-width: 960px;
+  margin: 40px auto 0;
+  padding: 0 24px;
+}
+.content-preview {
+  position: relative;
+  padding: 0 0 40px;
+  max-width: 680px;
+  margin: 0 auto;
+}
+.content-preview::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 160px;
+  background: linear-gradient(to bottom, transparent, var(--cream) 80%);
+  pointer-events: none;
+}
+.content-preview p {
+  filter: blur(4px);
+  user-select: none;
+  font-size: 1rem;
+  line-height: 2.2;
+  color: var(--ink-muted);
+  margin-bottom: 1.6em;
+}
+
+.paywall-cta {
+  position: relative;
+  max-width: 680px;
+  margin: -40px auto 0;
+  padding: 56px 48px;
+  background: var(--sage-pale);
+  border-left: 3px solid var(--sage-deep);
+  text-align: center;
+}
+.cta-tagline {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--sage-deep);
+  margin-bottom: 16px;
+}
+.cta-title {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+.cta-subtitle {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+  margin-bottom: 32px;
+}
+.cta-benefits {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto 36px;
+  max-width: 420px;
+  text-align: left;
+}
+.cta-benefits li {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 2;
+  color: var(--ink-soft);
+  padding-left: 22px;
+  position: relative;
+  letter-spacing: 0.02em;
+}
+.cta-benefits li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--sage-deep);
+  font-size: 14px;
+}
+.cta-btn {
+  display: inline-block;
+  padding: 14px 44px;
+  background: var(--ink);
+  color: var(--cream);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  transition: all 0.3s ease;
+  margin-bottom: 28px;
+}
+.cta-btn:hover {
+  background: var(--sage-deep);
+  color: var(--cream);
+}
+.cta-password-area {
+  margin-top: 8px;
+  padding-top: 24px;
+  border-top: 1px solid var(--sand);
+}
+.cta-password-label {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--ink-muted);
+  margin-bottom: 14px;
+}
+.cta-password-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.cta-password-input {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  padding: 10px 16px;
+  width: 180px;
+  border: 1px solid var(--sand);
+  background: var(--cream);
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.3s;
+}
+.cta-password-input:focus {
+  border-color: var(--sage-deep);
+}
+.cta-password-submit {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  padding: 0 22px;
+  background: var(--sage-deep);
+  color: var(--cream);
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.cta-password-submit:hover { background: var(--ink); }
+.cta-error {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: #9A6B5A;
+  margin-top: 6px;
+  display: none;
+}
+.cta-error.active { display: block; }
+
+/* FULL CONTENT — 預設隱藏 */
+.full-content { display: none; }
+
+/* ARTICLE FOOTER */
+.article-footer {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 56px 24px;
+  border-top: 1px solid var(--sand);
+  text-align: center;
+}
+.article-footer .signoff {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--sage-deep);
+  letter-spacing: 0.05em;
+  line-height: 1.9;
+  margin-bottom: 36px;
+}
+.article-footer p.thanks {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  letter-spacing: 0.15em;
+  color: var(--ink-muted);
+  margin-bottom: 32px;
+}
+.back-link {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  letter-spacing: 0.15em;
+  color: var(--sage-deep);
+  padding: 14px 36px;
+  border: 1px solid var(--sage-deep);
+  transition: all 0.3s;
+}
+.back-link:hover {
+  background: var(--sage-deep);
+  color: var(--cream);
+}
+
+/* SITE FOOTER */
+.site-footer {
+  background: var(--ink);
+  padding: 56px 24px;
+  text-align: center;
+}
+.footer-brand {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  color: var(--cream);
+  margin-bottom: 8px;
+}
+.footer-copy {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: rgba(255,254,248,0.4);
+}
+
+/* RWD */
+@media (max-width: 768px) {
+  html { font-size: 16px; }
+  .nav { padding: 20px 24px; }
+  .article-header { padding: 60px 20px 40px; }
+  .article-title { font-size: 32px; }
+  .article-subtitle { font-size: 16px; }
+  .two-col {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 40px 0;
+  }
+  .col-left {
+    position: static;
+    border-bottom: 1px solid var(--sand);
+    padding-bottom: 20px;
+  }
+  .paywall-cta { padding: 40px 24px; }
+  .cta-title { font-size: 24px; }
+  .cta-password-row { flex-direction: column; align-items: center; }
+  .cta-password-input { width: 100%; max-width: 260px; }
+}
+</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NPM5W1XHKG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-NPM5W1XHKG');
+</script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html" class="nav-back">← 返回</a>
+  <a href="index.html" class="nav-logo">飛揚細籽 FEYOND</a>
+</nav>
+
+<!-- HEADER -->
+<header class="article-header">
+  <p class="article-category">身覺 · Embodied Awareness</p>
+  <h1 class="article-title"><span class="sanskrit">Śīrṣāsana</span>：翻轉，才是回家</h1>
+  <p class="article-subtitle">根在上，枝在下<br>從頭倒立看見世界本來的樣子</p>
+  <p class="article-meta">
+    <span>2026.05.16</span>
+    <span class="sep">·</span>
+    <span>FEYOND</span>
+  </p>
+</header>
+
+<!-- HERO IMAGE -->
+<figure class="article-hero">
+  <div class="hero-portrait">
+    <img src="https://feyond.muzen.store/images/sirsasana-hero.jpg" alt="Feyond 在 MUYOGA 教室的繩牆前練習頭倒立">
+  </div>
+  <figcaption>Śīrṣāsana<span class="sep">·</span>MUYOGA 繩牆前的五分鐘</figcaption>
+</figure>
+
+<!-- READING TIME TAG -->
+<div class="reading-tag">
+  深度閱讀<span class="sep">·</span>約 15 分鐘
+</div>
+
+<!-- INTRO（單欄開場）-->
+<section class="intro-section">
+  <h2>逃不掉的試煉</h2>
+
+  <p>最初在瑜伽的領域中，我定位自己只是一個「場域提供者」與練習者。</p>
+
+  <p>當 OLOP 老師在台灣開啟第一屆師資培訓時，我一口允諾支援行政與場地，心中清楚的是：把空間營造好，把學員行政事務支援好，安安靜靜地當一個推廣艾揚格瑜伽的經營者就好。</p>
+
+  <p>直到第一堂課時，老師把我從辦公桌前請入教室，堅持要我跟著上課。</p>
+
+  <div class="divider">· · ·</div>
+
+  <p>那一刻起，我的身心進入了另一場境界的試煉。</p>
+
+  <p>面對有點熟悉卻又陌生的梵文體式、面對多年教學經驗的同學，我陷入深沉的迷惘——在自己熱愛的瑜伽墊上，常常反覆問自己：為什麼還在這裡？</p>
+
+  <p>身體跟不上，腦袋更跟不上。無數次咬牙留下，才在 2024 年底許願能在來年給自己一份 100 堂課自律跟練的約定。</p>
+
+  <p>在 2025 年我如實完成了 132 堂規律跟練。</p>
+
+  <p>當第七次師資訓練再返回到 MUYOGA，我才似乎、有點——進入了「怎麼一回事」的狀況裡。</p>
+
+  <p>艾揚格的世界太深，在《Light on Yoga》（瑜伽之光）面前，我想沒人敢輕易說自己「懂了」。</p>
+</section>
+
+<!-- ─── 第二段：宇宙的真相（免費可讀，作為哲學鉤子）─── -->
+<div class="content-section">
+
+  <div class="two-col">
+    <div class="col-left">
+      <h2>宇宙的真相</h2>
+      <p class="summary">這一回的體勢訓練重點，是側扭轉與倒立。即使有超過百次的經歷，每一次倒立——世界翻過來的瞬間，我仍問自己：真的翻過來了嗎？</p>
+    </div>
+    <div class="col-right">
+      <p>這一回的體勢訓練重點，是側扭轉與倒立。</p>
+
+      <p>即使有超過百次的頭倒立練習經驗，而每當實際操作——毯子四折，十指交扣，前臂安放，讓頭頂心那塊如印度盧比硬幣大小的圓圈觸地。</p>
+
+      <p class="accent">吐氣。<br>雙腿離地。<br>世界翻轉過來的時刻——</p>
+
+      <p>我仍問自己，世界真的翻過來了嗎？</p>
+
+      <div class="pause">· · ·</div>
+
+      <p>《薄伽梵歌》第十五章開頭，克里希那對阿周那說：</p>
+
+      <blockquote>
+        有一棵永恆的樹，根在上，枝在下。<br>
+        葉子，是吠陀的詩篇。<br>
+        知曉這棵樹的人，就是知曉吠陀的人。
+        <span class="sanskrit">Ūrdhva-mūlam adhaḥ-śākham · 向上是根，向下是枝</span>
+      </blockquote>
+
+      <p>Aśvattha——菩提樹，印度最神聖的樹之一，在這裡長反了方向。</p>
+
+      <p>不是寫錯。</p>
+
+      <p>是宇宙的真相。</p>
+
+      <div class="pause">· · ·</div>
+
+      <p>我們以為自己站在地上、頭頂著天，以為腳下的大地是根、雙手伸向的天空是枝。但克里希那說，不是這樣的。真正的根，在上面；我們以為的天，才是源頭。</p>
+
+      <p>我們在這個世界上，一直是倒著活的——把感官當作根，把靈魂當作偶爾才想起來的枝葉。</p>
+
+      <p>頭倒立的那一刻，你以為你把世界翻過來了。</p>
+
+      <p class="accent">其實，你只是讓世界，回到它本來的樣子。</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     PAYWALL（會員專屬內容從此開始）
+     ═══════════════════════════════════════════════ -->
+<div id="paywall-section">
+  <div class="paywall-wrapper">
+    <div class="content-preview">
+      <p>為什麼是頭？艾揚格大師在書中寫道：頭骨包覆著大腦，而大腦，是 Brahman（梵）的居所。當我們把頭頂按向大地，並非在挑戰高難度動作。而是在完成一場最徹底的「臣服」。古印度修行者以五體投地展現謙卑，而 Śīrṣāsana，則是將這種頂禮延長成五分鐘的修行……</p>
+      <p>它是「眾體式之王」。但這個「王」字並非高高在上，而是承擔一切——王者之姿，是把自己放在最低處……</p>
+    </div>
+
+    <div class="paywall-cta">
+      <p class="cta-tagline">Feyond Membership</p>
+      <h2 class="cta-title">解鎖完整文章</h2>
+      <p class="cta-subtitle">Unlock the full story</p>
+      <ul class="cta-benefits">
+        <li>臣服的藝術——為什麼頭顱是梵的居所</li>
+        <li>父親的火與母親的水——體式序列的剛柔煉金術</li>
+        <li>倒立後的景界——清明的覺知與赫胥黎的見證</li>
+        <li>自我（Ahaṃkāra）的降伏與專注力（Dhāraṇā）的凝結</li>
+        <li>給害怕倒立的人——你只會翻過去，然後笑出來</li>
+      </ul>
+      <a href="https://dhyana.store" class="cta-btn" target="_blank">立即訂閱 · Subscribe</a>
+      <div class="cta-password-area">
+        <span class="cta-password-label">已是會員？輸入專屬密碼</span>
+        <div class="cta-password-row">
+          <input type="password" class="cta-password-input" id="pwInput" placeholder="會員密碼">
+          <button class="cta-password-submit" onclick="checkPW()">進入</button>
+        </div>
+        <p class="cta-error" id="pwError">密碼不正確，請確認後再試</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     FULL CONTENT（會員顯示）
+     ═══════════════════════════════════════════════ -->
+<div class="full-content" id="full-content">
+<div class="content-section">
+
+  <!-- 第三段：臣服的藝術 -->
+  <div class="two-col">
+    <div class="col-left">
+      <h2>臣服的藝術</h2>
+      <p class="summary">當我們把頭頂按向大地，並非在挑戰高難度動作。而是在完成一場最徹底的「臣服」——這是一種修行，一種勇氣，也是一種孤獨。</p>
+    </div>
+    <div class="col-right">
+      <p>為什麼是頭？</p>
+
+      <p>艾揚格大師在書中寫道：</p>
+
+      <blockquote>
+        頭骨包覆著大腦，<br>
+        而大腦，是 Brahman（梵）的居所。
+      </blockquote>
+
+      <p>當我們把頭頂按向大地，並非在挑戰高難度動作。</p>
+
+      <p>而是在完成一場最徹底的「臣服」。</p>
+
+      <p>古印度修行者以五體投地展現謙卑，而 Śīrṣāsana，則是將這種頂禮延長成五分鐘的修行。</p>
+
+      <div class="pause">· · ·</div>
+
+      <p>它是「眾體式之王」。</p>
+
+      <p>但這個「王」字並非高高在上，而是承擔一切——</p>
+
+      <p>王者之姿，是把自己放在最低處，讓肩膀抬起、脊椎挺立，在孤獨的停留中承擔自我。</p>
+
+      <p class="accent">這是一種修行，一種勇氣，也是一種孤獨。</p>
+
+      <p>一個人在孤獨中停留。</p>
+
+      <p>一個人承擔著自我。</p>
+    </div>
+  </div>
+
+  <!-- 第四段：剛柔並濟 -->
+  <div class="two-col">
+    <div class="col-left">
+      <h2>剛柔並濟</h2>
+      <p class="summary">即便是王，也不能孤獨站立。體式的序列，就是一場身心煉金術——讓喚醒的，最終被安撫。</p>
+    </div>
+    <div class="col-right">
+      <p>然而，即便是王，也不能孤獨站立。</p>
+
+      <div class="pause">· · ·</div>
+
+      <p>Guruji 形容：</p>
+
+      <blockquote>
+        如果頭倒立（Śīrṣāsana）是父親，<br>
+        肩立式（Sarvāṅgāsana）就是母親。
+      </blockquote>
+
+      <p>頭倒立是火，喚醒精神，若無安撫便容易躁進。</p>
+
+      <p>肩立式是水，收攝鎮靜神經，是火之後的清涼。</p>
+
+      <div class="pause">· · ·</div>
+
+      <p>我曾因慣性的生活重擔導致肩頸失衡，極度逃避肩立式。</p>
+
+      <p>直到深讀經典才明白——</p>
+
+      <p class="accent">體式的序列，就是一場身心煉金術。</p>
+
+      <p>一堂正確的練習，必須剛柔並濟，讓喚醒的，最終被安撫。</p>
+    </div>
+  </div>
+
+  <!-- 第五段：倒立後的景界 -->
+  <div class="two-col">
+    <div class="col-left">
+      <h2>倒立後的景界</h2>
+      <p class="summary">在經歷了火與水的長期洗禮之後，思緒會像水底的沙慢慢沉澱。最上面那一層水，開始變得透明——那是一種安靜下來的清楚。</p>
+    </div>
+    <div class="col-right">
+      <p>在經歷了火與水的長期洗禮之後，身體的張力與平衡感都會改變。</p>
+
+      <p>開始能久停在倒立的人，會慢慢嘗到一種很難形容的東西。</p>
+
+      <p>當血液流回頭部，呼吸漸緩，肩膀穩穩撐起一切，五分鐘的時間裡，思緒會像水底的沙慢慢沉澱。</p>
+
+      <p>最上面那一層水，開始變得透明。</p>
+
+      <div class="pause">· · ·</div>
+
+      <p>那不是成就感帶來的亢奮。</p>
+
+      <p>是一種——安靜下來的清楚。</p>
+
+      <blockquote>
+        Guruji 說，那是一種「清明的覺知」。
+        <span class="sanskrit">Clear Awareness</span>
+      </blockquote>
+
+      <!-- 子節：赫胥黎的見證 -->
+      <h3>赫胥黎的見證</h3>
+
+      <p>上世紀六〇年代，英國作家赫胥黎（Aldous Huxley）——這位終其一生探索「意識如何被打開」的知識分子——晚年走進了艾揚格的教室。</p>
+
+      <p>他理解到，原來不必透過藥物，也不必透過長久的冥想。</p>
+
+      <p>有時僅需一個體式，進入將世界翻轉過來的瞬間。</p>
+
+      <p>然後，便會看見——事物原本的樣子。</p>
+
+      <p class="accent">身體本身，就是通往意識的門。</p>
+
+      <!-- 子節：自我的降伏 -->
+      <h3>自我（Ego）的降伏</h3>
+
+      <p>平常，頭處在最高的位置發號施令，這是一個容易製造「自我感」（Ahaṃkāra）的核心位置，而當 Ahaṃkāra 過度膨脹時，就會隨之有我慢、自傲感。</p>
+
+      <p>但在 Śīrṣāsana 裡，把最驕傲、用來發號施令的頭顱頂心，輕輕安置在大地上。對身體物理而言，這是最徹底的降伏。</p>
+
+      <p>當雙腳離地的那一刻——</p>
+
+      <p>這不是挫敗。</p>
+
+      <p>而是主動將最習慣掌控的一塊，交託給大地。</p>
+
+      <p>Ahaṃkāra 離開了雙腳站立的安全感，它經歷了失控與恐懼後會慢慢消退，藏在它後面的 Brahman（梵／靈魂／整體的宇宙覺知）就顯現出來了。</p>
+
+      <p class="accent">這種有距離的溫柔，是練出來的，不是想出來的。</p>
+
+      <!-- 子節：專注力的凝結 -->
+      <h3>專注力（Dhāraṇā）的凝結</h3>
+
+      <p>帕坦伽利在《瑜伽經》中將瑜伽分為八支。前五支是準備，後三支——專注（Dhāraṇā）、禪定（Dhyāna）、三摩地（Samādhi）——才是核心。</p>
+
+      <p>而頭倒立，就是進入核心的門。</p>
+
+      <p>平常的心像散落在地上的水銀，隨處流散。但當你頭頂著地、雙腳指天的那一刻，你必須把心全部收攝回來，凝結在頭頂那個盧比大小的圓圈上。</p>
+
+      <p>它直接把你拉進了專注的世界。</p>
+
+      <blockquote>
+        這才是 Śīrṣāsana 被稱為「王」的真正原因——<br>
+        不是因為它最難，<br>
+        而是它把你帶進了瑜伽真正的核心。
+      </blockquote>
+    </div>
+  </div>
+
+  <!-- 第六段：給害怕倒立的人 -->
+  <div class="two-col">
+    <div class="col-left">
+      <h2>給害怕倒立的人</h2>
+      <p class="summary">無論是換工作、結束一段關係，或是說出真心話，我們總以為跌倒會是世界末日。但事實上，你只會翻過去，然後笑出來。</p>
+    </div>
+    <div class="col-right">
+      <p>如果你在倒立口令響起時仍會胃部揪緊，《瑜伽之光》裡有段溫柔叮嚀：</p>
+
+      <blockquote>
+        一切起初都會感到陌生……<br>
+        克服恐懼最好的方式，是平靜地面對它。<br>
+        如果你失去平衡，<br>
+        只需鬆開手指、放鬆屈膝，<br>
+        你只會翻過去，然後笑出來。
+      </blockquote>
+
+      <p>這句話不只是體式指南，而是人生哲學。</p>
+
+      <p>無論是換工作、結束一段關係，或是說出真心話，我們總以為跌倒會是世界末日。</p>
+
+      <p class="accent">但事實上，你只會翻過去，然後笑出來。</p>
+
+      <div class="pause">· · ·</div>
+
+      <p>在《卡塔奧義書》中，少年 Naciketā 在死神門口等了三天三夜。</p>
+
+      <p>那種「不能逃避、不能假裝沒事、只能在那裡等」的狀態，就是頭倒立。</p>
+
+      <p>你得等呼吸均勻，等恐懼變成背景音，直到你發現：</p>
+
+      <p class="accent">你還在，世界也還在。<br>而你正用一個從未有過的視角，看著它。</p>
+    </div>
+  </div>
+
+  <!-- 第七段：結語 -->
+  <div class="two-col">
+    <div class="col-left">
+      <h2>結語</h2>
+      <p class="summary">你不是在做一個改善甲狀腺或腦下垂體的動作。你是在讓那棵根在上、枝在下的樹，在你的身體裡，活一次。</p>
+    </div>
+    <div class="col-right">
+      <p>當你再次摺好毯子，把頭頂放在那盧比大小的圓圈上時，請記住——</p>
+
+      <p>你不是在做一個改善甲狀腺或腦下垂體的動作。</p>
+
+      <p>你是在讓那棵「根在上、枝在下」的樹，在你的身體裡，活一次。</p>
+
+      <div class="pause">· · ·</div>
+
+      <p>下來的時候，請輕輕地跪坐。</p>
+
+      <p>額頭貼地。</p>
+
+      <p>不要急著起身。</p>
+
+      <p>聽聽看，那個剛剛被翻過來、又翻回去的身體裡——</p>
+
+      <p>是否有什麼聲音？</p>
+
+      <div class="pause">· · ·</div>
+
+      <blockquote>
+        那是清明的覺知。<br>
+        不是想得很清楚，<br>
+        而是——不必再想。
+        <span class="sanskrit">Clear Awareness</span>
+      </blockquote>
+    </div>
+  </div>
+
+</div>
+</div><!-- end full-content -->
+
+<!-- ARTICLE FOOTER -->
+<div class="article-footer">
+  <p class="signoff">
+    寫於完成 132 堂跟練之後。<br>
+    寫給所有還在路上的人。
+  </p>
+  <p class="thanks">感謝閱讀 · Thank you for reading</p>
+  <a href="https://feyond.muzen.store" class="back-link">返回文章列表</a>
+</div>
+
+<!-- SITE FOOTER -->
+<footer class="site-footer">
+  <p class="footer-brand">飛揚細籽 · FEYOND</p>
+  <p class="footer-copy">© 2026 Dhyana Aromatherapy · All rights reserved</p>
+</footer>
+
+<script>
+const CORRECT_PW = 'FEYOND2024';
+
+function checkPW() {
+  const input = document.getElementById('pwInput').value.trim();
+  const errorEl = document.getElementById('pwError');
+  if (input === CORRECT_PW) {
+    localStorage.setItem('feyondMember', 'true');
+    unlockContent();
+  } else {
+    errorEl.classList.add('active');
+    document.getElementById('pwInput').value = '';
+  }
+}
+
+function unlockContent() {
+  document.getElementById('paywall-section').style.display = 'none';
+  document.getElementById('full-content').style.display = 'block';
+}
+
+// 檢查 URL 參數
+const urlParams = new URLSearchParams(window.location.search);
+const isPaywall = urlParams.get('paywall') === 'true';
+const isMember = localStorage.getItem('feyondMember') === 'true';
+
+if (!isPaywall) {
+  // 免費文章模式 — 直接顯示全文
+  document.getElementById('paywall-section').style.display = 'none';
+  document.getElementById('full-content').style.display = 'block';
+} else if (isMember) {
+  // 已是會員
+  unlockContent();
+}
+// 否則顯示 paywall（預設狀態）
+
+// Enter 鍵送出
+document.addEventListener('DOMContentLoaded', function() {
+  const input = document.getElementById('pwInput');
+  if (input) {
+    input.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') checkPW();
+    });
+  }
+});
+</script>
+
+</body>
+</html>
