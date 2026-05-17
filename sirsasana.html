@@ -353,6 +353,84 @@ img { max-width: 100%; display: block; }
   font-size: 13px;
 }
 
+/* SAFETY NOTE — 倒立的嚴謹（安全注意框） */
+.col-right .safety-note {
+  margin: 2.5em 0;
+  padding: 32px 36px;
+  background: var(--sage-mist);
+  border-left: 4px solid var(--gold);
+}
+.col-right .safety-note .safety-tagline {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-style: italic;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+.col-right .safety-note h4 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+.col-right .safety-note .safety-subtitle {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-style: italic;
+  color: var(--sage-deep);
+  margin-bottom: 24px;
+  letter-spacing: 0.04em;
+}
+.col-right .safety-note p {
+  font-size: 0.95rem;
+  line-height: 2;
+  color: var(--ink-soft);
+  margin-bottom: 1em;
+}
+.col-right .safety-note ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.5em 0 1em;
+}
+.col-right .safety-note li {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 300;
+  line-height: 2;
+  color: var(--ink-soft);
+  padding-left: 18px;
+  position: relative;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.4em;
+}
+.col-right .safety-note li::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  top: -2px;
+  color: var(--sage-deep);
+  font-size: 20px;
+  font-weight: 600;
+}
+.col-right .safety-note li strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+.col-right .safety-note .safety-closing {
+  margin-top: 1em;
+  padding-top: 1em;
+  border-top: 1px solid rgba(74, 99, 88, 0.15);
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--sage-deep);
+  line-height: 2;
+}
+
 /* ═══════════════════════════════════════
    PAYWALL（會員付費牆）
    ═══════════════════════════════════════ */
@@ -965,10 +1043,39 @@ img { max-width: 100%; display: block; }
   <div class="two-col">
     <div class="col-left">
       <h2>給害怕倒立的人</h2>
-      <p class="summary">無論是換工作、結束一段關係，或是說出真心話，我們總以為跌倒會是世界末日。但事實上，你只會翻過去，然後笑出來。</p>
+      <p class="summary">初次倒立時，我怕折頸、怕跌下來、怕眼壓過高。所幸老師很有系統——透過磚、椅子、各種輔具，讓我們慢慢長出安全感。</p>
     </div>
     <div class="col-right">
-      <p>如果你在倒立口令響起時仍會胃部揪緊，《瑜伽之光》裡有段溫柔叮嚀：</p>
+      <p>如果你在倒立口令響起時仍會胃部揪緊——我懂。</p>
+
+      <p>初次倒立時，我怕姿勢不對折了頸、怕跌下來受傷、怕眼壓過高，各種恐懼在心裡、在腦中不停迴盪。</p>
+
+      <p>所幸老師的教學很有系統：透過磚，透過椅子，透過各種輔具，讓我們在安全的模式中，反覆幾週熟悉這個體勢的本體感。身體一點一點記住「被支撐」的感覺，我們才慢慢長出安全感。</p>
+
+      <p class="accent">安全感，是一塊磚、一張椅子、一週又一週，<br>穿入身體的記憶中慢慢堆砌出來的。</p>
+
+      <!-- ─── 安全注意框 ─── -->
+      <div class="safety-note">
+        <div class="safety-tagline">A Note Before You Begin</div>
+        <h4>倒立的嚴謹</h4>
+        <p class="safety-subtitle">倒立前，請先聽身體說話</p>
+
+        <p>頭倒立是「眾體式之王」，但並不是所有人都適合進入。以下這些狀況，請先暫停、諮詢老師或醫生，再決定要不要練習：</p>
+
+        <ul>
+          <li><strong>眼壓偏高、青光眼、視網膜病變</strong>——倒立會使眼內壓力上升，這類朋友應避免。</li>
+          <li><strong>高血壓未控制、心血管疾病</strong>——頭部充血會增加心血管負擔，需待穩定並得到醫療評估後再進入。</li>
+          <li><strong>頸椎傷勢、頸椎退化、椎間盤突出</strong>——頭頂撐起全身重量，頸椎需先被肩點充分支撐，貿然可能造成不可逆的傷害。</li>
+          <li><strong>生理期</strong>——Iyengar 明確建議這個階段暫停頭倒立與所有倒置體勢，讓身體順著本來的方向運行。</li>
+          <li><strong>懷孕中</strong>（除非原本就有穩定的練習基礎並經老師評估）、<strong>中耳炎</strong>、<strong>重感冒鼻塞或頻繁頭暈</strong>——都不適合進入。</li>
+        </ul>
+
+        <p class="safety-closing">即使不在上述狀況中，初學者也請勿自行嘗試。磚、繩子、牆面、椅子——這些輔具並非不夠熟練才需要，而是練習本身的一部分。在可靠的老師身邊，讓身體透過輔具慢慢認識這個體勢，才是安全的起點。</p>
+      </div>
+
+      <div class="pause">· · ·</div>
+
+      <p>《瑜伽之光》裡也有一段溫柔叮嚀：</p>
 
       <blockquote>
         一切起初都會感到陌生……<br>
