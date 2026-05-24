@@ -134,6 +134,73 @@ img { max-width: 100%; display: block; }
   .password-input { width: 100%; max-width: 260px; }
   .benefits-list { flex-direction: column; align-items: center; gap: 12px; }
 }
+
+/* 限時免費 BANNER */
+.free-banner {
+  max-width: 720px;
+  margin: 32px auto 0;
+  padding: 16px 24px;
+  background: linear-gradient(to right, rgba(184, 150, 90, 0.08), rgba(184, 150, 90, 0.04));
+  border: 1px solid var(--sand);
+  text-align: center;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--philosophy);
+}
+.free-banner strong {
+  font-weight: 500;
+  color: var(--ink);
+  margin-right: 8px;
+}
+
+/* MEMBERSHIP INVITE（文末會員邀請） */
+.membership-invite {
+  max-width: 680px;
+  margin: 48px auto 0;
+  padding: 36px 32px;
+  background: var(--parchment);
+  border-left: 3px solid var(--gold);
+  text-align: center;
+}
+.membership-invite .invite-tag {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+.membership-invite .invite-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+.membership-invite p {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--ink-soft);
+  margin-bottom: 20px;
+}
+.membership-invite .invite-btn {
+  display: inline-block;
+  padding: 12px 32px;
+  background: var(--ink);
+  color: var(--cream);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+.membership-invite .invite-btn:hover {
+  background: var(--gold);
+  color: var(--ink);
+}
 </style>
 </head>
 <body>
@@ -143,6 +210,11 @@ img { max-width: 100%; display: block; }
   <a href="index.html" class="nav-back">← 返回</a>
   <a href="index.html" class="nav-logo">飛揚細籽 FEYOND</a>
 </nav>
+
+<!-- 限時免費 BANNER -->
+<div class="free-banner" id="freeBanner">
+  <strong>限時開放</strong>本篇深度長文原為會員專屬，即日起至 5/27 全文免費閱讀
+</div>
 
 <!-- HEADER -->
 <header class="article-header">
@@ -388,6 +460,14 @@ img { max-width: 100%; display: block; }
   <p>※ IFEAT（International Federation of Essential Oils and Aroma Trades，國際精油與芳香貿易聯盟）為全球精油與芳香產業最具代表性的國際組織之一，匯集了世界各地的精油生產商、貿易商、研究機構與品牌成員。</p>
 </div>
 
+<!-- 文末會員邀請（限時免費期間顯示） -->
+<div class="membership-invite" id="membershipInvite">
+  <p class="invite-tag">Feyond Membership</p>
+  <h3 class="invite-title">如果這篇文章曾在某處接住你</h3>
+  <p>邀請你成為飛揚細籽會員，閱讀所有深度產地故事、調香手記與芳療哲思。<br>每月更新，專屬內容，陪伴你探索香氣與生命的根本。</p>
+  <a href="https://dhyana.cyberbiz.co/products/feyond-membership" class="invite-btn" target="_blank">了解會員方案</a>
+</div>
+
 </div><!-- /#full-content -->
 
 <!-- PAYWALL CTA -->
@@ -436,24 +516,44 @@ img { max-width: 100%; display: block; }
   <p class="footer-copy">© 2026 Dhyana Aromatherapy · 根本芳療</p>
 </footer>
 
-<!-- PAYWALL LOGIC -->
+<!-- PAYWALL LOGIC + 限時開放邏輯 -->
 <script>
 (function() {
+  // 限時開放截止時間（台灣時間 5/27 23:59:59）
+  const FREE_UNTIL = new Date('2026-05-27T23:59:59+08:00');
+  const now = new Date();
+  const isInFreePeriod = now <= FREE_UNTIL;
+
   const isMember = localStorage.getItem('feyondMember') === 'true';
-  const urlParams = new URLSearchParams(window.location.search);
-  const isPaywall = urlParams.get('paywall') === 'true';
 
   const fullContent = document.getElementById('full-content');
   const paywallBlock = document.getElementById('paywall-block');
+  const freeBanner = document.getElementById('freeBanner');
+  const membershipInvite = document.getElementById('membershipInvite');
 
-  if (isMember || !isPaywall) {
+  // 顯示邏輯：
+  // 1. 限時免費期間 OR 已是會員 → 全文開放，隱藏 paywall
+  // 2. 過了限時期間且非會員 → 顯示 paywall，隱藏完整內容
+  if (isInFreePeriod || isMember) {
     fullContent.style.display = 'block';
     paywallBlock.style.display = 'none';
+    // 限時期間顯示 banner 與會員邀請；非會員看到的會員邀請有引流效果
+    if (isInFreePeriod && !isMember) {
+      if (freeBanner) freeBanner.style.display = 'block';
+      if (membershipInvite) membershipInvite.style.display = 'block';
+    } else {
+      // 已是會員，banner 不需要顯示
+      if (freeBanner) freeBanner.style.display = 'none';
+      if (membershipInvite) membershipInvite.style.display = 'none';
+    }
   } else {
+    // 過期且非會員：顯示 paywall
     fullContent.style.display = 'none';
     paywallBlock.style.display = 'block';
+    if (freeBanner) freeBanner.style.display = 'none';
   }
 
+  // 密碼驗證
   const showBtn = document.getElementById('showPasswordBtn');
   const pwSection = document.getElementById('passwordSection');
   const pwInput = document.getElementById('memberPassword');
