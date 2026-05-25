@@ -42,6 +42,9 @@ body {
 a { color: inherit; text-decoration: none; }
 img { max-width: 100%; display: block; }
 
+/* ═══════════════════════════════════════
+   NAV
+   ═══════════════════════════════════════ */
 .nav {
   padding: 28px 48px;
   display: flex;
@@ -99,6 +102,9 @@ img { max-width: 100%; display: block; }
   color: var(--ink);
 }
 
+/* ═══════════════════════════════════════
+   HERO
+   ═══════════════════════════════════════ */
 .hero {
   max-width: 960px;
   margin: 0 auto;
@@ -132,6 +138,9 @@ img { max-width: 100%; display: block; }
   color: var(--ink-muted);
 }
 
+/* ═══════════════════════════════════════
+   AUTHOR SECTION
+   ═══════════════════════════════════════ */
 .author-section {
   max-width: 680px;
   margin: 0 auto 48px;
@@ -201,6 +210,9 @@ img { max-width: 100%; display: block; }
   color: var(--cream);
 }
 
+/* ═══════════════════════════════════════
+   CATEGORY TABS
+   ═══════════════════════════════════════ */
 .category-nav {
   max-width: 960px;
   margin: 0 auto;
@@ -239,6 +251,7 @@ img { max-width: 100%; display: block; }
   background: var(--gold);
 }
 
+/* Sub-category */
 .subcategory-nav {
   max-width: 960px;
   margin: 0 auto;
@@ -268,6 +281,9 @@ img { max-width: 100%; display: block; }
   color: var(--gold);
 }
 
+/* ═══════════════════════════════════════
+   NEW ARTICLE (Featured - Left Image, Right Text)
+   ═══════════════════════════════════════ */
 .section-header {
   max-width: 960px;
   margin: 0 auto;
@@ -398,6 +414,9 @@ img { max-width: 100%; display: block; }
   gap: 12px;
 }
 
+/* ═══════════════════════════════════════
+   FEATURED ARTICLES (3 Columns)
+   ═══════════════════════════════════════ */
 .featured-articles {
   max-width: 960px;
   margin: 0 auto 60px;
@@ -461,6 +480,9 @@ img { max-width: 100%; display: block; }
   color: var(--ink-faint);
 }
 
+/* ═══════════════════════════════════════
+   ARTICLE LIST
+   ═══════════════════════════════════════ */
 .article-list {
   max-width: 960px;
   margin: 0 auto;
@@ -518,6 +540,9 @@ img { max-width: 100%; display: block; }
   opacity: 1;
 }
 
+/* ═══════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════ */
 .site-footer {
   background: var(--ink);
   padding: 56px 24px;
@@ -537,26 +562,34 @@ img { max-width: 100%; display: block; }
   color: rgba(255,254,248,0.4);
 }
 
+/* ═══════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════ */
 @media (max-width: 768px) {
   html { font-size: 16px; }
+  
   .nav { 
     padding: 20px 24px;
     flex-direction: column;
     gap: 16px;
   }
   .nav-logo span { display: block; margin: 8px 0 0; }
+  
   .hero { padding: 60px 24px 40px; }
   .hero-title { font-size: 36px; }
+  
   .author-section {
     flex-direction: column;
     text-align: center;
     padding: 28px 24px;
   }
+  
   .category-tabs {
     flex-wrap: wrap;
     justify-content: center;
   }
   .category-tab { padding: 12px 16px; }
+  
   .new-article-card {
     grid-template-columns: 1fr;
   }
@@ -564,10 +597,12 @@ img { max-width: 100%; display: block; }
     padding: 28px;
   }
   .new-article-title { font-size: 26px; }
+  
   .featured-grid {
     grid-template-columns: 1fr;
     gap: 40px;
   }
+  
   .article-list-item {
     flex-direction: column;
     align-items: flex-start;
@@ -577,6 +612,7 @@ img { max-width: 100%; display: block; }
   .article-list-arrow { display: none; }
 }
 
+/* Premium 文章列表樣式 */
 .article-list-item.is-premium {
   border-left: 2px solid var(--gold);
   padding-left: 16px;
@@ -598,6 +634,9 @@ img { max-width: 100%; display: block; }
 </head>
 <body>
 
+<!-- ═══════════════════════════════════════
+     NAV
+     ═══════════════════════════════════════ -->
 <nav class="nav">
   <a href="index.html" class="nav-logo">
     FEYOND
@@ -611,12 +650,18 @@ img { max-width: 100%; display: block; }
   </div>
 </nav>
 
+<!-- ═══════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════ -->
 <section class="hero">
   <p class="hero-eyebrow">Since 2001</p>
   <h1 class="hero-title">飛揚細籽</h1>
   <p class="hero-subtitle">以慢文字記錄尋香足跡<br>用生命探索香氣的根本</p>
 </section>
 
+<!-- ═══════════════════════════════════════
+     AUTHOR SECTION
+     ═══════════════════════════════════════ -->
 <section class="author-section">
   <a href="about.html" class="author-avatar">
     <img src="https://feyond.muzen.store/images/feyond-avatar.jpg" alt="Feyond 老師">
@@ -630,6 +675,9 @@ img { max-width: 100%; display: block; }
   </a>
 </section>
 
+<!-- ═══════════════════════════════════════
+     CATEGORY TABS
+     ═══════════════════════════════════════ -->
 <nav class="category-nav">
   <div class="category-tabs">
     <div class="category-tab active" data-category="all">全部</div>
@@ -641,6 +689,7 @@ img { max-width: 100%; display: block; }
   </div>
 </nav>
 
+<!-- Sub-categories for 植物誌 -->
 <div class="subcategory-nav" id="subcategory-botany">
   <span class="subcategory-chip active">全部</span>
   <span class="subcategory-chip">針葉木</span>
@@ -651,6 +700,7 @@ img { max-width: 100%; display: block; }
   <span class="subcategory-chip">根木</span>
 </div>
 
+<!-- Sub-categories for 產區尋香 -->
 <div class="subcategory-nav" id="subcategory-journey">
   <span class="subcategory-chip active">全部</span>
   <span class="subcategory-chip">台灣</span>
@@ -661,11 +711,17 @@ img { max-width: 100%; display: block; }
   <span class="subcategory-chip">印度</span>
 </div>
 
+<!-- ═══════════════════════════════════════
+     最新文章（由 JS 動態生成）
+     ═══════════════════════════════════════ -->
 <div class="section-header" id="header-new">
   <p class="section-label">最新文章</p>
 </div>
 <section class="new-article" id="section-new"></section>
 
+<!-- ═══════════════════════════════════════
+     精選文章（由 JS 動態生成）
+     ═══════════════════════════════════════ -->
 <div class="section-header" id="header-featured">
   <p class="section-label">精選文章</p>
 </div>
@@ -673,19 +729,29 @@ img { max-width: 100%; display: block; }
   <div class="featured-grid" id="grid-featured"></div>
 </section>
 
+<!-- ═══════════════════════════════════════
+     所有文章（由 JS 動態生成）
+     ═══════════════════════════════════════ -->
 <div class="section-header" id="header-list">
   <p class="section-label">所有文章</p>
 </div>
 <section class="article-list" id="section-list"></section>
 
+<!-- ═══════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════ -->
 <footer class="site-footer">
   <p class="footer-brand">飛揚細籽 · FEYOND</p>
   <p class="footer-copy">© 2026 Dhyana Aromatherapy · 根本芳療</p>
 </footer>
 
+<!-- ═══════════════════════════════════════
+     JAVASCRIPT
+     ═══════════════════════════════════════ -->
 <script>
 (function () {
 
+  // ── 分類設定 ──────────────────────────────────
   const CAT = {
     botany:    { label: '植物誌',  color: '#2D4A3E' },
     journey:   { label: '產區尋香', color: '#8B5A3C' },
@@ -695,26 +761,33 @@ img { max-width: 100%; display: block; }
   };
   const IMAGE_BASE = 'https://feyond.muzen.store/images/';
 
+  // ── 工具函數 ──────────────────────────────────
   function isNew(dateStr) {
     return (new Date() - new Date(dateStr)) / 86400000 <= 30;
   }
+
   function catBadge(category) {
     const c = CAT[category] || { label: category, color: '#7A756D' };
     return `<span class="badge badge-category" style="border-color:${c.color};color:${c.color};">${c.label}</span>`;
   }
+
   function premiumBadge(premium) {
     return premium ? `<span class="badge badge-premium">Premium</span>` : '';
   }
+
   function newBadge(dateStr) {
     return isNew(dateStr) ? `<span class="badge badge-new">New</span>` : '';
   }
+
   function href(article) {
     return article.file + (article.premium ? '?paywall=true' : '');
   }
+
   function imgSrc(image) {
     return image ? IMAGE_BASE + image : '';
   }
 
+  // ── 最新文章卡片（大卡，左圖右文）──────────────
   function renderNew(article) {
     const img = imgSrc(article.image);
     const imgEl = img
@@ -756,6 +829,7 @@ img { max-width: 100%; display: block; }
       </a>`;
   }
 
+  // ── 精選文章卡片（三欄小卡）──────────────────
   function renderFeatured(article) {
     const img = imgSrc(article.image);
     const imgEl = img
@@ -789,6 +863,7 @@ img { max-width: 100%; display: block; }
       </a>`;
   }
 
+  // ── 所有文章列表項目 ──────────────────────────
   function renderListItem(article) {
     const premiumClass = article.premium ? ' is-premium' : '';
     if (article.locked) {
@@ -823,7 +898,9 @@ img { max-width: 100%; display: block; }
       </a>`;
   }
 
+  // ── 篩選邏輯 ──────────────────────────────────
   function filterByCategory(category) {
+    // 最新文章
     const secNew = document.getElementById('section-new');
     const hdNew  = document.getElementById('header-new');
     const newCard = secNew.querySelector('[data-category]');
@@ -831,6 +908,7 @@ img { max-width: 100%; display: block; }
     secNew.style.display = showNew ? '' : 'none';
     hdNew.style.display  = showNew ? '' : 'none';
 
+    // 精選文章
     const secFeat = document.getElementById('section-featured');
     const hdFeat  = document.getElementById('header-featured');
     let visibleFeat = 0;
@@ -842,6 +920,7 @@ img { max-width: 100%; display: block; }
     secFeat.style.display = visibleFeat > 0 ? '' : 'none';
     hdFeat.style.display  = visibleFeat > 0 ? '' : 'none';
 
+    // 所有文章
     const secList = document.getElementById('section-list');
     const hdList  = document.getElementById('header-list');
     let visibleList = 0;
@@ -854,6 +933,7 @@ img { max-width: 100%; display: block; }
     hdList.style.display  = visibleList > 0 ? '' : 'none';
   }
 
+  // ── Tab 點擊 ──────────────────────────────────
   function initTabs() {
     const tabs = document.querySelectorAll('.category-tab');
     const subBotany  = document.getElementById('subcategory-botany');
@@ -870,6 +950,7 @@ img { max-width: 100%; display: block; }
       });
     });
 
+    // 子分類 chips
     document.querySelectorAll('.subcategory-chip').forEach(chip => {
       chip.addEventListener('click', function () {
         this.parentElement.querySelectorAll('.subcategory-chip')
@@ -879,26 +960,28 @@ img { max-width: 100%; display: block; }
     });
   }
 
+  // ── 主程式 ────────────────────────────────────
+  // 文章資料直接內嵌於此（與根目錄的 articles.json 保持同步）
+  // 新增文章時：① 在下方陣列最前面加一筆 ② 同步更新 articles.json
   const ARTICLES = [
-    {
-      title: "頭立式",
-      subtitle: "Sirsasana · 透過身體進入意識",
-      file: "sirsasana.html",
-      category: "embodied",
-      date: "2026-05-22",
-      excerpt: "（請補上 sirsasana 文章 excerpt）",
-      image: "sirsasana-cover.jpg",
-      premium: true
-    },
     {
       title: "恆河水流過的聖性",
       subtitle: "從濕婆髮髻到哈里瓦的火光 · 一場深沉的自我修復",
       file: "haridwar-ganga.html",
       category: "philosophy",
-      date: "2026-05-20",
-      written: "2008",
-      excerpt: "2008 年首次創業低谷，叩了印度合作多年、亦師亦友的供應鏈。從孟買工廠往北到哈里瓦恆河邊——在 Bhagiratha 千年苦行的傳說、Ganga Aarti 夜祭的火光與花燈之中，植物站在生命的每一道邊界上替人說話。這道體悟，後來成為我返台投入台灣在地精油與純露製作的原點。限時一週免費開放至 5/27。",
+      date: "2026-05-24",
+      excerpt: "從濕婆髮髻流下的恆河水，在哈里瓦的火光中，洗去的不只是塵世。2008 年的創業低谷讓我暫時離開選擇的芳療空間、走入聖城河邊上——當植物站在生命的每一道邊界上替人說話，我才明白：芳療的根，從來不在配方裡。",
       image: "haridwar-aarti-hero.jpg",
+      premium: true
+    },
+    {
+      title: "Śīrṣāsana：翻轉，才是回家",
+      subtitle: "根在上，枝在下——從頭倒立看見世界本來的樣子",
+      file: "sirsasana.html",
+      category: "embodied",
+      date: "2026-05-16",
+      excerpt: "「世界翻過來了。但，真的翻過來了嗎？」一個推廣艾揚格瑜伽的經營者，在七次師資訓練、132 堂跟練之後寫下的修行筆記。從《薄伽梵歌》「根在上，枝在下」到 Naciketā 在死神門口的三天三夜，這是一篇關於翻轉、恐懼、與回家的長文。",
+      image: "sirsasana-cover.jpg",
       premium: true
     },
     {
@@ -1039,13 +1122,21 @@ img { max-width: 100%; display: block; }
     }
   ];
 
+  // 依日期排序（最新在前）
   ARTICLES.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  // 最新文章 = 第 1 篇
   document.getElementById('section-new').innerHTML = renderNew(ARTICLES[0]);
+
+  // 精選文章 = 第 2–4 篇
   document.getElementById('grid-featured').innerHTML =
     ARTICLES.slice(1, 4).map(renderFeatured).join('');
+
+  // 所有文章 = 全部
   document.getElementById('section-list').innerHTML =
     ARTICLES.map(renderListItem).join('');
 
+  // Tab 篩選啟動
   initTabs();
 
 })();
