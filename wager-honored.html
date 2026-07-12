@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>輸了，笑著認 · A Wager Honored｜飛揚細籽 FEYOND</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+TC:wght@300;400;500&family=Noto+Sans+TC:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #FFFEF8;
+  --sand: #EDE6D6;
+  --parchment: #F5F0E3;
+  --ink: #252220;
+  --ink-soft: #4A4540;
+  --ink-muted: #7A756D;
+  --ink-faint: #A8A29A;
+  --gold: #B8965A;
+  --font-display: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+  --font-body: 'Noto Serif TC', Georgia, serif;
+  --font-sans: 'Noto Sans TC', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 17px; }
+body {
+  font-family: var(--font-body);
+  background: var(--cream);
+  color: var(--ink);
+  line-height: 2;
+  font-weight: 300;
+}
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+
+/* NAV */
+.nav {
+  padding: 28px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--sand);
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  color: var(--ink);
+}
+.nav-back {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  transition: color 0.3s;
+}
+.nav-back:hover { color: var(--ink); }
+
+/* ARTICLE HEADER */
+.article-header {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 80px 24px 48px;
+  text-align: center;
+}
+.article-category {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 24px;
+}
+.article-title {
+  font-family: var(--font-display);
+  font-size: 42px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+.article-subtitle {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  margin-bottom: 32px;
+}
+.article-meta {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--ink-faint);
+}
+
+/* HERO IMAGE */
+.article-hero {
+  max-width: 960px;
+  margin: 0 auto 80px;
+  padding: 0 24px;
+}
+.article-hero img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  filter: saturate(0.8) contrast(0.92) brightness(0.98);
+}
+.article-hero figcaption {
+  margin-top: 12px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--ink-faint);
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+/* TWO COLUMN LAYOUT */
+.content-section {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 60px;
+  padding: 48px 0;
+  border-top: 1px solid var(--sand);
+}
+
+.two-col:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.col-left {
+  position: sticky;
+  top: 100px;
+  align-self: start;
+}
+.col-left h2 {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  line-height: 1.5;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+.col-left .summary {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--ink-muted);
+  letter-spacing: 0.02em;
+}
+
+.col-right p {
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 2.2;
+  color: var(--ink-soft);
+  margin-bottom: 1.8em;
+  letter-spacing: 0.02em;
+}
+.col-right p:last-child { margin-bottom: 0; }
+
+.col-right blockquote {
+  margin: 2em 0;
+  padding: 1.5em 2em;
+  background: var(--parchment);
+  border-left: 3px solid var(--gold);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-style: italic;
+  line-height: 2;
+  color: var(--ink-soft);
+}
+
+/* INTRO（單欄開場）*/
+.intro-section {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+.intro-section p {
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 2.2;
+  color: var(--ink-soft);
+  margin-bottom: 1.8em;
+  letter-spacing: 0.02em;
+}
+.intro-section p:first-of-type::first-letter {
+  font-family: var(--font-display);
+  font-size: 4em;
+  float: left;
+  line-height: 0.85;
+  margin: 6px 16px 0 0;
+  color: var(--ink);
+  font-weight: 400;
+}
+
+/* 全幅圖 */
+.img-full {
+  max-width: 960px;
+  margin: 40px auto 60px;
+  padding: 0 24px;
+}
+.img-full img {
+  width: 100%;
+  filter: saturate(0.8) contrast(0.92) brightness(0.98);
+}
+.img-full figcaption {
+  margin-top: 12px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--ink-faint);
+  text-align: center;
+}
+
+/* 中型圖 */
+.img-medium {
+  max-width: 560px;
+  margin: 40px auto 60px;
+  padding: 0 24px;
+}
+.img-medium img {
+  width: 100%;
+  filter: saturate(0.8) contrast(0.92) brightness(0.98);
+}
+.img-medium figcaption {
+  margin-top: 12px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--ink-faint);
+  text-align: center;
+}
+
+/* CODA 結尾 */
+.coda-section {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 8px 24px 40px;
+  text-align: center;
+}
+.coda-section .coda {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.2rem;
+  line-height: 2;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  margin-bottom: 16px;
+}
+.coda-section .sign {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+}
+
+/* ARTICLE FOOTER */
+.article-footer {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 48px 24px;
+  border-top: 1px solid var(--sand);
+  text-align: center;
+}
+.article-footer p {
+  font-size: 14px;
+  color: var(--ink-muted);
+  margin-bottom: 32px;
+}
+.back-link {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+  padding: 14px 32px;
+  border: 1px solid var(--gold);
+  transition: all 0.3s;
+}
+.back-link:hover {
+  background: var(--gold);
+  color: var(--cream);
+}
+
+/* SITE FOOTER */
+.site-footer {
+  background: var(--ink);
+  padding: 56px 24px;
+  text-align: center;
+}
+.footer-brand {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  color: var(--cream);
+  margin-bottom: 8px;
+}
+.footer-copy {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: rgba(255,254,248,0.4);
+}
+
+/* RWD */
+@media (max-width: 768px) {
+  html { font-size: 16px; }
+  .nav { padding: 20px 24px; }
+  .article-header { padding: 60px 20px 40px; }
+  .article-title { font-size: 32px; }
+  .two-col {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .col-left {
+    position: static;
+    border-bottom: 1px solid var(--sand);
+    padding-bottom: 24px;
+  }
+  .coda-section .coda { font-size: 1.05rem; }
+}
+</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NPM5W1XHKG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-NPM5W1XHKG');
+</script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html" class="nav-back">← 返回</a>
+  <a href="index.html" class="nav-logo">飛揚細籽 FEYOND</a>
+</nav>
+
+<!-- HEADER -->
+<header class="article-header">
+  <p class="article-category">香氣哲思 · Philosophy</p>
+  <h1 class="article-title">輸了，笑著認</h1>
+  <p class="article-subtitle">A Wager Honored · 一個孩子眼裡，還沒被切開的世界</p>
+  <p class="article-meta">2026.07 · FEYOND</p>
+</header>
+
+<!-- HERO IMAGE -->
+<figure class="article-hero">
+  <img src="https://feyond.muzen.store/images/wager-honored-hero.jpg" alt="以雲杉針葉織成的維京長船，載著大人與孩子划過峽灣的天空，遠方一架換了名字的飛機照常飛行">
+  <figcaption>維京長船以雲杉針葉織成，划過峽灣的天空；遠方，那架換了名字的飛機正照常飛行</figcaption>
+</figure>
+
+<!-- INTRO（單欄開場）-->
+<section class="intro-section">
+  <p>一架飛機，在啟航前換上了另一個國家的名字。</p>
+  <p>不是被佔領，不是被收購。只是一場球賽輸了，於是，願賭服輸。</p>
+</section>
+
+<!-- TWO COLUMN SECTIONS -->
+<div class="content-section">
+
+  <!-- Section 1 -->
+  <div class="two-col">
+    <div class="col-left">
+      <h2>那艘鬆弛的船</h2>
+      <p class="summary">四年一度的世界盃，停在一個名字上——哈蘭德。一支睽違二十八年才回來的隊伍，讓全世界跟著一起划槳。</p>
+    </div>
+    <div class="col-right">
+      <p>四年一度的足球賽事，讓從美國飛回台灣過暑假的姪子，有了最美好的暑假作業題：英格蘭與挪威，誰能進四強。而讓他最眼神發光的，就是停在一個名字上——哈蘭德。北方的巨人，挪威一整年的光，球迷暱稱他「魔人普烏」。《時代》雜誌乾脆這樣寫：哈蘭德，早就贏了這屆世界盃——</p>
+      <p>挪威靠著哈蘭德（Erling Braut Haaland）一路闖進八強，而他帶領著那一聲「Ro！」（划！）、整齊擺臂的維京划船「Viking Row」，從奧斯陸一路划到紐約、時代廣場、地鐵電梯，甚至划進了挪威國會。</p>
+      <p>他的魅力不只擴及整座運動場，也不只擄獲孩子——就連我們，全都上了他那艘鬆弛無比的船。一支睽違世界盃二十八年才回來的隊伍，讓全世界跟著一起划槳。</p>
+    </div>
+  </div>
+
+  <!-- Section 2 -->
+  <div class="two-col">
+    <div class="col-left">
+      <h2>哨聲的兩端</h2>
+      <p class="summary">一個孩子氣的賭約，一場逆轉勝，一對親手把對方淘汰、卻沒讓情與賽彼此打折的好友。</p>
+    </div>
+    <div class="col-right">
+      <p>賽前，兩國許下一個近乎孩子氣的賭約：輸的那一方，航空公司要掛上贏家的國名，飛一整天。但挪威沒能走進最後四強。</p>
+      <p>而讓英格蘭逆轉勝、把哈蘭德的挪威擋在四強門外的，偏偏來自裘德·貝林漢姆（Jude Bellingham）。他和哈蘭德，不僅是多特蒙德時期同隊幾年、肩並著肩踢過球的舊識，更是一對交心的手帕交。是他，親手淘汰了自己的好朋友。</p>
+      <blockquote>
+        哨聲一響，競場只有對手；哨聲一落，競外情誼依舊。
+      </blockquote>
+      <p>大人常以為情與賽只能二選一：不是手下留情，就是從此翻臉。而貝林漢姆偏偏兩個都要——而且，兩個都留得完完整整。</p>
+    </div>
+  </div>
+
+  <!-- Section 3 -->
+  <div class="two-col">
+    <div class="col-left">
+      <h2>天空上的守信</h2>
+      <p class="summary">輸的一方，讓航空掛上贏家的名字飛一整天。在姪子的敘述裡，「輸家」這個詞沒有重量。</p>
+    </div>
+    <div class="col-right">
+      <p>活動結束不到幾個小時，挪威的航空真的換上了英格蘭的名號，照常起飛、降落、載著旅客穿過雲層。一個國家，在天空上，安靜地守了信。沒有人受傷，沒有人被羞辱。輸，也可以這麼乾淨、這麼好看。</p>
+      <p>我把新聞照片貼給首次離家、參加 AIT 舉辦四十小時夏令營的姪子。他完全沒有初次離家的陌生與孤獨，一個勁地在另一頭滔滔不絕地說著一場遠在地球另一端的比賽，像自家後院正在發生的趣事。一下為挪威惋惜，又立刻為那架換了名字的飛機笑出聲來。</p>
+      <p>在他的敘述裡，「輸家」這個詞沒有重量。只有一句——他們說到做到，好酷。</p>
+    </div>
+  </div>
+
+  <!-- Section 4 -->
+  <div class="two-col">
+    <div class="col-left">
+      <h2>還沒被割開的世界</h2>
+      <p class="summary">大人把世界切成塊，再替每一塊配上情緒；孩子卻一口氣，把整個世界呼出來。</p>
+    </div>
+    <div class="col-right">
+      <p>大人習慣把世界切成塊：國與國、輸與贏、我方與他方。切完之後，再替每一塊配上一種該有的情緒。</p>
+      <p>孩子不這樣。在他眼裡，比賽、賭約、飛機、哈蘭德、惋惜、大笑，是同一件事，一口氣呼出來的。世界還是整的，還沒有被縫線割開。</p>
+    </div>
+  </div>
+
+  <!-- Section 5 -->
+  <div class="two-col">
+    <div class="col-left">
+      <h2>寫進制度的天真</h2>
+      <p class="summary">挪威的《兒童運動權利宣言》——十三歲前不記分。健康的競技心態，是從童年一點一點養成的。</p>
+    </div>
+    <div class="col-right">
+      <p>有人問：為什麼挪威能有這麼健康的競技心態？輸了笑著認，連敗者都被溫柔以待。答案，其實寫在他們對待孩子的方式裡。</p>
+      <p>挪威有一份《兒童運動權利宣言》。裡頭有一條近乎天真的規定：孩子小的時候，比賽不記分。十三歲以前不計分，十一歲以前連積分榜都不能有，把孩子的比賽成績貼上網，還可能挨罰。</p>
+      <blockquote>
+        在那個年紀，運動只有一個重點——樂趣，在計分之前。
+      </blockquote>
+      <p>Viking Row 划的，其實就是這個。幾千個大人，在看台上重新做回孩子，一起划一艘並不存在的船。身體先動了起來，快樂先滿了出來，比分是後來的事。挪威做的，是把一個孩子看世界的方式，慎重地寫成了制度。</p>
+    </div>
+  </div>
+
+  <!-- Section 6 -->
+  <div class="two-col">
+    <div class="col-left">
+      <h2>氣味，先於名字</h2>
+      <p class="summary">身體先反應，文字才姍姍來遲。孩子看世界的次序，其實和聞香一樣。</p>
+    </div>
+    <div class="col-right">
+      <p>我做了二十幾年香氣。最清楚的一件事是：氣味，先於名字。</p>
+      <p>你聞到，身體先反應——鬆開，或者警戒——文字才姍姍來遲，替它貼上標籤：茉莉、木質、太甜了、像誰。標籤一旦貼上，那個最初的、完整的感受，就被收進抽屜裡了。</p>
+      <p>孩子看世界，也是這個次序。先整個地接住，再慢慢學會分類。而大人們花了大半輩子練習分類、邏輯，卻很少再練習——接住那個不貼標籤的感受。</p>
+      <p>在教育上我們也習慣急著給孩子一個明確框架：這是輸那是贏，這個要在意，那個不必。似乎不畫出這個框線，他就會迷路。</p>
+      <p>但那架貼上英格蘭名字、照常起降的挪威飛機，卻點出了：有些最乾淨的道理，不靠框架也站得住。說到做到。輸了，笑著認。</p>
+      <p>孩子的世界之所以寬，不是因為他懂得多，是因為他尚沒有把世界切成小方框。</p>
+    </div>
+  </div>
+
+  <!-- Section 7 -->
+  <div class="two-col">
+    <div class="col-left">
+      <h2>最不嚴肅的針葉</h2>
+      <p class="summary">挪威雲杉——冷，但一點也不冷淡。有些東西，氣味裡先寫好了，身體就會記得。</p>
+    </div>
+    <div class="col-right">
+      <p>最後，說一種氣味。</p>
+      <p>挪威雲杉，Picea abies。松科裡，單萜烯給得最慷慨的一種——飽滿的檸檬烯，明亮的蒎烯，一開瓶，就整個亮了起來。</p>
+      <p>它是我認識的針葉精油裡，最不嚴肅的一支。別的松杉，在冰天雪地裡站得筆直、氣味凜冽，帶著北國的莊重；挪威雲杉不是。一樣的零下，一樣的雪，它卻透著檸檬般的清亮，像一個在雪地裡笑出聲的孩子。</p>
+      <blockquote>
+        冷，但一點也不冷淡。
+      </blockquote>
+      <p>也許這就是為什麼，那片土地長出來的人，輸了也笑得出來。有些東西，氣味裡先寫好了，身體就會記得。</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- CODA -->
+<div class="coda-section">
+  <p class="coda">願賭服輸，四個字。大人拿它當教訓，孩子拿它當理所當然。<br>
+  而我想留住的，是他說出「好酷」時，那個還沒被切開的世界。</p>
+  <p class="sign">—— FEYOND</p>
+</div>
+
+<!-- ARTICLE FOOTER -->
+<div class="article-footer">
+  <p>感謝閱讀</p>
+  <a href="index.html" class="back-link">返回文章列表</a>
+</div>
+
+<!-- SITE FOOTER -->
+<footer class="site-footer">
+  <p class="footer-brand">飛揚細籽 · FEYOND</p>
+  <p class="footer-copy">© 2026 Dhyana Aromatherapy</p>
+</footer>
+
+</body>
+</html>
