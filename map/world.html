@@ -250,7 +250,7 @@ TWSITES.forEach(o => o.items.forEach(it => twItems.add(it.id)));
    蒸出來的東西不一樣。所以這一層不是裝飾。            */
 const CLIMATE = {
   polar:       {zh:'極地',     en:'Polar',        ground:0xEFF2F0, soil:0xC6CECB, tree:'snow',    sparse:true},
-  boreal:      {zh:'寒帶針葉林', en:'Boreal',       ground:0x7E9C78, soil:0xA8A68C, tree:'cypress'},
+  boreal:      {zh:'寒帶針葉林', en:'Boreal',       ground:0x6E9B6E, soil:0xA8A68C, tree:'cypress'},
   temperate:   {zh:'溫帶',     en:'Temperate',    ground:0x8FC06B, soil:0xC2A87E, tree:'round'},
   mediterran:  {zh:'地中海型',  en:'Mediterranean',ground:0xBCC47A, soil:0xCDB183, tree:'cypress'},
   steppe:      {zh:'半乾燥草原', en:'Steppe',       ground:0xD3C88C, soil:0xC9AE7C, tree:'round',   sparse:true},
@@ -264,8 +264,10 @@ Object.keys(CLIMATE).forEach(k => CLIMATE[k].key = k);
 /* 經緯度 → 氣候。緯度為主，再用經度修正幾個大區。 */
 function climateOf(lat, lng){
   const a = Math.abs(lat);
-  if (a > 62) return 'polar';
-  if (a > 52) return 'boreal';
+  // 格陵蘭是冰蓋，緯度雖然不到 72 也算極地
+  if (lat > 59 && lng > -73 && lng < -12) return 'polar';
+  if (a > 72) return 'polar';
+  if (a > 54) return 'boreal';
   // 撒哈拉本體（西段緯度收低，否則摩洛哥玫瑰／橙花產區會被誤判成沙漠）
   if (lat > 15 && lat < 30 && lng > -17 && lng < 15) return 'desert';
   // 馬格里布的半乾燥過渡帶
@@ -369,6 +371,9 @@ function onLand(lng, lat){
   return false;
 }
 
+/* 緯度切掉南極與北極頂端：等距長方在那裡會被透視壓成橫條，
+   而且那兩塊一個產地都沒有。 */
+const LAT_N = 83, LAT_S = -58;
 const GSTEP = 1.5;
 const NL = Math.round(360 / GSTEP), NT = Math.round(180 / GSTEP);
 const isLand = new Uint8Array(NL * NT);
@@ -384,8 +389,9 @@ let landCells = 0;
 for (let j = 0; j < NT; j++){
   for (let i = 0; i < NL; i++){
     if (!isLand[idx(i, j)]) continue;
-    landCells++;
     const lng0 = -180 + i * GSTEP, lat0 = 90 - j * GSTEP;
+    if (lat0 > LAT_N || lat0 - GSTEP < LAT_S) continue;
+    landCells++;
     const lat = lat0 - GSTEP / 2, lng = lng0 + GSTEP / 2;
     const c = clim(lat, lng);
     // 貼海的那一圈帶一點沙色，海岸線才有層次
@@ -553,11 +559,11 @@ function taiwanIsland(scale){
 /* ── 位置：直接用真實經緯度。新增產地給座標就落對地方 ── */
 const nodes = OVERSEAS.map(o => ({
   o, x:px(o.lng), z:pz(o.lat), lat:o.lat, lng:o.lng,
-  r:2.3 + Math.min(1.3, o.items.length * 0.28),
+  r:3.0 + Math.min(1.6, o.items.length * 0.32),
   c:clim(o.lat, o.lng)
 }));
 const twNode = {tw:true, x:px(120.98), z:pz(23.6), lat:23.6, lng:120.98,
-  r:3.4, c:clim(23.6, 120.98)};
+  r:4.2, c:clim(23.6, 120.98)};
 nodes.push(twNode);
 /* 只有真的畫不下才微調，而且記錄移動了多少，不能悄悄騙人 */
 let maxShift = 0;
@@ -853,7 +859,7 @@ renderer.domElement.addEventListener('click', e => {
 });
 
 /* ── 鏡頭 ───────────────────────────────── */
-const HOME = {theta:-0.14, phi:0.60, dist:RSPAN * 1.5 + 30, tx:CX, tz:CZ};
+const HOME = {theta:-0.06, phi:0.34, dist:RSPAN * 1.35 + 24, tx:CX, tz:CZ};
 const CAM = Object.assign({}, HOME);
 const TARGET = new THREE.Vector3(CX, 1.5, CZ);
 let anim = null;
