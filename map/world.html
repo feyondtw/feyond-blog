@@ -555,66 +555,101 @@ const borderLines = new THREE.LineSegments(bgeo,
   new THREE.LineBasicMaterial({color:0x6E7A5E, transparent:true, opacity:0.42}));
 world.add(borderLines);
 
-/* ── 植被：讓氣候再被樹講一次 ──────────────────────────
-   寒帶密生針葉、熱帶是棕櫚、地中海是絲柏、沙漠幾乎空著。
-   顏色已經說了一次，樹是第二次——而且它給了地圖質感。
-   用 InstancedMesh，幾千棵只花一個 draw call。      */
+/* ── 植被：少、大、看得出是一棵樹 ─────────────────────
+   第一版撒了九千多棵小樹，在世界尺度下每棵只有幾個像素，
+   整片變成黑點雜訊。改成五百棵左右、每棵約兩個單位高，
+   有樹幹、有圓胖的樹冠——要的是「一棵樹」，不是密度。
+   三個 InstancedMesh：樹幹共用一個，樹冠分圓形與針葉。 */
 const VEG = {
-  boreal:     {kind:'conifer', p:0.97, col:0x3F7A63},   // 密佈，這是針葉林帶
-  tropic:     {kind:'palm',    p:0.50, col:0x2E7D4F},
-  subtropic:  {kind:'broad',   p:0.30, col:0x5A9A52},
-  temperate:  {kind:'broad',   p:0.34, col:0x6BA85A},
-  mediterran: {kind:'conifer', p:0.14, col:0x6E8A4E},
-  steppe:     {kind:'broad',   p:0.035,col:0x9A9A62},
-  desert:     {kind:'broad',   p:0.006,col:0xA89A6E},
-  polar:      {kind:null,      p:0}
+  boreal:     {cone:true,  n:170, col:0x7FA882},
+  tropic:     {cone:false, n:130, col:0x8FBE7A},
+  temperate:  {cone:false, n:95,  col:0xA8C98A},
+  subtropic:  {cone:false, n:75,  col:0x9ABF7E},
+  mediterran: {cone:true,  n:30,  col:0xA3B881},
+  steppe:     {cone:false, n:14,  col:0xB9BE8E},
+  desert:     {cone:false, n:4,   col:0xC2BE92},
+  polar:      {n:0}
 };
-/* 樹底朝地，永遠看不到——所以用 openEnded 省掉底面；
-   闊葉用八面體而不是球，一棵只要 8 個三角形。
-   九千棵的差別是 167k 對 49k。 */
-const GEO = {
-  conifer: new THREE.ConeGeometry(0.26, 0.95, 5, 1, true),
-  broad:   new THREE.OctahedronGeometry(0.30, 0),
-  palm:    new THREE.ConeGeometry(0.17, 1.15, 4, 1, true)
-};
-const picks = {conifer:[], broad:[], palm:[]};
-const SEEDS = 95000;
-for (let i = 0; i < SEEDS; i++){
+const need = {}; for (const k in VEG) need[k] = VEG[k].n || 0;
+const trees = [];
+for (let i = 0, guard = 0; guard < 260000; guard++){
   const lat = LAT_S + Math.random() * (LAT_N - LAT_S);
   const lng = -180 + Math.random() * 360;
-  // 等經緯取樣會讓高緯度過密，用 cos 修正回真實面積密度
   if (Math.random() > Math.cos(lat * RAD) * 0.72 + 0.28) continue;
-  // 先做便宜的氣候與機率判定，最後才查是不是陸地——
-  // onLand 要掃多邊形，是這裡最貴的一步
-  const v = VEG[climateOf(lat, lng)];
-  if (!v || !v.kind || Math.random() > v.p) continue;
+  const key = climateOf(lat, lng);
+  if (!need[key]) continue;
   if (!onLand(lng, lat)) continue;
-  const q = P(lng, lat);
-  picks[v.kind].push([q[0], q[1], v.col, 0.7 + Math.random() * 0.45]);
+  need[key]--;
+  const v = VEG[key], q = P(lng, lat);
+  trees.push({x:q[0], z:q[1], cone:!!v.cone, col:v.col, s:0.85 + Math.random() * 0.45});
+  if (Object.values(need).every(n => n <= 0)) break;
 }
-const dummy = new THREE.Object3D(), tcol = new THREE.Color();
-let treeCount = 0;
-for (const kind in picks){
-  const list = picks[kind];
-  if (!list.length) continue;
-  const im = new THREE.InstancedMesh(GEO[kind],
-    new THREE.MeshPhongMaterial({flatShading:true, shininess:0, specular:0x000000,
-      vertexColors:true, side:THREE.DoubleSide}), list.length);
-  const cols = new Float32Array(list.length * 3);
-  list.forEach(([x, z, col, s], i) => {
-    dummy.position.set(x, 0.12 + 0.4 * s, z);
-    dummy.scale.set(s, s, s);
-    dummy.rotation.y = Math.random() * 6.28;
-    dummy.updateMatrix();
-    im.setMatrixAt(i, dummy.matrix);
-    tcol.setHex(col);
-    cols[i*3] = tcol.r; cols[i*3+1] = tcol.g; cols[i*3+2] = tcol.b;
+/* r134 的 UMD 版沒有 mergeBufferGeometries（那在 examples/jsm），
+   自己接 position/normal 就好——合併成一個幾何才能用 InstancedMesh，
+   不然一棵三層的針葉樹就要三個 draw call。 */
+function mergeGeos(list){
+  const parts = list.map(g => g.index ? g.toNonIndexed() : g);
+  let n = 0; parts.forEach(g => n += g.attributes.position.count);
+  const pos = new Float32Array(n * 3), nor = new Float32Array(n * 3);
+  let o = 0;
+  parts.forEach(g => {
+    pos.set(g.attributes.position.array, o * 3);
+    nor.set(g.attributes.normal.array, o * 3);
+    o += g.attributes.position.count;
   });
-  im.instanceColor = new THREE.InstancedBufferAttribute(cols, 3);
-  im.instanceMatrix.needsUpdate = true;
-  world.add(im);
-  treeCount += list.length;
+  const out = new THREE.BufferGeometry();
+  out.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  out.setAttribute('normal', new THREE.Float32BufferAttribute(nor, 3));
+  return out;
 }
+const TRUNK = new THREE.CylinderGeometry(0.11, 0.15, 0.72, 5);
+/* 針葉樹：三層錐疊起來，一眼就認得出是針葉 */
+const CONE = mergeGeos([
+  new THREE.ConeGeometry(0.62, 0.95, 6, 1, true).translate(0, -0.42, 0),
+  new THREE.ConeGeometry(0.47, 0.85, 6, 1, true).translate(0,  0.12, 0),
+  new THREE.ConeGeometry(0.31, 0.72, 6, 1, true).translate(0,  0.62, 0)
+]);
+/* 闊葉樹：兩瓣疊出蓬鬆的樹冠，不是一顆球 */
+const ROUND = mergeGeos([
+  new THREE.IcosahedronGeometry(0.62, 0),
+  new THREE.IcosahedronGeometry(0.44, 0).translate(0.40, 0.26, 0.08),
+  new THREE.IcosahedronGeometry(0.38, 0).translate(-0.36, 0.14, -0.14)
+]);
+
+function instance(geo, list, place, colored){
+  const m = new THREE.InstancedMesh(geo,
+    new THREE.MeshPhongMaterial({flatShading:true, shininess:0, specular:0x000000,
+      vertexColors:!!colored, side:THREE.DoubleSide}), list.length);
+  const cols = colored ? new Float32Array(list.length * 3) : null;
+  const dum = new THREE.Object3D(), c = new THREE.Color();
+  list.forEach((tr, i) => {
+    place(dum, tr);
+    dum.updateMatrix();
+    m.setMatrixAt(i, dum.matrix);
+    if (colored){ c.setHex(tr.col); cols[i*3] = c.r; cols[i*3+1] = c.g; cols[i*3+2] = c.b; }
+  });
+  if (colored) m.instanceColor = new THREE.InstancedBufferAttribute(cols, 3);
+  m.instanceMatrix.needsUpdate = true;
+  m.castShadow = true;
+  world.add(m);
+  return m;
+}
+instance(TRUNK, trees, (d, tr) => {
+  d.position.set(tr.x, 0.12 + 0.36 * tr.s, tr.z);
+  d.scale.set(tr.s, tr.s, tr.s); d.rotation.set(0, 0, 0);
+}, false).material.color.setHex(0xA98B6B);
+const round = trees.filter(t => !t.cone), cones = trees.filter(t => t.cone);
+if (round.length) instance(ROUND, round, (d, tr) => {
+  d.position.set(tr.x, 0.12 + 1.18 * tr.s, tr.z);
+  d.scale.set(tr.s, tr.s * 0.92, tr.s);
+  d.rotation.set(0, Math.random() * 6.28, 0);
+}, true);
+if (cones.length) instance(CONE, cones, (d, tr) => {
+  d.position.set(tr.x, 0.12 + 1.12 * tr.s, tr.z);
+  d.scale.set(tr.s, tr.s, tr.s);
+  d.rotation.set(0, Math.random() * 6.28, 0);
+}, true);
+const treeCount = trees.length;
 
 /* ── 零件 ───────────────────────────────── */
 function house(roof, s){
