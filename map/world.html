@@ -249,45 +249,64 @@ TWSITES.forEach(o => o.items.forEach(it => twItems.add(it.id)));
    香氣的差別本來就來自氣候——同一種植物，乾燥地和濕熱地
    蒸出來的東西不一樣。所以這一層不是裝飾。            */
 const CLIMATE = {
-  polar:       {zh:'極地',     en:'Polar',        ground:0xEFF2F0, soil:0xC6CECB, tree:'snow',    sparse:true},
-  boreal:      {zh:'寒帶針葉林', en:'Boreal',       ground:0x6E9B6E, soil:0xA8A68C, tree:'cypress'},
-  temperate:   {zh:'溫帶',     en:'Temperate',    ground:0x8FC06B, soil:0xC2A87E, tree:'round'},
-  mediterran:  {zh:'地中海型',  en:'Mediterranean',ground:0xBCC47A, soil:0xCDB183, tree:'cypress'},
-  steppe:      {zh:'半乾燥草原', en:'Steppe',       ground:0xD3C88C, soil:0xC9AE7C, tree:'round',   sparse:true},
-  desert:      {zh:'乾燥沙漠',  en:'Desert',       ground:0xE4CF9B, soil:0xD2B37E, tree:'resin',   sparse:true},
-  subtropic:   {zh:'副熱帶',    en:'Subtropical',  ground:0x7FBC63, soil:0xC9A878, tree:'round'},
-  tropic:      {zh:'熱帶',     en:'Tropical',     ground:0x4F9E55, soil:0xB08A5E, tree:'palm'}
+  polar:       {zh:'極地',     en:'Polar',        ground:0xE8ECE9, soil:0xC2CAC6, tree:'snow',    sparse:true},
+  boreal:      {zh:'寒帶針葉林', en:'Boreal',       ground:0x7D9B79, soil:0xA6A48D, tree:'cypress'},
+  temperate:   {zh:'溫帶',     en:'Temperate',    ground:0x9EBE84, soil:0xC2A87E, tree:'round'},
+  mediterran:  {zh:'地中海型',  en:'Mediterranean',ground:0xBFC391, soil:0xC9AE86, tree:'cypress'},
+  steppe:      {zh:'半乾燥草原', en:'Steppe',       ground:0xD6C79D, soil:0xC6AC84, tree:'round',   sparse:true},
+  desert:      {zh:'乾燥沙漠',  en:'Desert',       ground:0xE3D2A8, soil:0xCEB189, tree:'resin',   sparse:true},
+  subtropic:   {zh:'副熱帶',    en:'Subtropical',  ground:0x92BC74, soil:0xC4A57E, tree:'round'},
+  tropic:      {zh:'熱帶',     en:'Tropical',     ground:0x6EA46A, soil:0xAE8C66, tree:'palm'}
 };
 
 Object.keys(CLIMATE).forEach(k => CLIMATE[k].key = k);
 
-/* 經緯度 → 氣候。緯度為主，再用經度修正幾個大區。 */
+/* 乾燥度與地中海性用「中心點 + 橢圓高斯」疊加，不是方框。
+   方框寫出來的氣候帶長得就像方框——澳洲內陸會是一塊長方形。
+   高斯是平滑的，交界會自然散開。                      */
+function bell(lat, lng, clat, clng, rlat, rlng){
+  let dl = lng - clng;
+  while (dl > 180) dl -= 360;
+  while (dl < -180) dl += 360;
+  const a = (lat - clat) / rlat, b = dl / rlng;
+  return Math.exp(-(a * a + b * b));
+}
+/* [緯度, 經度, 緯向半徑, 經向半徑] */
+const DRY = [
+  [24,   0, 11, 16],   // 撒哈拉西
+  [24,  25, 11, 16],   // 撒哈拉東—利比亞埃及
+  [22,  46,  9, 12],   // 阿拉伯
+  [19,  52,  7,  9],   // 魯卜哈利—阿曼
+  [29,  64,  8, 14],   // 伊朗—塔爾
+  [41,  92,  7, 18],   // 塔克拉瑪干—戈壁
+  [-24, 19,  8,  8],   // 喀拉哈里—納米比
+  [-25,133,  9, 15],   // 澳洲內陸
+  [-22,-69,  9, 3.5],  // 阿塔卡馬
+  [29,-108,  6,  7],   // 索諾蘭—奇瓦瓦
+  [40,-117, 4.5, 5],   // 大盆地
+  [-46,-69,  7,  4]    // 巴塔哥尼亞
+];
+const MED = [
+  [39,   2,  6, 15],   // 西地中海—伊比利
+  [39,  23,  6, 14],   // 東地中海—巴爾幹
+  [36,-120,  4,  4],   // 加州
+  [-34,-71,4.5,  3],   // 智利中部
+  [-33, 20,3.5,  4],   // 南非角
+  [-33,117,3.5,  5]    // 澳洲西南
+];
+const dryness = (lat, lng) => DRY.reduce((s, d) => s + bell(lat, lng, d[0], d[1], d[2], d[3]), 0);
+const medness = (lat, lng) => MED.reduce((s, d) => s + bell(lat, lng, d[0], d[1], d[2], d[3]), 0);
+
 function climateOf(lat, lng){
   const a = Math.abs(lat);
   // 格陵蘭是冰蓋，緯度雖然不到 72 也算極地
   if (lat > 59 && lng > -73 && lng < -12) return 'polar';
   if (a > 72) return 'polar';
   if (a > 54) return 'boreal';
-  // 撒哈拉本體（西段緯度收低，否則摩洛哥玫瑰／橙花產區會被誤判成沙漠）
-  if (lat > 15 && lat < 30 && lng > -17 && lng < 15) return 'desert';
-  // 馬格里布的半乾燥過渡帶
-  if (lat >= 30 && lat < 35 && lng > -17 && lng < 15) return 'steppe';
-  // 埃及—阿拉伯—伊朗，沙漠一路到海岸
-  if (lat > 13 && lat < 33 && lng >= 15 && lng < 62) return 'desert';
-  // 中亞—戈壁
-  if (lat > 35 && lat < 48 && lng > 55 && lng < 108) return 'steppe';
-  // 澳洲內陸
-  if (lat < -18 && lat > -32 && lng > 115 && lng < 142) return 'desert';
-  // 南部非洲乾燥帶
-  if (lat < -17 && lat > -30 && lng > 12 && lng < 25) return 'desert';
-  // 地中海型：地中海盆地、加州、智利中部、南非角、澳洲西南
-  const med = (a > 30 && a < 46) && (
-    (lng > -11 && lng < 45) ||
-    (lng > -124 && lng < -116) ||
-    (lng > -74 && lng < -70) ||
-    (lng > 17 && lng < 25 && lat < 0) ||
-    (lng > 114 && lng < 122 && lat < 0));
-  if (med) return 'mediterran';
+  const d = dryness(lat, lng);
+  if (d > 0.66) return 'desert';
+  if (medness(lat, lng) > 0.55 && a > 27 && a < 48) return 'mediterran';
+  if (d > 0.36) return 'steppe';
   if (a > 40) return 'temperate';
   if (a > 23.5) return 'subtropic';
   return 'tropic';
@@ -302,10 +321,12 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 host.appendChild(renderer.domElement);
 
-const DAY = {bg:0xBCDCE8, fog:0xC6E2EC, hemiSky:0xDCEFF5, hemiGnd:0x8FBB72,
-  sun:0xFFF4DC, sunI:0.95, hemiI:0.60, sea:0x5FA8C6};
-const NIGHT = {bg:0x1E2C3A, fog:0x22303E, hemiSky:0x33485F, hemiGnd:0x2A3A24,
-  sun:0xBACFEE, sunI:0.34, hemiI:0.50, sea:0x2A4A62};
+/* 低彩度、柔光。puma 那種「東西坐在地上」的手感，
+   靠的是弱一點的直射光＋強一點的天光，不是更多細節。 */
+const DAY = {bg:0xC6DEE4, fog:0xCDE4E8, hemiSky:0xE4F0F2, hemiGnd:0xA8BF94,
+  sun:0xFFF6E6, sunI:0.72, hemiI:0.86, sea:0x7FB4C4};
+const NIGHT = {bg:0x20303C, fog:0x253642, hemiSky:0x3A5062, hemiGnd:0x2C3A2A,
+  sun:0xC2D6EE, sunI:0.26, hemiI:0.58, sea:0x33586C};
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(DAY.bg);
@@ -321,8 +342,14 @@ sun.shadow.mapSize.set(2048, 2048);
 const sc = sun.shadow.camera;
 sc.left = -60; sc.right = 60; sc.top = 60; sc.bottom = -60; sc.near = 1; sc.far = 180;
 sun.shadow.bias = -0.0016;
+sun.shadow.radius = 3.5;                    // 陰影邊緣散開，不要刀切
 scene.add(sun);
-scene.add(new THREE.AmbientLight(0xFFFFFF, 0.17));
+/* 補光：從反方向打一盞很弱的冷光，把陰影裡的細節撈回來。
+   這一盞不投影，純粹用來softening。 */
+const fill = new THREE.DirectionalLight(0xCFE0EA, 0.26);
+fill.position.set(30, 18, -34);
+scene.add(fill);
+scene.add(new THREE.AmbientLight(0xFFFFFF, 0.1));
 
 const mats = {};
 function mat(color, o){
@@ -374,51 +401,74 @@ function onLand(lng, lat){
 /* 緯度切掉南極與北極頂端：等距長方在那裡會被透視壓成橫條，
    而且那兩塊一個產地都沒有。 */
 const LAT_N = 83, LAT_S = -58;
-const GSTEP = 1.5;
-const NL = Math.round(360 / GSTEP), NT = Math.round(180 / GSTEP);
-const isLand = new Uint8Array(NL * NT);
-const idx = (i, j) => j * NL + i;
-for (let j = 0; j < NT; j++)
-  for (let i = 0; i < NL; i++)
-    isLand[idx(i, j)] = onLand(-180 + (i + 0.5) * GSTEP, 90 - (j + 0.5) * GSTEP) ? 1 : 0;
-
-const COAST = new THREE.Color(0xE6D5AC);
+/* 用真實多邊形切出海岸線，再把內部的大三角形遞迴細分，
+   每個小三角形取自己的重心判氣候。
+   海岸是真的，氣候照樣分得出來——不必在兩者之間二選一。 */
+/* 顏色給在「頂點」而不是「三角形」，再讓它內插。
+   氣候交界本來就是漸變的，這樣既不會有鋸齒，
+   三角形也能放大一倍，省一半的量。 */
+const MAXEDGE = 4.5;
 const mpos = [], mcol = [];
 const cTmp = new THREE.Color();
-let landCells = 0;
-for (let j = 0; j < NT; j++){
-  for (let i = 0; i < NL; i++){
-    if (!isLand[idx(i, j)]) continue;
-    const lng0 = -180 + i * GSTEP, lat0 = 90 - j * GSTEP;
-    if (lat0 > LAT_N || lat0 - GSTEP < LAT_S) continue;
-    landCells++;
-    const lat = lat0 - GSTEP / 2, lng = lng0 + GSTEP / 2;
-    const c = clim(lat, lng);
-    // 貼海的那一圈帶一點沙色，海岸線才有層次
-    let edge = false;
-    for (const [di, dj] of [[1,0],[-1,0],[0,1],[0,-1]]){
-      const ii = (i + di + NL) % NL, jj = j + dj;
-      if (jj < 0 || jj >= NT || !isLand[idx(ii, jj)]) edge = true;
-    }
-    cTmp.setHex(c.ground);
-    if (edge) cTmp.lerp(COAST, 0.42);
-    const h = 0.12 + (edge ? 0 : 0.26 * (0.4 + 0.6 * Math.abs(
-      Math.sin(lat * 0.37) * Math.cos(lng * 0.29))));
-    const x0 = px(lng0), x1 = px(lng0 + GSTEP);
-    const z0 = pz(lat0), z1 = pz(lat0 - GSTEP);
-    const quad = [[x0,z0],[x0,z1],[x1,z0],[x1,z0],[x0,z1],[x1,z1]];
-    for (const [x, z] of quad){
-      mpos.push(x, h, z);
-      mcol.push(cTmp.r, cTmp.g, cTmp.b);
-    }
+let landTris = 0;
+
+function emit(a, b, c){
+  for (const p of [a, b, c]){
+    mpos.push(px(p[0]), 0.12, pz(p[1]));
+    cTmp.setHex(clim(p[1], p[0]).ground);
+    mcol.push(cTmp.r, cTmp.g, cTmp.b);
+  }
+  landTris++;
+}
+/* 最長邊對切，直到夠細。用堆疊不用遞迴，免得爆堆疊。 */
+function split(a, b, c){
+  const stack = [[a, b, c]];
+  let guard = 0;
+  while (stack.length && guard++ < 400000){
+    const [p, q, r] = stack.pop();
+    const d1 = Math.hypot(q[0] - p[0], q[1] - p[1]);
+    const d2 = Math.hypot(r[0] - q[0], r[1] - q[1]);
+    const d3 = Math.hypot(p[0] - r[0], p[1] - r[1]);
+    const m = Math.max(d1, d2, d3);
+    if (m <= MAXEDGE){ emit(p, q, r); continue; }
+    if (m === d1){ const h = [(p[0]+q[0])/2, (p[1]+q[1])/2];
+      stack.push([p, h, r], [h, q, r]); }
+    else if (m === d2){ const h = [(q[0]+r[0])/2, (q[1]+r[1])/2];
+      stack.push([q, h, p], [h, r, p]); }
+    else { const h = [(r[0]+p[0])/2, (r[1]+p[1])/2];
+      stack.push([r, h, q], [h, p, q]); }
   }
 }
+
+LAND.features.forEach(f => {
+  const rings = f.geometry.coordinates;
+  let y0 = 90, y1 = -90;
+  for (const [, y] of rings[0]){ if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  if (y1 < LAT_S || y0 > LAT_N) return;          // 南極與北極頂端不畫
+  const shape = new THREE.Shape();
+  rings[0].forEach(([x, y], i) => i ? shape.lineTo(x, y) : shape.moveTo(x, y));
+  for (let k = 1; k < rings.length; k++){
+    const hole = new THREE.Path();
+    rings[k].forEach(([x, y], i) => i ? hole.lineTo(x, y) : hole.moveTo(x, y));
+    shape.holes.push(hole);
+  }
+  const g = new THREE.ShapeGeometry(shape);
+  const pa = g.attributes.position, ix = g.index;
+  const vert = i => [pa.getX(i), pa.getY(i)];
+  if (ix) for (let i = 0; i < ix.count; i += 3)
+    split(vert(ix.getX(i)), vert(ix.getX(i + 1)), vert(ix.getX(i + 2)));
+  else for (let i = 0; i < pa.count; i += 3)
+    split(vert(i), vert(i + 1), vert(i + 2));
+  g.dispose();
+});
+const landCells = landTris;
 const mg = new THREE.BufferGeometry();
 mg.setAttribute('position', new THREE.Float32BufferAttribute(mpos, 3));
 mg.setAttribute('color', new THREE.Float32BufferAttribute(mcol, 3));
 mg.computeVertexNormals();
+/* 地圖這一層不要 flatShading：要的是顏色平順地從沙色過到綠色 */
 const mapMesh = new THREE.Mesh(mg, new THREE.MeshPhongMaterial({
-  vertexColors:true, flatShading:true, shininess:0, specular:0x000000,
+  vertexColors:true, flatShading:false, shininess:0, specular:0x000000,
   side:THREE.DoubleSide}));
 mapMesh.receiveShadow = true;
 world.add(mapMesh);
