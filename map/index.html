@@ -122,6 +122,19 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 }
 .globe-svg.close .lbl{opacity:1}
 
+/* 第一層：轉到正面的國名。往裡一層才換成產地名 */
+.globe-svg .cn{cursor:pointer;transition:opacity .3s}
+.globe-svg .cn text{
+  font-family:var(--serif);font-size:13px;letter-spacing:.12em;
+  fill:var(--ink);paint-order:stroke;stroke:var(--paper);stroke-width:3.5px;
+  stroke-linejoin:round;pointer-events:none
+}
+.globe-svg .cn .n{font-family:var(--sans);font-size:9px;letter-spacing:.04em;
+  fill:var(--gold);stroke-width:3px}
+.globe-svg .cn .hit{fill:transparent}
+.globe-svg .cn:hover text,
+.globe-svg .cn:focus-visible text{fill:var(--gold)}
+
 .legend{left:0;bottom:0;padding:1.4rem 1.6rem;display:flex;gap:1.1rem;flex-wrap:wrap;
   font-family:var(--sans);font-size:.7rem;letter-spacing:.06em;color:var(--muted)}
 .legend span{display:inline-flex;align-items:center;gap:.4rem}
@@ -358,6 +371,7 @@ const svg = mk('svg', {class: 'globe-svg'});
 const gGrat = mk('g', {class: 'grat'});
 const gLand = mk('g', {class: 'land'});
 const gDots = mk('g', {class: 'dots'});
+const gCname = mk('g', {class: 'cnames'});
 const defs = mk('defs', {});
 const grad = mk('radialGradient', {id:'seaGrad', cx:'42%', cy:'36%', r:'72%'});
 grad.appendChild(mk('stop', {offset:'0%',  'stop-color':'#58A9A3'}));
@@ -375,7 +389,7 @@ const sea = mk('circle', {class: 'sea'});
 const limb = mk('circle', {class: 'limb'});
 const gTree = mk('g', {class: 'trees'});
 gLand.setAttribute('filter', 'url(#wc)');
-svg.append(defs, sea, gGrat, gLand, gDots, limb);
+svg.append(defs, sea, gGrat, gLand, gDots, gCname, limb);
 el.appendChild(svg);
 
 /* 經緯網：每 30 度一條，單純讓它看起來像個球 */
@@ -437,6 +451,61 @@ function inView(bb, clng, clat, pad){
   const d = Math.abs(((bb[0] + bb[2]) / 2 - clng + 540) % 360 - 180);
   return d <= padL + half;
 }
+/* ── 第一層：國名 ────────────────────────────────────
+   轉到正面的國家才浮出名字，背面與球緣不出現；重疊的讓位給
+   更正面的那一個。點國名＝飛過去放大，產地名才接著出現。 */
+const CNAME = {
+  TW:'台灣', JP:'日本', ID:'印尼', AU:'澳洲', MG:'馬達加斯加',
+  CA:'加拿大', PY:'巴拉圭', MA:'摩洛哥', FR:'法國', PE:'秘魯',
+  AR:'阿根廷', BR:'巴西', ES:'西班牙', IT:'義大利', ZA:'南非',
+  NO:'挪威', GR:'希臘', BG:'保加利亞', EG:'埃及', SO:'索馬利蘭',
+  OM:'阿曼', IN:'印度', LK:'斯里蘭卡', NP:'尼泊爾', VN:'越南', NZ:'紐西蘭'
+};
+const COUNTRIES = (() => {
+  const by = {};
+  ORIGINS.forEach(o => { (by[o.country] = by[o.country] || []).push(o); });
+  return Object.keys(by).map(code => {
+    const list = by[code];
+    /* 球面上取平均，不是經緯度直接平均——跨換日線會算錯 */
+    let X = 0, Y = 0, Z = 0;
+    list.forEach(o => {
+      const la = o.lat * RAD, ln = o.lng * RAD;
+      X += Math.cos(la) * Math.cos(ln);
+      Y += Math.cos(la) * Math.sin(ln);
+      Z += Math.sin(la);
+    });
+    const seen = {};
+    list.forEach(o => o.items.forEach(it => { seen[it.id] = 1; }));
+    return {
+      code, name: CNAME[code] || code, origins: list,
+      n: Object.keys(seen).length,
+      lat: Math.atan2(Z, Math.hypot(X, Y)) / RAD,
+      lng: Math.atan2(Y, X) / RAD
+    };
+  });
+})();
+
+const cnameNodes = COUNTRIES.map(c => {
+  const g = mk('g', {class: 'cn', tabindex: '0', role: 'button',
+                     'aria-label': c.name + ' ' + c.n + ' 種'});
+  const w = c.__w = c.name.length * 13 + 24;
+  g.appendChild(mk('rect', {class: 'hit', x: -w / 2, y: -13, width: w, height: 18}));
+  const t = mk('text', {'text-anchor': 'middle', x: 0, y: 0});
+  t.textContent = c.name;
+  const sp = mk('tspan', {class: 'n'});
+  sp.textContent = ' ' + c.n;
+  t.appendChild(sp);
+  g.appendChild(t);
+  const go = () => { stopSpin(); anim = null; glideTo(c.lng, c.lat, 9, 1100); };
+  g.addEventListener('click', go);
+  g.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); go(); }
+  });
+  g.__c = c;
+  gCname.appendChild(g);
+  return g;
+});
+
 const gratPaths = GRAT.map(line => {
   const p = mk('path', {});
   p.__line = line;
@@ -681,6 +750,37 @@ function draw(){
     if (vis) g.setAttribute('transform',
       `translate(${(CX + R * x).toFixed(1)} ${(CY - R * y).toFixed(1)})`);
   });
+
+  /* 國名：離球心越近越清楚，超過 70° 就收起來。
+     先排最正面的，位置撞到的讓位——寧可少一個，不要疊成一團。 */
+  const showC = zoom <= 6;
+  gCname.style.display = showC ? '' : 'none';
+  if (showC){
+    const sp0 = Math.sin(phi0), cp0 = Math.cos(phi0);
+    const placed = [];
+    cnameNodes.map(g => {
+      const la = g.__c.lat * RAD, ln = g.__c.lng * RAD;
+      const cosd = sp0 * Math.sin(la) + cp0 * Math.cos(la) * Math.cos(ln - lam0);
+      /* 讓位的順序不只看正不正面，也看這個國家有幾種——
+         不然法國 6 種會被旁邊只有 1 種的義大利擋掉 */
+      return {g, cosd, rank: cosd * (1 + Math.min(0.3, g.__c.n * 0.02))};
+    }).sort((a, b) => b.rank - a.rank).forEach(v => {
+      const c = v.g.__c;
+      const op = Math.min(1, (v.cosd - 0.34) / 0.42);
+      /* 淡到看不清的就別出現，也別佔著位置擋別人 */
+      if (op <= 0.22){ v.g.style.display = 'none'; return; }
+      const [x, y] = project(c.lng, c.lat);
+      const px = CX + R * x, py = CY - R * y - 15;
+      if (placed.some(p => Math.abs(p.x - px) < (p.w + c.__w) / 2 + 4 &&
+                           Math.abs(p.y - py) < 19)){
+        v.g.style.display = 'none'; return;
+      }
+      placed.push({x: px, w: c.__w, y: py});
+      v.g.style.display = '';
+      v.g.style.opacity = op.toFixed(2);
+      v.g.setAttribute('transform', `translate(${px.toFixed(1)} ${py.toFixed(1)})`);
+    });
+  }
 }
 
 function fit(){

@@ -840,22 +840,68 @@ const twNode = {tw:true, x:P(120.98, 23.6)[0], z:P(120.98, 23.6)[1],
   tx:P(120.98, 23.6)[0], tz:P(120.98, 23.6)[1], lat:23.6, lng:120.98,
   r:2.8, c:clim(23.6, 120.98)};
 nodes.push(twNode);
-/* 只有真的畫不下才微調，而且記錄移動了多少，不能悄悄騙人 */
-let maxShift = 0;
-for (let pass = 0; pass < 160; pass++){
-  for (let i = 0; i < nodes.length; i++)
-    for (let j = i + 1; j < nodes.length; j++){
-      const a = nodes[i], b = nodes[j];
+/* ── 推開：方位不能被推翻 ──────────────────────────────
+   日本六處真實相距不到 1 單位，島半徑卻有 1.84。原本兩兩
+   對推，結果把方位推翻了——青森被推到富良野東邊 3.9 單位，
+   實際上它在西南。改成：先找出擠在一起的群，整群連形狀一起
+   等比放大、島一起縮小（形狀完全保留，所以誰在誰的哪一邊
+   永遠是對的），群與群之間才當剛體互推。 */
+const KMAX = 2.4, SMIN = 0.48;
+const trueD = (a, b) => Math.hypot(b.tx - a.tx, b.tz - a.tz) || 0.01;
+
+const par = nodes.map((_, i) => i);
+const find = i => par[i] === i ? i : (par[i] = find(par[i]));
+for (let i = 0; i < nodes.length; i++)
+  for (let j = i + 1; j < nodes.length; j++)
+    if (trueD(nodes[i], nodes[j]) < nodes[i].r + nodes[j].r + 0.8)
+      par[find(i)] = find(j);
+
+const groups = {};
+nodes.forEach((n, i) => { const k = find(i); (groups[k] = groups[k] || []).push(n); });
+
+const clusters = Object.keys(groups).map(key => {
+  const mem = groups[key];
+  const cx = mem.reduce((s, n) => s + n.tx, 0) / mem.length;
+  const cz = mem.reduce((s, n) => s + n.tz, 0) / mem.length;
+  let need1 = 0;                       /* s=1 時要放大幾倍才不疊 */
+  for (let i = 0; i < mem.length; i++)
+    for (let j = i + 1; j < mem.length; j++)
+      need1 = Math.max(need1,
+        (mem[i].r + mem[j].r + 0.8) / trueD(mem[i], mem[j]));
+  const s = need1 > 0 ? Math.max(SMIN, Math.min(1, KMAX / need1)) : 1;
+  const k = Math.max(1, Math.min(KMAX, need1 * s));
+  mem.forEach(n => {
+    n.r *= s;
+    n.x = cx + (n.tx - cx) * k;
+    n.z = cz + (n.tz - cz) * k;
+  });
+  const c = {mem, k, s};
+  c.x = mem.reduce((a, n) => a + n.x, 0) / mem.length;
+  c.z = mem.reduce((a, n) => a + n.z, 0) / mem.length;
+  c.R = Math.max.apply(null, mem.map(n => Math.hypot(n.x - c.x, n.z - c.z) + n.r));
+  return c;
+});
+
+for (let pass = 0; pass < 120; pass++)
+  for (let i = 0; i < clusters.length; i++)
+    for (let j = i + 1; j < clusters.length; j++){
+      const a = clusters[i], b = clusters[j];
       const dx = b.x - a.x, dz = b.z - a.z;
       const d = Math.hypot(dx, dz) || 0.01;
-      const need = a.r + b.r + 0.8;
+      const need = a.R + b.R + 0.8;
       if (d < need){
         const push = (need - d) / 2 / d;
         a.x -= dx * push; a.z -= dz * push;
         b.x += dx * push; b.z += dz * push;
       }
     }
-}
+clusters.forEach(c => {
+  const ox = c.mem.reduce((a, n) => a + n.x, 0) / c.mem.length;
+  const oz = c.mem.reduce((a, n) => a + n.z, 0) / c.mem.length;
+  c.mem.forEach(n => { n.x += c.x - ox; n.z += c.z - oz; });
+});
+
+let maxShift = 0;
 nodes.forEach(n => {
   maxShift = Math.max(maxShift, Math.hypot(n.x - n.tx, n.z - n.tz));
 });
