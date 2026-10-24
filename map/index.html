@@ -536,7 +536,7 @@ const cnameNodes = COUNTRIES.map(c => {
   sp.textContent = ' ' + c.n;
   t.appendChild(sp);
   g.appendChild(t);
-  const go = () => { stopSpin(); anim = null; glideTo(c.lng, c.lat, 9, 1100); };
+  const go = () => select('country', c.code, true);
   g.addEventListener('click', go);
   g.addEventListener('keydown', e => {
     if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); go(); }
