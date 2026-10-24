@@ -136,7 +136,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 }
 .globe-svg .cn .n{font-family:var(--sans);font-size:9px;letter-spacing:.04em;
   fill:var(--gold);stroke-width:3px}
-.globe-svg .cn .hit{fill:transparent}
+.globe-svg .cn .hit{fill:none;pointer-events:all}
 .globe-svg .cn:hover text,
 .globe-svg .cn:focus-visible text{fill:var(--gold)}
 
@@ -859,16 +859,21 @@ const spread = () => {
   return Math.hypot(a.x - b.x, a.y - b.y);
 };
 let pinch0 = 0, zoom0 = 1;
+/* 一按下去就 setPointerCapture 的話，click 會被改送到 #globe 這個
+   div，地球儀上的點和國名就都點不到了。改成「拖超過 3px 才抓指標」，
+   單純點一下就不抓，子元素的 click 照常觸發。 */
+let sx = 0, sy = 0, moved = false, cap = -1;
+function grab(e){ if (cap !== e.pointerId){ cap = e.pointerId; el.setPointerCapture(e.pointerId); } }
 
 el.addEventListener('pointerdown', e => {
   pts.set(e.pointerId, {x: e.clientX, y: e.clientY});
   anim = null; stopSpin();
-  el.setPointerCapture(e.pointerId);
   if (pts.size === 1){
-    dragging = true; px = e.clientX; py = e.clientY; el.classList.add('grabbing');
+    dragging = true; moved = false;
+    sx = px = e.clientX; sy = py = e.clientY;
   } else if (pts.size === 2){
-    dragging = false; el.classList.remove('grabbing');
-    pinch0 = spread(); zoom0 = zoom;
+    dragging = false; moved = true; el.classList.remove('grabbing');
+    grab(e); pinch0 = spread(); zoom0 = zoom;
   }
 });
 el.addEventListener('pointermove', e => {
@@ -879,6 +884,10 @@ el.addEventListener('pointermove', e => {
     return;
   }
   if (!dragging) return;
+  if (!moved){
+    if (Math.hypot(e.clientX - sx, e.clientY - sy) < 3) return;
+    moved = true; el.classList.add('grabbing'); grab(e);
+  }
   lam0 += (e.clientX - px) / R * 0.9;
   phi0 = Math.max(-80 * RAD, Math.min(80 * RAD, phi0 + (e.clientY - py) / R * 0.9));
   px = e.clientX; py = e.clientY;
@@ -891,7 +900,9 @@ el.addEventListener('pointermove', e => {
     const [p] = [...pts.values()];
     dragging = true; px = p.x; py = p.y; el.classList.add('grabbing');
   }
-  if (pts.size === 0){ dragging = false; el.classList.remove('grabbing'); }
+  if (pts.size === 0){
+    dragging = false; moved = false; cap = -1; el.classList.remove('grabbing');
+  }
 }));
 el.addEventListener('wheel', e => {
   e.preventDefault();
