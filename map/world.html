@@ -560,14 +560,18 @@ world.add(borderLines);
    整片變成黑點雜訊。改成五百棵左右、每棵約兩個單位高，
    有樹幹、有圓胖的樹冠——要的是「一棵樹」，不是密度。
    三個 InstancedMesh：樹幹共用一個，樹冠分圓形與針葉。 */
+/* instanceColor 是「乘」上光照的，不是最終顏色。
+   直射 0.95 ＋ 天光 0.62 ＋ 環境 0.10 的受光面會放大到 1.4 倍以上，
+   所以底色必須壓在中綠，太亮會整棵爆成白色。
+   上一版從全黑一路衝過頭變成棉花，就是這個原因。 */
 const VEG = {
-  boreal:     {cone:true,  n:92, col:0xA3C9AE},
-  tropic:     {cone:false, n:68, col:0xAEDC97},
-  temperate:  {cone:false, n:48, col:0xC2DEA6},
-  subtropic:  {cone:false, n:38, col:0xB6D79B},
-  mediterran: {cone:true,  n:16, col:0xBED1A0},
-  steppe:     {cone:false, n:8,  col:0xD0D3AC},
-  desert:     {cone:false, n:2,  col:0xD8D4B0},
+  boreal:     {cone:true,  n:92, col:0x4E8A6E},
+  tropic:     {cone:false, n:68, col:0x47934C},
+  temperate:  {cone:false, n:48, col:0x639E52},
+  subtropic:  {cone:false, n:38, col:0x56974E},
+  mediterran: {cone:true,  n:16, col:0x74915A},
+  steppe:     {cone:false, n:8,  col:0x7D8257},
+  desert:     {cone:false, n:2,  col:0x8A8459},
   polar:      {n:0}
 };
 const need = {}; for (const k in VEG) need[k] = VEG[k].n || 0;
@@ -644,7 +648,7 @@ function instance(geo, list, place, colored){
 instance(TRUNK, trees, (d, tr) => {
   d.position.set(tr.x, 0.12 + 0.36 * tr.s, tr.z);
   d.scale.set(tr.s, tr.s, tr.s); d.rotation.set(0, 0, 0);
-}, false).material.color.setHex(0xA98B6B);
+}, false).material.color.setHex(0x8A6E52);
 const round = trees.filter(t => !t.cone), cones = trees.filter(t => t.cone);
 if (round.length) instance(ROUND, round, (d, tr) => {
   d.position.set(tr.x, 0.12 + 1.18 * tr.s, tr.z);
