@@ -129,6 +129,18 @@ a.item:hover .zh{color:var(--gold)}
   font-family:var(--sans);font-size:.78rem;letter-spacing:.06em;color:var(--gold);
   text-decoration:none;border-bottom:1px solid transparent;padding-bottom:1px}
 .go:hover{border-bottom-color:var(--gold)}
+
+/* 第三層：品項卡 */
+.back{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--sans);
+  font-size:.72rem;letter-spacing:.08em;color:var(--muted);margin-bottom:.6rem}
+.back:hover{color:var(--gold)}
+button.item{width:100%;text-align:left;background:none;border:0;cursor:pointer;
+  padding:.5rem 0;border-bottom:1px solid var(--line);
+  display:grid;grid-template-columns:1fr auto;gap:0 .8rem;align-items:baseline}
+button.item:last-child{border-bottom:0}
+button.item:hover .zh{color:var(--gold)}
+.kinw{font-family:var(--sans);font-size:.66rem;letter-spacing:.06em;color:var(--faint);
+  border:1px solid var(--line);border-radius:999px;padding:.08rem .45rem;margin-left:.4rem}
 .flag{display:inline-block;font-family:var(--sans);font-size:.67rem;letter-spacing:.08em;
   border:1px solid var(--gold);color:var(--gold);border-radius:999px;
   padding:.16rem .55rem;margin-bottom:.8rem}
@@ -1087,8 +1099,86 @@ function itemRows(items){
       : `<div class="item">${inner}</div>`;
   }).join('');
 }
+
+/* ── 第三層：品項卡 ─────────────────────────────────
+   原本點產地只到「列出品項」就停了，品項點不下去。
+   補上之後層次和 puma 一樣深：產地 → 品項 → 親緣。
+   親緣從學名自動算，不是手填。                   */
+function binomial(lat){
+  if (!lat) return [null, null];
+  const k = String(lat).trim().split(/\s+/);
+  const g = (k[0] || '').replace(/[^A-Za-z]/g, '') || null;
+  let s = null;
+  if (k[1] === '×' || k[1] === 'x'){ if (k[2]) s = '× ' + k[2]; }
+  else if (k[1] && !/^sp+\.$/i.test(k[1])) s = k[1];
+  return [g, s];
+}
+const ALL = DATA.items, byGenus = {}, bySpecies = {};
+ALL.forEach(it => {
+  const [g, s] = binomial(it.latin);
+  it.__g = g; it.__s = s;
+  if (g) (byGenus[g] = byGenus[g] || []).push(it);
+  if (g && s){ const k = g + ' ' + s; (bySpecies[k] = bySpecies[k] || []).push(it); }
+});
+const kinOf = it => {
+  const same = (bySpecies[it.__g + ' ' + it.__s] || []).filter(x => x.id !== it.id);
+  const gen = (byGenus[it.__g] || []).filter(x => x.id !== it.id && !same.some(y => y.id === x.id));
+  return {same, gen};
+};
+const TYPE_ZH = {hydrosol:'純露', essential_oil:'精油', both:'純露 · 精油'};
+let cameFrom = null;
+
+function itemBtns(items){
+  if (!items.length) return '<p style="color:var(--faint);font-size:.82rem">還沒有品項掛在這裡。</p>';
+  return items.map(it => {
+    const k = kinOf(it), n = k.same.length + k.gen.length;
+    return `<button class="item" data-item="${it.id}">
+      <span><span class="zh">${txt(it.name)}</span>
+      <span class="lat">${it.latin || ''}</span></span>
+      <span class="part">${PARTS[it.part] ? txt(PARTS[it.part]) : ''}${
+        n ? `<span class="kinw">親緣 ${n}</span>` : ''}</span>
+    </button>`;
+  }).join('');
+}
+function showItem(id){
+  const it = ALL.find(x => x.id === id); if (!it) return;
+  const origins = (it.originIds || []).map(i => byOrigin[i]).filter(Boolean);
+  const k = kinOf(it);
+  const kv = [];
+  if (origins.length) kv.push(['產地', origins.map(o =>
+    `${txt(o.name)}<span style="color:var(--faint)">　${txt(o.where)}</span>`).join('<br>')]);
+  if (PARTS[it.part]) kv.push(['萃取', txt(PARTS[it.part])]);
+  if (it.type) kv.push(['型態', TYPE_ZH[it.type] || it.type]);
+  if (it.season && txt(it.season)) kv.push(['時節', txt(it.season)]);
+  if (it.aroma && txt(it.aroma)) kv.push(['氣味', txt(it.aroma)]);
+  const links = [];
+  if (it.articleUrl) links.push(`<a class="go" href="${it.articleUrl}" target="_blank" rel="noopener">讀這一篇 →</a>`);
+  if (it.videoId) links.push(`<a class="go" href="https://www.youtube.com/watch?v=${it.videoId}" target="_blank" rel="noopener">${it.series || '影片'} →</a>`);
+  document.getElementById('c-eyebrow').textContent = it.latin || '品項';
+  document.getElementById('c-title').textContent = txt(it.name);
+  document.getElementById('c-where').textContent =
+    origins.map(o => txt(o.name)).join('、') || '尚無產地';
+  document.getElementById('c-body').innerHTML = `
+    ${cameFrom ? `<button class="back" data-back="1">← 回到 ${txt(byOrigin[cameFrom].name)}</button>` : ''}
+    ${it.confidence !== 'high' ? `<span class="flag">${it.confidence === 'low' ? '產地待確認' : '細節待確認'}</span>` : ''}
+    ${it.verify ? `<p class="verify">${it.verify}</p>` : ''}
+    <dl class="kv">${kv.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join('')}</dl>
+    ${it.story && txt(it.story) ? `<p class="note">${txt(it.story)}</p>` : ''}
+    ${k.same.length ? `<div class="sect"><h3>同一個種 · ${it.__g} ${it.__s}</h3>${itemBtns(k.same)}</div>` : ''}
+    ${k.gen.length ? `<div class="sect"><h3>同屬 · ${it.__g}</h3>${itemBtns(k.gen)}</div>` : ''}
+    ${links.length ? `<div class="sect"><h3>延伸</h3>${links.join('<br>')}</div>` : ''}`;
+  document.getElementById('c-body').scrollTop = 0;
+  card.hidden = false;
+}
+document.getElementById('c-body').addEventListener('click', e => {
+  const b = e.target.closest('[data-item]');
+  if (b){ showItem(b.dataset.item); return; }
+  if (e.target.closest('[data-back]') && cameFrom) open(cameFrom, false);
+});
+
 function open(id, fly){
   const o = byOrigin[id]; if (!o) return;
+  cameFrom = id;
   document.getElementById('c-eyebrow').innerHTML =
     `<span class="no">${no(o)}</span>` + (DATA.kinds[o.kind] ? txt(DATA.kinds[o.kind]) : '產地');
   document.getElementById('c-title').textContent = txt(o.name);
@@ -1100,7 +1190,7 @@ function open(id, fly){
     ${o.verify ? `<p class="verify">${o.verify}</p>` : ''}
     ${o.note && txt(o.note) ? `<p class="note">${txt(o.note)}</p>` : ''}
     ${o.facts ? `<ul class="facts">${o.facts.map(f => `<li>${f}</li>`).join('')}</ul>` : ''}
-    <div class="sect"><h3>這裡來的 ${o.items.length} 項</h3>${itemRows(o.items)}</div>`;
+    <div class="sect"><h3>這裡來的 ${o.items.length} 項</h3>${itemBtns(o.items)}</div>`;
   document.getElementById('c-body').scrollTop = 0;
   card.hidden = false;
   pins.forEach(p => p.tag.classList.toggle('on', !p.tw && p.o.id === id));
@@ -1117,7 +1207,7 @@ function openTW(){
   document.getElementById('c-body').innerHTML = `
     <p class="note">從深根大地的實驗田，到大武山入夜後才開始的採花，到新竹五峰一百一十四年的柳杉。</p>
     <a class="go" href="taiwan.html">進入台灣島，看 ${TWSITES.length} 處產地的實際位置 →</a>
-    <div class="sect"><h3>台灣來的 ${twItems.size} 項</h3>${itemRows(all)}</div>`;
+    <div class="sect"><h3>台灣來的 ${twItems.size} 項</h3>${itemBtns(all)}</div>`;
   document.getElementById('c-body').scrollTop = 0;
   card.hidden = false;
   pins.forEach(p => p.tag.classList.toggle('on', !!p.tw));

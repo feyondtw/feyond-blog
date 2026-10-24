@@ -32,7 +32,7 @@
      每個國家一個淡彩，顏色由國名雜湊決定——不是隨機，
      所以重新整理顏色不會跳。 */
   --sea:#2F8E8C; --land:#F5EFE0; --coast:#9B8F7A; --halo:#7FC2BE;
-  --dot-tw:#F19072; --dot-os:#5C9291; --shadow:0 1px 3px rgba(51,48,43,.08); --nezu:#888E7E;
+  --dot-tw:#D94F2B; --dot-os:#15424E; --shadow:0 1px 3px rgba(51,48,43,.08); --nezu:#6F7A76;
   --serif:"Noto Serif TC","Songti TC",serif;
   --latin:"Cormorant Garamond","Noto Serif TC",Georgia,serif;
   --sans:"Noto Sans TC","PingFang TC",system-ui,sans-serif;
@@ -61,8 +61,9 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   stroke-linejoin:round;vector-effect:non-scaling-stroke}
 
 .globe-svg .dot{cursor:pointer}
-.globe-svg .dot .halo{fill:var(--gold);opacity:0;transition:opacity .2s}
-.globe-svg .dot .core{stroke:var(--sea);stroke-width:1}
+.globe-svg .dot .halo{fill:#FFFFFF;opacity:0;transition:opacity .2s}
+.globe-svg .dot .core{stroke:#FFFFFF;stroke-width:1.8;
+  vector-effect:non-scaling-stroke;paint-order:stroke}
 .globe-svg .dot.tw .core{fill:var(--dot-tw)}
 .globe-svg .dot.os .core{fill:var(--dot-os)}
 .globe-svg .dot.low .core{fill:var(--faint)}
@@ -446,7 +447,7 @@ const dotNodes = ORIGINS.map(o => {
   const g = mk('g', {class: 'dot' + (o.hero ? ' hero' : '') + (lowConf(o) ? ' low' : '') +
                              (isTW(o) ? ' tw' : ' os'), tabindex: '0', role: 'button'});
   const halo = mk('circle', {class: 'halo', r: o.hero ? 13 : 9});
-  const dot = mk('circle', {class: 'core', r: o.hero ? 5.5 : 4});
+  const dot = mk('circle', {class: 'core', r: o.hero ? 6 : 4.6});
   const lbl = mk('text', {class: 'lbl', x: o.hero ? 11 : 9, y: 4});
   lbl.textContent = txt(o.name);
   g.append(halo, dot, lbl);
