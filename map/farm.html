@@ -332,16 +332,16 @@ C.grassDark = 0x7FAE66;
    清晨光從東邊低角度進來，黃昏從西邊，夜晚只剩月色與窗光。 */
 const MOODS = {
   dawn:  {zh:'清晨', bg:0xD6DCE2, fog:0xDBE1E5, hemiSky:0xE8E4EC, hemiGnd:0x9AA890,
-          hemiI:0.60, sun:0xFFD2A6, sunI:0.56, pos:[-78, 18, 34], sea:0x8FAEC2,
+          hemiI:0.60, sun:0xFFD2A6, sunI:0.56, pos:[-78, 18, 34], sea:0x7C9AA6,
           amb:0.15, lit:false},
   day:   {zh:'白天', bg:0xBCDCE8, fog:0xC6E2EC, hemiSky:0xCDE8F2, hemiGnd:0x8FBB72,
-          hemiI:0.62, sun:0xFFF4DC, sunI:0.92, pos:[16, 24, 12], sea:0x5FA8C6,
+          hemiI:0.62, sun:0xFFF4DC, sunI:0.92, pos:[16, 24, 12], sea:0x6BA3B5,
           amb:0.17, lit:false},
   dusk:  {zh:'黃昏', bg:0xE9C7A2, fog:0xE4C2A0, hemiSky:0xF4D4AE, hemiGnd:0x9C866A,
-          hemiI:0.56, sun:0xFFA660, sunI:0.82, pos:[82, 15, -26], sea:0xA69CAC,
+          hemiI:0.56, sun:0xFFA660, sunI:0.82, pos:[82, 15, -26], sea:0x94908E,
           amb:0.13, lit:true},
   night: {zh:'夜晚', bg:0x1D2B38, fog:0x22323E, hemiSky:0x364C5E, hemiGnd:0x2A3828,
-          hemiI:0.48, sun:0xB4C8E6, sunI:0.22, pos:[46, 52, -34], sea:0x2F5468,
+          hemiI:0.48, sun:0xB4C8E6, sunI:0.22, pos:[46, 52, -34], sea:0x2C4654,
           amb:0.08, lit:true}
 };
 
@@ -430,7 +430,7 @@ world.add(buildGround());
 
 /* 海 */
 const seaMat = new THREE.MeshPhongMaterial({color:MOODS.day.sea, flatShading:true,
-  shininess:16, specular:0x335566, transparent:true, opacity:0.92});
+  shininess:7, specular:0x1E3240, transparent:true, opacity:0.92});
 const sea = new THREE.Mesh(new THREE.CylinderGeometry(78, 78, 1.2, 64), seaMat);
 sea.position.y = TOP_Y - 3.4;
 sea.receiveShadow = true;
