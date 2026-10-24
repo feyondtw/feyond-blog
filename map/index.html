@@ -117,9 +117,12 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .sbtn:hover{border-color:var(--gold);color:var(--gold)}
 .sbtn.ico{width:2rem;padding:.35rem 0;text-align:center;font-size:.9rem;line-height:1}
 
+/* 描邊用奶油色不是海色：在海上讓深色字浮出來，在陸地上描邊
+   本來就和底色同色等於隱形——一種寫法兩邊都清楚。 */
 .globe-svg .lbl{
-  font-family:var(--sans);font-size:11px;letter-spacing:.05em;fill:var(--ink);
-  paint-order:stroke;stroke:var(--sea);stroke-width:3px;stroke-linejoin:round;
+  font-family:"PingFang TC","PingFang SC","Noto Sans TC",system-ui,sans-serif;
+  font-size:12.5px;font-weight:500;letter-spacing:.03em;fill:#2A2722;
+  paint-order:stroke;stroke:#FDFCF7;stroke-width:4px;stroke-linejoin:round;
   opacity:0;transition:opacity .25s;pointer-events:none
 }
 .globe-svg.close .lbl{opacity:1}
@@ -554,7 +557,7 @@ const dotNodes = ORIGINS.map(o => {
                              (isTW(o) ? ' tw' : ' os'), tabindex: '0', role: 'button'});
   const halo = mk('circle', {class: 'halo', r: o.hero ? 13 : 9});
   const dot = mk('circle', {class: 'core', r: o.hero ? 6 : 4.6});
-  const lbl = mk('text', {class: 'lbl', x: o.hero ? 11 : 9, y: 4});
+  const lbl = mk('text', {class: 'lbl', x: o.hero ? 12 : 10, y: 4.5});
   lbl.textContent = txt(o.name);
   g.append(halo, dot, lbl);
   g.addEventListener('click', () => select('origin', o.id, true));
