@@ -908,6 +908,20 @@ el.addEventListener('wheel', e => {
   e.preventDefault();
   setZoom(zoom * (1 - e.deltaY * 0.0015));
 }, {passive: false});
+/* 保險：指標捕捉的後遺症是某些瀏覽器會把 click 改送到容器，
+   這時 e.target 是 #globe 本身，子元素的 handler 根本不會跑。
+   自己用座標再找一次目標補上；子元素已經處理過的就不重複。 */
+el.addEventListener('click', e => {
+  if (moved) return;
+  const direct = e.target && e.target.closest && e.target.closest('.cn,.dot');
+  if (direct) return;
+  const hit = document.elementFromPoint(e.clientX, e.clientY);
+  const g = hit && hit.closest && hit.closest('.cn,.dot');
+  if (!g) return;
+  if (g.__c) select('country', g.__c.code, true);
+  else if (g.__o) select('origin', g.__o.id, true);
+});
+
 el.addEventListener('dblclick', () => setZoom(zoom * 1.9));
 
 /* 飛到某個產地：經度走最短路徑 */
