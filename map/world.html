@@ -363,7 +363,7 @@ const MOODS = {
           hemiI:0.60, sun:0xFFD2A6, sunI:0.56, pos:[-78, 18, 34], sea:0x7C9AA6,
           amb:0.15, lit:false},
   day:   {zh:'白天', bg:0xC6DEE4, fog:0xCDE4E8, hemiSky:0xE4F0F2, hemiGnd:0xA8BF94,
-          hemiI:0.86, sun:0xFFF6E6, sunI:0.72, pos:[-40, 60, 34], sea:0x6BA3B5,
+          hemiI:0.62, sun:0xFFF6E6, sunI:0.95, pos:[-40, 60, 34], sea:0x6BA3B5,
           amb:0.10, lit:false},
   dusk:  {zh:'黃昏', bg:0xE9C7A2, fog:0xE4C2A0, hemiSky:0xF4D4AE, hemiGnd:0x9C866A,
           hemiI:0.56, sun:0xFFA660, sunI:0.82, pos:[82, 15, -26], sea:0x94908E,
@@ -561,13 +561,13 @@ world.add(borderLines);
    有樹幹、有圓胖的樹冠——要的是「一棵樹」，不是密度。
    三個 InstancedMesh：樹幹共用一個，樹冠分圓形與針葉。 */
 const VEG = {
-  boreal:     {cone:true,  n:170, col:0x7FA882},
-  tropic:     {cone:false, n:130, col:0x8FBE7A},
-  temperate:  {cone:false, n:95,  col:0xA8C98A},
-  subtropic:  {cone:false, n:75,  col:0x9ABF7E},
-  mediterran: {cone:true,  n:30,  col:0xA3B881},
-  steppe:     {cone:false, n:14,  col:0xB9BE8E},
-  desert:     {cone:false, n:4,   col:0xC2BE92},
+  boreal:     {cone:true,  n:92, col:0xA3C9AE},
+  tropic:     {cone:false, n:68, col:0xAEDC97},
+  temperate:  {cone:false, n:48, col:0xC2DEA6},
+  subtropic:  {cone:false, n:38, col:0xB6D79B},
+  mediterran: {cone:true,  n:16, col:0xBED1A0},
+  steppe:     {cone:false, n:8,  col:0xD0D3AC},
+  desert:     {cone:false, n:2,  col:0xD8D4B0},
   polar:      {n:0}
 };
 const need = {}; for (const k in VEG) need[k] = VEG[k].n || 0;
@@ -581,7 +581,7 @@ for (let i = 0, guard = 0; guard < 260000; guard++){
   if (!onLand(lng, lat)) continue;
   need[key]--;
   const v = VEG[key], q = P(lng, lat);
-  trees.push({x:q[0], z:q[1], cone:!!v.cone, col:v.col, s:0.85 + Math.random() * 0.45});
+  trees.push({x:q[0], z:q[1], cone:!!v.cone, col:v.col, s:0.72 + Math.random() * 0.34});
   if (Object.values(need).every(n => n <= 0)) break;
 }
 /* r134 的 UMD 版沒有 mergeBufferGeometries（那在 examples/jsm），
@@ -600,20 +600,27 @@ function mergeGeos(list){
   const out = new THREE.BufferGeometry();
   out.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
   out.setAttribute('normal', new THREE.Float32BufferAttribute(nor, 3));
+  /* 要用 instanceColor 就得開 vertexColors，而開了之後著色器會去讀
+     geometry 的 color 屬性。沒有這個屬性的話 WebGL 補 (0,0,0)，
+     整棵樹會變全黑。填滿 1.0 當中性值，顏色才由 instanceColor 決定。 */
+  const white = new Float32Array(n * 3).fill(1);
+  out.setAttribute('color', new THREE.Float32BufferAttribute(white, 3));
   return out;
 }
 const TRUNK = new THREE.CylinderGeometry(0.11, 0.15, 0.72, 5);
-/* 針葉樹：三層錐疊起來，一眼就認得出是針葉 */
+/* 針葉樹：三層錐疊起來，一眼就認得出是針葉。
+   段數 6 → 8，側面輪廓比較順。 */
 const CONE = mergeGeos([
-  new THREE.ConeGeometry(0.62, 0.95, 6, 1, true).translate(0, -0.42, 0),
-  new THREE.ConeGeometry(0.47, 0.85, 6, 1, true).translate(0,  0.12, 0),
-  new THREE.ConeGeometry(0.31, 0.72, 6, 1, true).translate(0,  0.62, 0)
+  new THREE.ConeGeometry(0.62, 0.95, 8, 1, true).translate(0, -0.42, 0),
+  new THREE.ConeGeometry(0.47, 0.85, 8, 1, true).translate(0,  0.12, 0),
+  new THREE.ConeGeometry(0.31, 0.72, 8, 1, true).translate(0,  0.62, 0)
 ]);
-/* 闊葉樹：兩瓣疊出蓬鬆的樹冠，不是一顆球 */
+/* 闊葉樹的「漸層」其實是 flat shading：每個面接光角度不同，
+   面越多階梯越細，就看起來像漸層。原本一瓣只有 20 面，
+   階梯太粗；主瓣改成細分一階（80 面），再疊一顆小的。 */
 const ROUND = mergeGeos([
-  new THREE.IcosahedronGeometry(0.62, 0),
-  new THREE.IcosahedronGeometry(0.44, 0).translate(0.40, 0.26, 0.08),
-  new THREE.IcosahedronGeometry(0.38, 0).translate(-0.36, 0.14, -0.14)
+  new THREE.IcosahedronGeometry(0.60, 1),
+  new THREE.IcosahedronGeometry(0.36, 0).translate(0.38, 0.24, 0.10)
 ]);
 
 function instance(geo, list, place, colored){
@@ -630,7 +637,7 @@ function instance(geo, list, place, colored){
   });
   if (colored) m.instanceColor = new THREE.InstancedBufferAttribute(cols, 3);
   m.instanceMatrix.needsUpdate = true;
-  m.castShadow = true;
+  m.castShadow = false;   // 平面地圖上樹影會變成一塊塊黑斑
   world.add(m);
   return m;
 }
