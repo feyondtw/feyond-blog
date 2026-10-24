@@ -208,8 +208,21 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .empty{color:var(--faint);font-size:.82rem;padding:1.5rem 0;font-family:var(--sans)}
 
 /* ── detail ──────────────────────────────── */
-.detail{position:absolute;inset:0;background:var(--paper);display:flex;flex-direction:column;z-index:5}
+/* 字卡獨立成一個視窗。原本是 absolute 塞在側欄裡，
+   視窗一矮、內容一長，下面就被切掉了。 */
+.scrim{position:fixed;inset:0;z-index:39;background:rgba(26,22,18,.38)}
+.scrim[hidden]{display:none!important}
+.detail{
+  position:fixed;z-index:40;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:min(560px,calc(100vw - 2.2rem));max-height:min(80vh,780px);
+  background:var(--paper);border:1px solid var(--line);border-radius:4px;
+  box-shadow:0 20px 56px rgba(0,0,0,.26);
+  display:flex;flex-direction:column;overflow:hidden
+}
 .detail[hidden]{display:none!important}
+.dclose{position:absolute;top:.75rem;right:.85rem;z-index:1;
+  font-size:1.05rem;line-height:1;color:var(--faint);padding:.3rem;transition:color .2s}
+.dclose:hover{color:var(--gold)}
 .dhead{padding:1.5rem 1.5rem .9rem;flex:none;border-bottom:1px solid var(--line)}
 .back{font-family:var(--sans);font-size:.72rem;letter-spacing:.08em;color:var(--muted);
   margin-bottom:.9rem;display:inline-flex;gap:.4rem;align-items:center}
@@ -311,7 +324,9 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
     </div>
     <div class="railwrap">
       <div class="list" id="list"></div>
-      <section class="detail" id="detail" hidden aria-label="詳細資料">
+      <div class="scrim" id="scrim" hidden></div>
+      <section class="detail" id="detail" hidden role="dialog" aria-modal="true" aria-label="詳細資料">
+        <button class="dclose" id="dclose" aria-label="關閉">&#10005;</button>
         <div class="dhead">
           <button class="back" id="back"><span class="arw">&#8592;</span> 回到清單</button>
           <h3 id="d-title"></h3>
@@ -984,15 +999,21 @@ listEl.addEventListener('click', e => {
 /* ── detail ─────────────────────────────── */
 const detail = document.getElementById('detail');
 const dBody = document.getElementById('d-body');
-document.getElementById('back').onclick = () => {
-  detail.hidden = true;
+const scrim = document.getElementById('scrim');
+function closeDetail(){
+  detail.hidden = scrim.hidden = true;
   dotNodes.forEach(g => g.classList.remove('sel'));
-};
+}
+document.getElementById('back').onclick = closeDetail;
+document.getElementById('dclose').onclick = closeDetail;
+scrim.onclick = closeDetail;
+addEventListener('keydown', e => { if (e.key === 'Escape' && !detail.hidden) closeDetail(); });
 
 function flyTo(o){
   stopSpin();
   dotNodes.forEach(g => g.classList.toggle('sel', g.__o.id === o.id));
-  glideTo(o.lng, o.lat, isTW(o) ? 2.6 : 1.7, 900);
+  /* 產地名要 zoom > 6 才浮出來，放大到 1.7 等於沒跳 */
+  glideTo(o.lng, o.lat, isTW(o) ? 14 : 9, 900);
 }
 
 function confFlag(x){
@@ -1101,7 +1122,7 @@ function select(kind, id, fly){
   document.getElementById('d-where').textContent = where;
   dBody.innerHTML = body;
   dBody.scrollTop = 0;
-  detail.hidden = false;
+  detail.hidden = scrim.hidden = false;
   if (o && fly) flyTo(o);
 }
 dBody.addEventListener('click', e => {

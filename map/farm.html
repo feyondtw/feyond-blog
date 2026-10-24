@@ -108,7 +108,9 @@ body.notags .tag{opacity:0;pointer-events:none}
 .card-x{position:absolute;top:1rem;right:1rem;width:1.9rem;height:1.9rem;border-radius:50%;
   font-size:1.1rem;line-height:1;color:var(--muted)}
 .card-x:hover{background:#EFE7D9}
-.card-b{padding:1.2rem 1.5rem 1.6rem;overflow-y:auto}
+/* flex:1 1 auto + min-height:0 缺一不可。少了它，內容一長
+   就撐破 max-height 被 overflow:hidden 切掉，而不是變成捲動。 */
+.card-b{padding:1.2rem 1.5rem 1.6rem;flex:1 1 auto;min-height:0;overflow-y:auto}
 .card-b p{margin:0 0 1rem;font-size:.9rem;line-height:1.95}
 .card-b p.lead{font-size:.95rem}
 .card-b .quote{margin:0 0 1.1rem;padding-left:.9rem;border-left:2px solid var(--gold);
