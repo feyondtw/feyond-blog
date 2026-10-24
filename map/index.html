@@ -31,7 +31,7 @@
   /* 水彩地圖集：灰藍的海、奶油與淡彩的陸地、細而淡的國界。
      每個國家一個淡彩，顏色由國名雜湊決定——不是隨機，
      所以重新整理顏色不會跳。 */
-  --sea:#7C9CB0; --land:#F2EBDA; --coast:#B9AE98; --halo:#A8BECB;
+  --sea:#2F8E8C; --land:#F5EFE0; --coast:#9B8F7A; --halo:#7FC2BE;
   --dot-tw:#F19072; --dot-os:#5C9291; --shadow:0 1px 3px rgba(51,48,43,.08); --nezu:#888E7E;
   --serif:"Noto Serif TC","Songti TC",serif;
   --latin:"Cormorant Garamond","Noto Serif TC",Georgia,serif;
@@ -54,10 +54,10 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 #globe{position:absolute;inset:0;cursor:grab;touch-action:none}
 #globe.grabbing{cursor:grabbing}
 .globe-svg{display:block;width:100%;height:100%;overflow:visible}
-.globe-svg .sea{fill:var(--sea)}
+.globe-svg .sea{fill:url(#seaGrad)}
 .globe-svg .limb{fill:none;stroke:var(--halo);stroke-opacity:.6;stroke-width:1.2}
-.globe-svg .grat path{fill:none;stroke:#FFFFFF;stroke-opacity:.3;stroke-width:.5}
-.globe-svg .land path{stroke:var(--coast);stroke-width:.5;stroke-opacity:.55;
+.globe-svg .grat path{fill:none;stroke:#FFFFFF;stroke-opacity:.22;stroke-width:.5}
+.globe-svg .land path{stroke:var(--coast);stroke-width:.4;stroke-opacity:.42;
   stroke-linejoin:round;vector-effect:non-scaling-stroke}
 
 .globe-svg .dot{cursor:pointer}
@@ -357,10 +357,24 @@ const svg = mk('svg', {class: 'globe-svg'});
 const gGrat = mk('g', {class: 'grat'});
 const gLand = mk('g', {class: 'land'});
 const gDots = mk('g', {class: 'dots'});
+const defs = mk('defs', {});
+const grad = mk('radialGradient', {id:'seaGrad', cx:'42%', cy:'36%', r:'72%'});
+grad.appendChild(mk('stop', {offset:'0%',  'stop-color':'#58A9A3'}));
+grad.appendChild(mk('stop', {offset:'62%', 'stop-color':'#2F8E8C'}));
+grad.appendChild(mk('stop', {offset:'100%','stop-color':'#1F6F72'}));
+defs.appendChild(grad);
+/* 水彩：用亂流做位移，把乾淨的向量邊緣抖開一點 */
+const wc = mk('filter', {id:'wc', x:'-6%', y:'-6%', width:'112%', height:'112%'});
+wc.appendChild(mk('feTurbulence', {type:'fractalNoise', baseFrequency:'0.022',
+  numOctaves:'3', seed:'7', result:'n'}));
+wc.appendChild(mk('feDisplacementMap', {in:'SourceGraphic', in2:'n', scale:'3.2',
+  xChannelSelector:'R', yChannelSelector:'G'}));
+defs.appendChild(wc);
 const sea = mk('circle', {class: 'sea'});
 const limb = mk('circle', {class: 'limb'});
 const gTree = mk('g', {class: 'trees'});
-svg.append(sea, gGrat, gLand, gTree, gDots, limb);
+gLand.setAttribute('filter', 'url(#wc)');
+svg.append(defs, sea, gGrat, gLand, gDots, limb);
 el.appendChild(svg);
 
 /* 經緯網：每 30 度一條，單純讓它看起來像個球 */
@@ -376,8 +390,8 @@ for (let lat = -60; lat <= 60; lat += 30){
 
 
 /* 水彩淡彩：每個國家一色，由國名雜湊挑選 */
-const TINTS = ['#F2EBDA','#D9E0C6','#E9D5CD','#EDE3C2','#D2DDE3','#DDCFB6',
-               '#E2DCC5','#CFD9C9','#E6D9D2'];
+const TINTS = ['#F5EFE0','#F8D3AC','#E08A3C','#F2CE5B','#6CB6CE','#FAE0C4',
+               '#EFA860','#CFE3E6','#F6E3B0'];
 function tintOf(name){
   let h = 0;
   for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
@@ -542,7 +556,7 @@ function onLand(lng, lat){
 /* 撒點：和島群一樣先做便宜的判定，最後才查是不是陸地 */
 const treeNodes = [];
 (function seedTrees(){
-  const want = 230;
+  const want = 0;   // 地球儀上不放樹——水彩地圖的語彙裡沒有這個
   const seen = [];
   for (let i = 0, guard = 0; seen.length < want && guard < 60000; guard++){
     const lat = -56 + Math.random() * 138;
