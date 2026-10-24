@@ -1213,7 +1213,9 @@ function select(kind, id, fly){
 }
 dBody.addEventListener('click', e => {
   const r = e.target.closest('.row'); if (!r) return;
-  select(r.dataset.k, r.dataset.id, false);
+  /* 從國家字卡點進產地時也要飛過去——要回去的視角早就記住了，
+     所以不管往下點幾層，關掉字卡都是回到最初的那一個比例。 */
+  select(r.dataset.k, r.dataset.id, r.dataset.k === 'origin');
 });
 
 /* ── stage buttons ──────────────────────── */
