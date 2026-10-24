@@ -9,27 +9,15 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Noto+Serif+TC:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap">
 <style>
 :root{
-  --ground:#EDE6D6; --paper:#F5F0E3; --ink:#252220; --muted:#7A756D;
-  --faint:#A8A29A; --gold:#B8965A; --line:#DBD2BE; --mat:#2D4A3E; --matink:#F5F0E3;
-  --sea:#6BA3B5; --land:#9CC178; --coast:#7FA85E; --halo:#BFE0EA;
-  --dot-tw:#D9663F; --dot-os:#1F5F46; --shadow:0 1px 3px rgba(37,34,32,.07);
+  /* 這一頁刻意只有一種光。香氣地圖、島群、台灣島、深根大地
+     都是亮的——跟著系統切深色，整張地圖就變成一本舊地圖冊。 */
+  --ground:#F2EDE1; --paper:#FFFBF2; --ink:#252220; --muted:#7A756D;
+  --faint:#A8A29A; --gold:#B8965A; --line:#E4DCCA; --mat:#2D4A3E; --matink:#F5F0E3;
+  --sea:#86CEDB; --land:#9ED47E; --coast:#6FB85C; --halo:#C8ECF4;
+  --dot-tw:#E0603C; --dot-os:#0F7A6B; --shadow:0 1px 3px rgba(37,34,32,.07);
   --serif:"Noto Serif TC","Songti TC",serif;
   --latin:"Cormorant Garamond","Noto Serif TC",Georgia,serif;
   --sans:"Noto Sans TC","PingFang TC",system-ui,sans-serif;
-}
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --ground:#161915; --paper:#1E221C; --ink:#EAE4D6; --muted:#9C9689;
-    --faint:#6E6A60; --gold:#C9A96B; --line:#2F342C; --mat:#0E120F; --matink:#EAE4D6;
-    --sea:#2A5A6E; --land:#4F7E4C; --coast:#3E6A3C; --halo:#5E86A2;
-    --dot-tw:#F08A5A; --dot-os:#7FD1A4; --shadow:0 1px 3px rgba(0,0,0,.3);
-  }
-}
-:root[data-theme="dark"]{
-  --ground:#161915; --paper:#1E221C; --ink:#EAE4D6; --muted:#9C9689;
-  --faint:#6E6A60; --gold:#C9A96B; --line:#2F342C; --mat:#0E120F; --matink:#EAE4D6;
-  --sea:#2A5A6E; --land:#4F7E4C; --coast:#3E6A3C; --halo:#5E86A2;
-  --dot-tw:#F08A5A; --dot-os:#7FD1A4; --shadow:0 1px 3px rgba(0,0,0,.3);
 }
 *{box-sizing:border-box}
 html,body{height:100%}
