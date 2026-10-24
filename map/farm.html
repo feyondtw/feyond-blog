@@ -76,6 +76,17 @@ body.notags .tag{opacity:0;pointer-events:none}
 .views a:hover{color:var(--ink);background:#EFE7D9}
 .views [aria-current]{background:var(--ink);color:var(--cream)}
 
+
+/* 四段光線 */
+.seg{display:inline-flex;align-items:center;background:var(--cream);border-radius:999px;
+  padding:.22rem;box-shadow:var(--shadow);gap:.08rem}
+.seg button{width:2.15rem;height:1.75rem;border-radius:999px;display:grid;place-items:center;
+  color:var(--muted);transition:background .18s,color .18s}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--cream)}
+.seg svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.5;
+  stroke-linecap:round;stroke-linejoin:round}
+
 .hint{position:fixed;left:50%;bottom:1.4rem;transform:translateX(-50%);z-index:3;
   font-family:var(--sans);font-size:.74rem;letter-spacing:.07em;color:#5E6B63;
   background:rgba(255,248,240,.8);padding:.4rem .9rem;border-radius:999px;
@@ -166,8 +177,16 @@ body.notags .tag{opacity:0;pointer-events:none}
 <nav class="tools">
   <button class="tool" id="t-tags" aria-pressed="true">
     <svg viewBox="0 0 16 16"><rect x="2" y="5" width="12" height="6" rx="3"/></svg>名牌</button>
-  <button class="tool" id="t-night" aria-pressed="false">
-    <svg viewBox="0 0 16 16"><path d="M13 10A6 6 0 016 3a5 5 0 107 7z"/></svg>入夜</button>
+  <div class="seg" role="group" aria-label="光線">
+    <button id="m-dawn" aria-pressed="false" title="清晨" aria-label="清晨">
+      <svg viewBox="0 0 24 24"><path d="M3 19h18M6.5 19a5.5 5.5 0 0 1 11 0"/><path d="M12 3v4M9.2 6.2 12 3.4l2.8 2.8"/></svg></button>
+    <button id="m-day" aria-pressed="true" title="白天" aria-label="白天">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.4v2.2M12 19.4v2.2M2.4 12h2.2M19.4 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M5.2 18.8l1.6-1.6M17.2 6.8l1.6-1.6"/></svg></button>
+    <button id="m-dusk" aria-pressed="false" title="黃昏" aria-label="黃昏">
+      <svg viewBox="0 0 24 24"><path d="M3 19h18M6.5 19a5.5 5.5 0 0 1 11 0"/><path d="M12 7.4V3M9.2 4.6 12 7.4l2.8-2.8"/></svg></button>
+    <button id="m-night" aria-pressed="false" title="夜晚" aria-label="夜晚">
+      <svg viewBox="0 0 24 24"><path d="M19.5 15.2A8.2 8.2 0 0 1 8.8 4.5a7.2 7.2 0 1 0 10.7 10.7z"/></svg></button>
+  </div>
   <button class="tool" id="t-pause" aria-pressed="false">
     <svg viewBox="0 0 16 16"><rect x="4" y="3" width="2.5" height="10" rx="1"/><rect x="9.5" y="3" width="2.5" height="10" rx="1"/></svg>暫停</button>
   <button class="tool" id="t-reset">
@@ -308,13 +327,22 @@ const C = {
 };
 C.grassDark = 0x7FAE66;
 
-const DAY = {
-  bg:0xBCDCE8, fog:0xC6E2EC, hemiSky:0xCDE8F2, hemiGnd:0x8FBB72,
-  sun:0xFFF4DC, sunI:0.92, hemiI:0.62, water:0x5FA8C6, win:0x3E5260, winLit:false
-};
-const NIGHT = {
-  bg:0x1E2C3A, fog:0x22303E, hemiSky:0x33485F, hemiGnd:0x2A3A24,
-  sun:0xBACFEE, sunI:0.34, hemiI:0.50, water:0x2A4A62, win:0xFFD79A, winLit:true
+/* ── 四段光線 ──────────────────────────────────────────
+   重點不只是顏色：太陽的位置會跟著移，所以影子會掃過去。
+   清晨光從東邊低角度進來，黃昏從西邊，夜晚只剩月色與窗光。 */
+const MOODS = {
+  dawn:  {zh:'清晨', bg:0xD6DCE2, fog:0xDBE1E5, hemiSky:0xE8E4EC, hemiGnd:0x9AA890,
+          hemiI:0.60, sun:0xFFD2A6, sunI:0.56, pos:[-78, 18, 34], sea:0x8FAEC2,
+          amb:0.15, lit:false},
+  day:   {zh:'白天', bg:0xBCDCE8, fog:0xC6E2EC, hemiSky:0xCDE8F2, hemiGnd:0x8FBB72,
+          hemiI:0.62, sun:0xFFF4DC, sunI:0.92, pos:[16, 24, 12], sea:0x5FA8C6,
+          amb:0.17, lit:false},
+  dusk:  {zh:'黃昏', bg:0xE9C7A2, fog:0xE4C2A0, hemiSky:0xF4D4AE, hemiGnd:0x9C866A,
+          hemiI:0.56, sun:0xFFA660, sunI:0.82, pos:[82, 15, -26], sea:0xA69CAC,
+          amb:0.13, lit:true},
+  night: {zh:'夜晚', bg:0x1D2B38, fog:0x22323E, hemiSky:0x364C5E, hemiGnd:0x2A3828,
+          hemiI:0.48, sun:0xB4C8E6, sunI:0.22, pos:[46, 52, -34], sea:0x2F5468,
+          amb:0.08, lit:true}
 };
 
 /* ── 基礎 ─────────────────────────────── */
@@ -330,14 +358,14 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 host.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(DAY.bg);
-scene.fog = new THREE.Fog(DAY.fog, 64, 160);
+scene.background = new THREE.Color(MOODS.day.bg);
+scene.fog = new THREE.Fog(MOODS.day.fog, 64, 160);
 
 const camera = new THREE.PerspectiveCamera(34, 1, 0.5, 300);
 
-const hemi = new THREE.HemisphereLight(DAY.hemiSky, DAY.hemiGnd, DAY.hemiI);
+const hemi = new THREE.HemisphereLight(MOODS.day.hemiSky, MOODS.day.hemiGnd, MOODS.day.hemiI);
 scene.add(hemi);
-const sun = new THREE.DirectionalLight(DAY.sun, DAY.sunI);
+const sun = new THREE.DirectionalLight(MOODS.day.sun, MOODS.day.sunI);
 sun.position.set(16, 24, 12);
 sun.castShadow = true;
 sun.shadow.mapSize.set(2048, 2048);
@@ -345,7 +373,8 @@ const sc = sun.shadow.camera;
 sc.left = -22; sc.right = 22; sc.top = 22; sc.bottom = -22; sc.near = 1; sc.far = 70;
 sun.shadow.bias = -0.0012;
 scene.add(sun);
-scene.add(new THREE.AmbientLight(0xFFFFFF, 0.17));
+const amb = new THREE.AmbientLight(0xFFFFFF, 0.17);
+scene.add(amb);
 
 /* ── 幾何小工具 ───────────────────────── */
 /* 低多邊形的切面感全靠 flatShading。
@@ -400,7 +429,7 @@ function buildGround(){
 world.add(buildGround());
 
 /* 海 */
-const seaMat = new THREE.MeshPhongMaterial({color:DAY.water, flatShading:true,
+const seaMat = new THREE.MeshPhongMaterial({color:MOODS.day.sea, flatShading:true,
   shininess:16, specular:0x335566, transparent:true, opacity:0.92});
 const sea = new THREE.Mesh(new THREE.CylinderGeometry(78, 78, 1.2, 64), seaMat);
 sea.position.y = TOP_Y - 3.4;
@@ -478,8 +507,8 @@ function buildStill(){
   g.add(roof);
   // 門窗
   g.add(box(0.7, 1.2, 0.08, C.wood, -0.9, 0.6, 1.42));
-  const w1 = box(0.62, 0.62, 0.08, DAY.win, 0.75, 1.35, 1.42);
-  const w2 = box(0.08, 0.62, 0.62, DAY.win, 1.72, 1.35, -0.4);
+  const w1 = box(0.62, 0.62, 0.08, 0x3E5260, 0.75, 1.35, 1.42);
+  const w2 = box(0.08, 0.62, 0.62, 0x3E5260, 1.72, 1.35, -0.4);
   windows.push(w1, w2); g.add(w1, w2);
   // 煙囪
   g.add(box(0.5, 1.5, 0.5, C.wall, -1.1, 3.4, -0.8));
@@ -640,7 +669,7 @@ function buildHouse(){
   const roof = cone(2.0, 1.2, 4, C.roofYellow, 0, 2.3, 0);
   roof.rotation.y = Math.PI / 4;
   g.add(roof);
-  const w = box(0.55, 0.55, 0.08, DAY.win, 0.5, 1.0, 1.02);
+  const w = box(0.55, 0.55, 0.08, 0x3E5260, 0.5, 1.0, 1.02);
   windows.push(w); g.add(w);
   g.add(box(0.5, 1.0, 0.08, C.wood, -0.6, 0.5, 1.02));
   // 竹籃
@@ -874,29 +903,48 @@ document.getElementById('t-reset').onclick = () => {
 };
 
 /* 日夜 */
-const tNight = document.getElementById('t-night');
-let night = false, lerp = 0, from = DAY, to = DAY;
-tNight.onclick = () => {
-  night = !night;
-  tNight.setAttribute('aria-pressed', String(night));
-  from = night ? DAY : NIGHT; to = night ? NIGHT : DAY;
-  lerp = 0;
-};
+let lerp = 1;
+const MOOD_KEYS = ['dawn', 'day', 'dusk', 'night'];
+let moodNow = 'day', moodFrom = MOODS.day, moodTo = MOODS.day;
 const cA = new THREE.Color(), cB = new THREE.Color();
-function mixColor(target, a, b, k){
-  cA.setHex(a); cB.setHex(b); target.copy(cA).lerp(cB, k);
+const mixc = (t, a, b, q) => { cA.setHex(a); cB.setHex(b); t.copy(cA).lerp(cB, q); };
+const lerpn = (a, b, q) => a + (b - a) * q;
+
+/* 從畫面目前的實際值出發，所以轉場途中再點也不會跳一下 */
+function currentMood(){
+  return {bg:scene.background.getHex(), fog:scene.fog ? scene.fog.color.getHex() : 0,
+    hemiSky:hemi.color.getHex(), hemiGnd:hemi.groundColor.getHex(), hemiI:hemi.intensity,
+    sun:sun.color.getHex(), sunI:sun.intensity,
+    pos:[sun.position.x, sun.position.y, sun.position.z],
+    sea:seaMat.color.getHex(), amb:amb.intensity, lit:moodTo.lit};
 }
-function applyMood(k){
-  mixColor(scene.background, from.bg, to.bg, k);
-  mixColor(scene.fog.color, from.fog, to.fog, k);
-  mixColor(hemi.color, from.hemiSky, to.hemiSky, k);
-  mixColor(hemi.groundColor, from.hemiGnd, to.hemiGnd, k);
-  mixColor(sun.color, from.sun, to.sun, k);
-  sun.intensity = from.sunI + (to.sunI - from.sunI) * k;
-  hemi.intensity = from.hemiI + (to.hemiI - from.hemiI) * k;
-  mixColor(seaMat.color, from.water, to.water, k);
-  const lit = k > 0.5 ? to.winLit : from.winLit;
-  windows.forEach(w => w.material = mat(lit ? NIGHT.win : DAY.win));
+MOOD_KEYS.forEach(key => {
+  const btn = document.getElementById('m-' + key);
+  if (!btn) return;
+  btn.onclick = () => {
+    if (moodNow === key) return;
+    moodFrom = currentMood(); moodTo = MOODS[key]; lerp = 0; moodNow = key;
+    MOOD_KEYS.forEach(k2 => {
+      const b2 = document.getElementById('m-' + k2);
+      if (b2) b2.setAttribute('aria-pressed', String(k2 === key));
+    });
+  };
+});
+function mood(q){
+  mixc(scene.background, moodFrom.bg, moodTo.bg, q);
+  if (scene.fog) mixc(scene.fog.color, moodFrom.fog, moodTo.fog, q);
+  mixc(hemi.color, moodFrom.hemiSky, moodTo.hemiSky, q);
+  mixc(hemi.groundColor, moodFrom.hemiGnd, moodTo.hemiGnd, q);
+  mixc(sun.color, moodFrom.sun, moodTo.sun, q);
+  mixc(seaMat.color, moodFrom.sea, moodTo.sea, q);
+  sun.intensity = lerpn(moodFrom.sunI, moodTo.sunI, q);
+  hemi.intensity = lerpn(moodFrom.hemiI, moodTo.hemiI, q);
+  amb.intensity = lerpn(moodFrom.amb, moodTo.amb, q);
+  sun.position.set(lerpn(moodFrom.pos[0], moodTo.pos[0], q),
+                   lerpn(moodFrom.pos[1], moodTo.pos[1], q),
+                   lerpn(moodFrom.pos[2], moodTo.pos[2], q));
+  const lit = q > 0.5 ? moodTo.lit : moodFrom.lit;
+  windows.forEach(w => w.material = mat(lit ? 0xFFD79A : 0x3E5260));
 }
 
 /* ═══ 動畫 ═══════════════════════════════ */
@@ -926,7 +974,7 @@ function loop(now){
   const dt = Math.min(0.05, (now - last) / 1000); last = now;
   requestAnimationFrame(loop);
 
-  if (lerp < 1){ lerp = Math.min(1, lerp + dt * 1.4); applyMood(lerp); }
+  if (lerp < 1){ lerp = Math.min(1, lerp + dt * 1.1); mood(lerp); }
 
   if (!paused){
     if (autoSpin){ CAM.theta -= dt * 0.055; applyCam(); }
@@ -966,7 +1014,7 @@ function loop(now){
 
 resize();
 applyCam();
-applyMood(1);
+mood(1);
 requestAnimationFrame(loop);
 
 })();
