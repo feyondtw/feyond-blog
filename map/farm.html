@@ -189,6 +189,8 @@ body.notags .tag{opacity:0;pointer-events:none}
   </div>
   <button class="tool" id="t-pause" aria-pressed="false">
     <svg viewBox="0 0 16 16"><rect x="4" y="3" width="2.5" height="10" rx="1"/><rect x="9.5" y="3" width="2.5" height="10" rx="1"/></svg>暫停</button>
+  <button class="tool" id="t-bird" aria-pressed="false">
+    <svg viewBox="0 0 16 16"><path d="M8 2.5 14 7l-6 4.5L2 7z"/><path d="M2 7v2.2L8 13.7l6-4.5V7"/></svg>鳥瞰</button>
   <button class="tool" id="t-reset">
     <svg viewBox="0 0 16 16"><path d="M5 11 11 5M6 5h5v5"/></svg>回正</button>
 </nav>
@@ -828,8 +830,10 @@ const CAM = {theta: -0.62, phi: 1.02, dist: 34, target: new THREE.Vector3(0, 0.8
 const HOME = {theta: -0.62, phi: 1.02, dist: 34};
 let autoSpin = !reduce, paused = false;
 
+let BIRD_MIN = 0.28;
+const HOME_PHI_MIN = 0.28;
 function applyCam(){
-  CAM.phi = Math.max(0.28, Math.min(1.40, CAM.phi));
+  CAM.phi = Math.max(BIRD_MIN, Math.min(1.40, CAM.phi));
   CAM.dist = Math.max(16, Math.min(62, CAM.dist));
   camera.position.set(
     CAM.target.x + CAM.dist * Math.sin(CAM.phi) * Math.sin(CAM.theta),
@@ -880,6 +884,30 @@ host.addEventListener('wheel', e => {
   CAM.dist *= 1 + e.deltaY * 0.0014;
   applyCam(); hideHint();
 }, {passive:false});
+
+
+/* 鳥瞰：不是另一個場景，只是把相機搬到正上方。
+   puma 的作法一樣——相機移到目標上空、放寬垂直角下限、補間飛過去。 */
+const tBird = document.getElementById('t-bird');
+let birdOn = false;
+function glideCam(toPhi, toDist, ms){
+  const a = {phi:CAM.phi, dist:CAM.dist}, t0 = performance.now(), me = anim = {};
+  (function step(now){
+    if (anim !== me) return;
+    const k = Math.min(1, (now - t0) / (ms || 850));
+    const e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+    CAM.phi = a.phi + (toPhi - a.phi) * e;
+    CAM.dist = a.dist + (toDist - a.dist) * e;
+    applyCam();
+    if (k < 1) requestAnimationFrame(step); else if (anim === me) anim = null;
+  })(t0);
+}
+if (tBird) tBird.onclick = () => {
+  birdOn = !birdOn;
+  tBird.setAttribute('aria-pressed', String(birdOn));
+  BIRD_MIN = birdOn ? 0.06 : HOME_PHI_MIN;
+  glideCam(birdOn ? 0.07 : HOME.phi, birdOn ? CAM.dist * 0.92 : HOME.dist);
+};
 
 /* ═══ 工具列 ═════════════════════════════ */
 const hint = document.getElementById('hint');
