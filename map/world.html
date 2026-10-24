@@ -1,0 +1,863 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>香氣島群</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Noto+Serif+TC:wght@400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap">
+<style>
+:root{
+  --ink:#2A2724; --cream:#FFF8F0; --line:#E2D9C8; --gold:#B8965A;
+  --muted:#7A756D; --faint:#A8A29A;
+  --serif:"Noto Serif TC","Songti TC",serif;
+  --latin:"Cormorant Garamond",Georgia,serif;
+  --sans:"Noto Sans TC","PingFang TC",system-ui,sans-serif;
+  --shadow:0 2px 10px rgba(42,39,36,.14);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;overflow:hidden;background:#BCDCE8;color:var(--ink);
+  font-family:var(--serif);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:4px}
+
+#scene{position:fixed;inset:0;touch-action:none;cursor:grab}
+#scene.grabbing{cursor:grabbing}
+canvas{display:block}
+
+#tags{position:fixed;inset:0;pointer-events:none;z-index:2}
+.tag{position:absolute;transform:translate(-50%,-100%);pointer-events:auto;
+  background:var(--cream);border-radius:999px;padding:.34rem .76rem;
+  box-shadow:var(--shadow);white-space:nowrap;cursor:pointer;
+  font-family:var(--sans);font-size:.78rem;font-weight:500;letter-spacing:.04em;
+  display:flex;align-items:center;gap:.4rem;transition:transform .16s,box-shadow .16s,opacity .2s}
+.tag:hover,.tag.on{transform:translate(-50%,-100%) scale(1.07);
+  box-shadow:0 5px 18px rgba(42,39,36,.22)}
+.tag .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex:none}
+.tag.low .dot{background:var(--faint)}
+.tag.tw .dot{background:#D9663F}
+.tag .n{font-family:var(--latin);font-size:.72rem;color:var(--faint)}
+.tag::after{content:"";position:absolute;left:50%;top:100%;transform:translateX(-50%);
+  border:5px solid transparent;border-top-color:var(--cream)}
+.tag.off{opacity:0;pointer-events:none}
+body.notags .tag{opacity:0;pointer-events:none}
+
+.brand{position:fixed;top:0;left:0;z-index:3;padding:1.6rem 1.8rem;
+  display:flex;flex-direction:column;gap:.4rem;pointer-events:none}
+.brand .mk{font-family:var(--latin);letter-spacing:.34em;font-size:.72rem;
+  text-transform:uppercase;color:#5E6B63}
+.brand h1{margin:0;font-size:1.9rem;font-weight:500;letter-spacing:.14em;
+  text-shadow:0 1px 10px rgba(255,255,255,.5)}
+.brand p{margin:0;font-family:var(--sans);font-size:.76rem;letter-spacing:.07em;color:#5E6B63}
+
+.views{position:fixed;left:50%;top:0;transform:translateX(-50%);z-index:3;
+  margin-top:1.6rem;display:flex;gap:.2rem;background:var(--cream);
+  border-radius:999px;padding:.28rem;box-shadow:var(--shadow);
+  font-family:var(--sans);font-size:.75rem;letter-spacing:.06em}
+.views a,.views span{padding:.3rem .78rem;border-radius:999px;text-decoration:none;
+  color:var(--muted);white-space:nowrap}
+.views a:hover{color:var(--ink);background:#EFE7D9}
+.views [aria-current]{background:var(--ink);color:var(--cream)}
+
+.tools{position:fixed;top:0;right:0;z-index:3;padding:1.6rem 1.8rem;
+  display:flex;gap:.4rem;flex-wrap:wrap;justify-content:flex-end}
+.tool{background:var(--cream);border-radius:999px;padding:.4rem .85rem;
+  box-shadow:var(--shadow);font-family:var(--sans);font-size:.75rem;
+  letter-spacing:.06em;display:inline-flex;align-items:center;gap:.38rem;transition:transform .15s}
+.tool:hover{transform:translateY(-1px)}
+.tool[aria-pressed="true"]{background:var(--ink);color:var(--cream)}
+.tool svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.6;
+  stroke-linecap:round;stroke-linejoin:round}
+
+.hint{position:fixed;left:50%;bottom:1.4rem;transform:translateX(-50%);z-index:3;
+  font-family:var(--sans);font-size:.74rem;letter-spacing:.07em;color:#5E6B63;
+  background:rgba(255,248,240,.82);padding:.4rem .9rem;border-radius:999px;
+  transition:opacity .4s;pointer-events:none}
+.hint.gone{opacity:0}
+
+.card{position:fixed;z-index:4;right:1.8rem;top:50%;transform:translateY(-50%);
+  width:min(22rem,calc(100vw - 3.6rem));max-height:min(32rem,calc(100vh - 8rem));
+  background:var(--cream);border-radius:14px;box-shadow:0 10px 40px rgba(42,39,36,.22);
+  display:flex;flex-direction:column;overflow:hidden}
+.card[hidden]{display:none}
+.card-h{padding:1.4rem 1.4rem .95rem;border-bottom:1px solid var(--line);position:relative;flex:none}
+.card-h .eyebrow{font-family:var(--latin);font-size:.72rem;letter-spacing:.22em;color:var(--gold)}
+.card-h h2{margin:.28rem 0 .1rem;font-size:1.3rem;font-weight:500;letter-spacing:.08em}
+.card-h .where{font-family:var(--sans);font-size:.76rem;color:var(--muted);letter-spacing:.05em}
+.card-x{position:absolute;top:.9rem;right:.9rem;width:1.8rem;height:1.8rem;border-radius:50%;
+  font-size:1.1rem;line-height:1;color:var(--muted)}
+.card-x:hover{background:#EFE7D9}
+.card-b{padding:1.1rem 1.4rem 1.5rem;overflow-y:auto}
+.card-b p{margin:0 0 1rem;font-size:.88rem;line-height:1.9}
+.card-b .note{padding-left:.85rem;border-left:2px solid var(--gold)}
+.card-b ul.facts{margin:0 0 1rem;padding:0;list-style:none;font-family:var(--sans);
+  font-size:.76rem;line-height:1.9;color:var(--muted)}
+.card-b ul.facts li{padding-left:.9rem;position:relative}
+.card-b ul.facts li::before{content:"·";position:absolute;left:.15rem;color:var(--gold)}
+.sect{margin-top:1.1rem;padding-top:.9rem;border-top:1px solid var(--line)}
+.sect h3{margin:0 0 .55rem;font-family:var(--sans);font-size:.7rem;letter-spacing:.11em;
+  color:var(--faint);font-weight:400}
+.item{display:grid;grid-template-columns:1fr auto;gap:0 .8rem;align-items:baseline;
+  padding:.5rem 0;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:0}
+a.item{text-decoration:none;color:inherit}
+a.item .zh::after{content:"→";font-family:var(--latin);color:var(--gold);
+  margin-left:.4rem;font-size:.85rem}
+a.item:hover .zh{color:var(--gold)}
+.item .zh{font-size:.88rem;letter-spacing:.03em}
+.item .lat{display:block;font-family:var(--latin);font-style:italic;font-size:.74rem;
+  letter-spacing:.08em;color:var(--muted)}
+.item .part{font-family:var(--sans);font-size:.7rem;color:var(--faint);white-space:nowrap}
+.go{display:inline-flex;align-items:center;gap:.4rem;margin-top:.3rem;
+  font-family:var(--sans);font-size:.78rem;letter-spacing:.06em;color:var(--gold);
+  text-decoration:none;border-bottom:1px solid transparent;padding-bottom:1px}
+.go:hover{border-bottom-color:var(--gold)}
+.flag{display:inline-block;font-family:var(--sans);font-size:.67rem;letter-spacing:.08em;
+  border:1px solid var(--gold);color:var(--gold);border-radius:999px;
+  padding:.16rem .55rem;margin-bottom:.8rem}
+.verify{background:rgba(184,150,90,.12);border-left:2px solid var(--gold);
+  padding:.75rem .9rem;margin:0 0 1rem;font-family:var(--sans);font-size:.76rem;line-height:1.8}
+
+.sorry{position:fixed;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;padding:1.5rem}
+.sorry[hidden]{display:none}
+.sorry-box{background:var(--cream);border-radius:14px;box-shadow:0 10px 40px rgba(42,39,36,.18);
+  padding:2rem;max-width:30rem;width:100%}
+.sorry-box h2{margin:0 0 .9rem;font-size:1.25rem;font-weight:500;letter-spacing:.08em}
+.sorry-box p{margin:0 0 1rem;font-size:.88rem;line-height:1.9}
+.sorry-box ol{margin:0 0 1rem;padding-left:1.2rem;font-family:var(--sans);
+  font-size:.8rem;line-height:2;color:var(--muted)}
+.sorry-box b{font-weight:500;color:var(--ink)}
+.sorry-box a{font-family:var(--sans);font-size:.8rem;color:var(--gold);text-decoration:none;
+  border-bottom:1px solid transparent}
+.sorry-box a:hover{border-bottom-color:var(--gold)}
+
+@media (max-width:760px){
+  .brand{padding:1rem 1.1rem} .brand h1{font-size:1.35rem}
+  .tools{padding:1rem 1.1rem}
+  .views{top:auto;bottom:3.2rem;margin-top:0;font-size:.72rem}
+  .card{right:0;left:0;bottom:0;top:auto;transform:none;width:100%;
+    max-height:60vh;border-radius:14px 14px 0 0}
+  .hint{bottom:.8rem}
+}
+</style>
+</head>
+<body>
+
+<div id="scene"></div>
+<div id="tags"></div>
+
+<header class="brand">
+  <span class="mk">Dhyana</span>
+  <h1>香氣島群</h1>
+  <p id="sub">—</p>
+</header>
+
+<nav class="views">
+  <a href="index.html">香氣地圖</a>
+  <span aria-current="page">島群</span>
+  <a href="taiwan.html">台灣島</a>
+  <a href="farm.html">深根大地</a>
+</nav>
+
+<nav class="tools">
+  <button class="tool" id="t-tags" aria-pressed="true">
+    <svg viewBox="0 0 16 16"><rect x="2" y="5" width="12" height="6" rx="3"/></svg>名牌</button>
+  <button class="tool" id="t-night" aria-pressed="false">
+    <svg viewBox="0 0 16 16"><path d="M13 10A6 6 0 016 3a5 5 0 107 7z"/></svg>入夜</button>
+  <button class="tool" id="t-reset">
+    <svg viewBox="0 0 16 16"><path d="M5 11 11 5M6 5h5v5"/></svg>全景</button>
+</nav>
+
+<p class="hint" id="hint">點名牌飛到那座島 ・ 拖曳轉動 ・ 滾輪縮放</p>
+
+<article class="card" id="card" hidden aria-live="polite">
+  <div class="card-h">
+    <button class="card-x" id="card-x" aria-label="關閉">×</button>
+    <div class="eyebrow" id="c-eyebrow"></div>
+    <h2 id="c-title"></h2>
+    <div class="where" id="c-where"></div>
+  </div>
+  <div class="card-b" id="c-body"></div>
+</article>
+
+<section class="sorry" id="sorry" hidden>
+  <div class="sorry-box">
+    <h2 id="sorry-title"></h2>
+    <p id="sorry-why"></p>
+    <div id="sorry-how"></div>
+  </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script>
+/* ═══════════════════════════════════════════════════════════
+   香氣島群 ── 一片海，每一處產地一座島
+   球體失敗的原因是尺度：房子在星球上只佔 2%，什麼都看不清楚。
+   島群把「地理方位」和「人的尺度」分開處理——
+   位置照真實方位排，但島的大小按內容給，所以看得到房子與娃娃。
+   台灣 12 處濃縮成一座真實輪廓的台灣島，點了進下一層。
+   ═══════════════════════════════════════════════════════════ */
+(function(){
+
+const DATA = {"schemaVersion":"0.1-draft","meta":{"brand":"根本芳療 Dhyana","title":{"zh":"香氣地圖","en":"The Aroma Map"},"lede":{"zh":"每一瓶純露，都有一個地方。轉動地球，找到它。","en":"Every hydrosol comes from somewhere. Turn the globe and find it."},"sources":["Desktop/純露學堂/純露聆聽－CYBERBIZ.html（items 文案）","Desktop/純露學堂/精油聆聽－CYBERBIZ.html","Desktop/純露學堂/台語芳聊－CYBERBIZ.html","Desktop/純露學堂/純露農民力－CYBERBIZ.html","Claude memory: 深根大地實驗農場（有機驗證資料、產地清單、28 農家 3 蒸餾廠）"],"palette":{"ground":"#EDE6D6","paper":"#F5F0E3","ink":"#252220","gold":"#B8965A","mat":"#2D4A3E","muted":"#7A756D"}},"kinds":{"own_farm":{"zh":"自有實驗農場","en":"Our experimental farm"},"partner_farm":{"zh":"合作農家","en":"Partner farm"},"forest":{"zh":"林地 · 林班地","en":"Forest"},"distillery":{"zh":"合作蒸餾廠","en":"Partner distillery"},"overseas":{"zh":"海外產地","en":"Overseas origin"}},"parts":{"flower":{"zh":"花","en":"Flower"},"leaf":{"zh":"葉","en":"Leaf"},"wood":{"zh":"木 · 材心","en":"Wood"},"seed":{"zh":"籽 · 豆莢","en":"Seed"},"root":{"zh":"根","en":"Root"},"resin":{"zh":"樹脂","en":"Resin"},"fruit":{"zh":"果","en":"Fruit"},"herb":{"zh":"全株 · 草本","en":"Whole herb"}},"origins":[{"id":"shengen","name":{"zh":"深根大地實驗農場","en":"Shengen Experimental Farm"},"where":{"zh":"高雄市旗山區","en":"Qishan, Kaohsiung, Taiwan"},"country":"TW","lat":22.885,"lng":120.483,"kind":"own_farm","hero":true,"note":{"zh":"0.7102 公頃，有機驗證（非轉型期）。在請合作農家種下任何一種植物之前，我們得先自己種過。","en":"0.71 ha, certified organic. Before we ask a partner farm to grow anything, we grow it ourselves first."},"facts":["有機驗證：環球國際驗證 UCS（TAF PC070），證書字號 1-007-113025","驗證場所：高雄市旗山區旗尾段二小段 2076 地號","0.7102 公頃，有機（非轉型期），有效至 2028-11-27","農地自 2009 年開始"],"videoId":"TBU_j4aesrQ","confidence":"high"},{"id":"dawushan","name":{"zh":"大武山","en":"Dawu Mountain"},"where":{"zh":"屏東縣 · 大武山下","en":"Pingtung, Taiwan"},"country":"TW","lat":22.6,"lng":120.63,"kind":"partner_farm","note":{"zh":"玉蘭的採集，從入暮之後才開始——頂著頭燈、提著竹籃，走進大武山下的玉蘭園。","en":"Magnolia picking begins after dusk, by headlamp."},"confidence":"high"},{"id":"changhua","name":{"zh":"彰化","en":"Changhua"},"where":{"zh":"彰化縣","en":"Changhua, Taiwan"},"country":"TW","lat":24.05,"lng":120.54,"kind":"partner_farm","confidence":"medium","verify":"老闆確認彰化產茉莉與黃梔花。台灣茉莉主產地是花壇鄉，座標暫放彰化市附近——請給實際鄉鎮我再修準。"},{"id":"mudan","name":{"zh":"牡丹鄉","en":"Mudan Township"},"where":{"zh":"屏東縣牡丹鄉","en":"Mudan, Pingtung, Taiwan"},"country":"TW","lat":22.17,"lng":120.78,"kind":"partner_farm","note":{"zh":"白露過了，牡丹鄉的蝶仔花開了。十年來，我們和在地夥伴一起採這種花。","en":"Ten years of picking butterfly ginger with local partners."},"confidence":"high"},{"id":"wufeng","name":{"zh":"竹東事業區第七林班地","en":"Zhudong Forest Block No.7"},"where":{"zh":"新竹縣五峰鄉","en":"Wufeng, Hsinchu, Taiwan"},"country":"TW","lat":24.6,"lng":121.1,"kind":"forest","note":{"zh":"日本時代種落來的柳杉。一百一十四年來換過好幾代，三十冬才成材。","en":"Japanese cedar planted in the colonial era; 114 years, several generations."},"confidence":"high"},{"id":"baihe","name":{"zh":"白河","en":"Baihe"},"where":{"zh":"台南市白河區","en":"Baihe, Tainan, Taiwan"},"country":"TW","lat":23.35,"lng":120.42,"kind":"partner_farm","note":{"zh":"青蓮花的台灣產地。","en":"The Taiwanese source of blue lotus."},"confidence":"high"},{"id":"dongshan","name":{"zh":"東山","en":"Dongshan"},"where":{"zh":"台南市東山區","en":"Dongshan, Tainan, Taiwan"},"country":"TW","lat":23.33,"lng":120.4,"kind":"partner_farm","confidence":"medium"},{"id":"guanshan","name":{"zh":"關山","en":"Guanshan"},"where":{"zh":"台東縣關山鎮","en":"Guanshan, Taitung, Taiwan"},"country":"TW","lat":23.05,"lng":121.16,"kind":"forest","confidence":"medium"},{"id":"yilan","name":{"zh":"宜蘭","en":"Yilan"},"where":{"zh":"宜蘭縣","en":"Yilan, Taiwan"},"country":"TW","lat":24.7,"lng":121.75,"kind":"partner_farm","confidence":"medium"},{"id":"taitung","name":{"zh":"台東","en":"Taitung"},"where":{"zh":"台東縣","en":"Taitung, Taiwan"},"country":"TW","lat":22.76,"lng":121.14,"kind":"partner_farm","confidence":"medium"},{"id":"beitaiwan","name":{"zh":"北台灣菊田","en":"Northern Taiwan Chrysanthemum Fields"},"where":{"zh":"北台灣（待確認是否為苗栗銅鑼）","en":"Northern Taiwan"},"country":"TW","lat":24.49,"lng":120.79,"kind":"partner_farm","confidence":"low","verify":"記憶裡寫「北台灣杭白菊」，但台灣杭菊主產地是苗栗銅鑼。座標暫放銅鑼，請你確認實際鄉鎮。"},{"id":"pingtung-vanilla","name":{"zh":"屏東香草園","en":"Pingtung Vanilla Farm"},"where":{"zh":"屏東縣","en":"Pingtung, Taiwan"},"country":"TW","lat":22.55,"lng":120.55,"kind":"partner_farm","note":{"zh":"一朵香草花只開一天，要靠人工授粉。島嶼逐漸成熟的農業心血。","en":"A vanilla flower opens for one day only; every one is hand-pollinated."},"confidence":"medium"},{"id":"kazanlak","name":{"zh":"保加利亞玫瑰谷","en":"Rose Valley, Kazanlak"},"where":{"zh":"保加利亞 · 卡贊勒克","en":"Kazanlak, Bulgaria"},"country":"BG","lat":42.62,"lng":25.39,"kind":"overseas","note":{"zh":"天亮前採收、銅鍋蒸餾。","en":"Picked before dawn, distilled in copper."},"confidence":"high"},{"id":"andalusia","name":{"zh":"安達盧西亞","en":"Andalusia"},"where":{"zh":"西班牙 · 安達盧西亞","en":"Andalusia, Spain"},"country":"ES","lat":37.5,"lng":-5.0,"kind":"overseas","note":{"zh":"取的是岩玫瑰在夏天高溫下分泌的勞丹脂。","en":"Labdanum, secreted by rock rose under summer heat."},"confidence":"high"},{"id":"dhofar","name":{"zh":"阿曼 佐法爾","en":"Dhofar, Oman"},"where":{"zh":"阿曼蘇丹國","en":"Oman"},"country":"OM","lat":17.02,"lng":54.09,"kind":"overseas","note":{"zh":"樹皮切開後緩緩凝結的樹脂，穿越千年的芳香傳承。","en":"Resin that slowly hardens after the bark is cut."},"confidence":"medium","verify":"文案只寫「阿曼乳香」。座標放在乳香主產區佐法爾省，請確認供應商實際產地。"},{"id":"nile-delta","name":{"zh":"下尼羅河三角洲","en":"Lower Nile Delta"},"where":{"zh":"埃及 · 尼羅河三角洲","en":"Nile Delta, Egypt"},"country":"EG","lat":30.8,"lng":31.0,"kind":"overseas","note":{"zh":"晨開暮合，生生不息。每一公斤清晨鮮花直接入釜，1:1 鮮花精露。","en":"Opens at dawn, closes at dusk. 1:1 fresh-flower distillation."},"confidence":"high"},{"id":"mediterranean","name":{"zh":"地中海","en":"Mediterranean"},"where":{"zh":"地中海沿岸（確切國別待確認）","en":"Mediterranean basin"},"country":"??","lat":43.8,"lng":5.9,"kind":"overseas","confidence":"low","verify":"文案只寫「地中海的中世紀墓園」。絲柏實際採購國別請確認（法國？西班牙？克里特？），座標暫放普羅旺斯。"},{"id":"greenland","name":{"zh":"格陵蘭","en":"Greenland"},"where":{"zh":"格陵蘭","en":"Greenland"},"country":"GL","lat":64.18,"lng":-51.72,"kind":"overseas","confidence":"low","verify":"年度亮點提到「格陵蘭喇叭茶」。多數 Labrador tea 實際產自加拿大魁北克，請確認。"}],"items":[{"id":"white-magnolia","name":{"zh":"白玉蘭","en":"White Magnolia"},"latin":"Michelia alba","type":"hydrosol","originIds":["dawushan"],"part":"flower","season":{"zh":"入夜採收","en":"Picked after dusk"},"aroma":{"zh":"等紅燈時遞進車窗的那串白玉蘭","en":""},"story":{"zh":"晚上七點，月亮剛爬上天際。對玉蘭而言，入夜不是一天的結束，而是採花的開始。","en":""},"videoId":"eHBYsS4Sp1s","series":"純露聆聽","articleUrl":"https://feyond.muzen.store/michelia-alba.html","productUrl":"","confidence":"high"},{"id":"gardenia","name":{"zh":"黃梔花","en":"Gardenia"},"latin":"Gardenia jasminoides","type":"hydrosol","originIds":["changhua"],"part":"flower","season":{"zh":"初夏","en":"Early summer"},"aroma":{"zh":"初夏巷口先聞其香","en":""},"videoId":"eHBYsS4Sp1s","series":"純露聆聽","productUrl":"","confidence":"high"},{"id":"butterfly-ginger","name":{"zh":"野薑花","en":"Butterfly Ginger"},"latin":"Hedychium coronarium","type":"hydrosol","originIds":["mudan"],"part":"flower","season":{"zh":"白露前後","en":"Around White Dew"},"aroma":{"zh":"白花的清香裡，還留著葉子的青、溪谷的水氣","en":""},"story":{"zh":"台灣人也叫它蝶仔花。遠遠望去，還以為是一隻隻白蝴蝶。十年來，我們和屏東牡丹鄉的在地夥伴，一起採這種花。","en":""},"videoId":"MdvO5tkgfZM","series":"台語芳聊","productUrl":"","confidence":"high"},{"id":"japanese-cedar","name":{"zh":"柳杉","en":"Japanese Cedar"},"latin":"Cryptomeria japonica","type":"hydrosol","originIds":["wufeng"],"part":"leaf","season":{"zh":"三十冬才成材","en":"30 years to maturity"},"aroma":{"zh":"葉仔和材心各藏一款清芳","en":""},"story":{"zh":"這款樹是日本時代種落來的。新竹五峰的山坡，一百一十四年來換過好幾代。","en":""},"videoId":"nkbSmzwra1Y","series":"台語芳聊","productUrl":"","confidence":"high"},{"id":"dragon-juniper","name":{"zh":"龍柏","en":"Dragon Juniper"},"latin":"Juniperus chinensis 'Kaizuka'","type":"essential_oil","originIds":["shengen"],"part":"wood","aroma":{"zh":"雪松醇與羅漢柏烯","en":"Cedrol, thujopsene"},"story":{"zh":"走進台灣的墓園，門前常站著一棵龍柏。","en":""},"videoId":"gPAeQbyyRu0","series":"精油聆聽","productUrl":"","confidence":"low","verify":"只知道是台灣。暫掛深根大地，請指定實際產地。"},{"id":"cypress","name":{"zh":"絲柏","en":"Cypress"},"latin":"Cupressus sempervirens","type":"essential_oil","originIds":["mediterranean"],"part":"leaf","aroma":{"zh":"α-蒎烯與 δ-3-蒈烯","en":"α-pinene, δ-3-carene"},"story":{"zh":"跨過海洋，地中海的中世紀墓園也有一棵絲柏在守候。兩座墓園，隔著一整片海，各自站著一棵樹。","en":""},"videoId":"gPAeQbyyRu0","series":"精油聆聽","productUrl":"","confidence":"medium"},{"id":"blue-lotus","name":{"zh":"青蓮花","en":"Blue Lotus"},"latin":"Nymphaea caerulea","type":"hydrosol","originIds":["baihe","shengen","nile-delta"],"part":"flower","season":{"zh":"晨開暮合，清晨採收","en":"Picked at dawn"},"aroma":{"zh":"1:1 鮮花精露","en":"1:1 fresh flower distillate"},"story":{"zh":"根扎在池底厚重的淤泥裡，花卻乾淨地探出水面。若無深邃的黑暗，便襯托不出純粹的光明。","en":""},"videoId":"cEmZIR5Qd1w","series":"純露聆聽","productUrl":"","confidence":"medium","verify":"台灣產地已確認為台南白河（老闆 10/24 指定），深根大地自家園區也種過。影片講的埃及下尼羅河三角洲還算不算來源？如果是「先自己種、再落地白河」，那正好是實驗農場故事最好的範例。"},{"id":"vanilla","name":{"zh":"台灣香草","en":"Vanilla"},"latin":"Vanilla planifolia","type":"hydrosol","originIds":["pingtung-vanilla"],"part":"seed","aroma":{"zh":"香氣藏得很深——藏在豆莢裡","en":""},"story":{"zh":"一朵香草花只開一天，要靠人工授粉。島嶼逐漸成熟的農業心血。","en":""},"videoId":"tZwG8t2Zaos","series":"純露聆聽","productUrl":"","confidence":"medium"},{"id":"frankincense","name":{"zh":"阿曼乳香","en":"Frankincense"},"latin":"Boswellia sacra","type":"both","originIds":["dhofar"],"part":"resin","aroma":{"zh":"穿越千年的芳香傳承","en":""},"story":{"zh":"阿曼乳香，是樹皮切開後緩緩凝結的樹脂。","en":""},"videoId":"tZwG8t2Zaos","series":"純露聆聽","productUrl":"","confidence":"high"},{"id":"rose-otto","name":{"zh":"奧圖玫瑰","en":"Rose Otto"},"latin":"Rosa damascena","type":"hydrosol","originIds":["kazanlak"],"part":"flower","season":{"zh":"天亮前採收","en":"Picked before dawn"},"aroma":{"zh":"清晨的花瓣","en":"Petals at dawn"},"story":{"zh":"保加利亞玫瑰谷的奧圖玫瑰，天亮前採收、銅鍋蒸餾。","en":""},"videoId":"EpiUB2d7QYI","series":"純露聆聽","articleUrl":"https://feyond.muzen.store/bulgarian-rose.html","productUrl":"","confidence":"high"},{"id":"rock-rose","name":{"zh":"岩玫瑰","en":"Rock Rose"},"latin":"Cistus ladanifer","type":"hydrosol","originIds":["andalusia"],"part":"resin","season":{"zh":"夏天高溫","en":"Summer heat"},"aroma":{"zh":"夏天的樹脂","en":"Resin in summer"},"story":{"zh":"兩款純露都被叫做玫瑰。一個是清晨的花瓣，一個是夏天的樹脂。","en":""},"videoId":"EpiUB2d7QYI","series":"純露聆聽","articleUrl":"https://feyond.muzen.store/cistus-labdanum.html","productUrl":"","confidence":"high"},{"id":"lotus-baihe","name":{"zh":"蓮花","en":"Lotus"},"latin":"Nelumbo nucifera","type":"hydrosol","originIds":["baihe"],"part":"flower","productUrl":"","confidence":"low","verify":"白河同時出現「蓮花」與「青蓮花」兩筆。蓮花 Nelumbo nucifera 與青蓮花 Nymphaea caerulea 是不同屬的植物。這是兩個獨立品項，還是同一個東西被記成兩筆？若是後者請刪掉這筆。"},{"id":"chrysanthemum","name":{"zh":"杭白菊","en":"Chrysanthemum"},"latin":"Chrysanthemum morifolium","type":"hydrosol","originIds":["beitaiwan"],"part":"flower","productUrl":"","confidence":"low"},{"id":"hinoki-guanshan","name":{"zh":"檜木","en":"Hinoki"},"latin":"Chamaecyparis obtusa var. formosana","type":"hydrosol","originIds":["guanshan"],"part":"wood","story":{"zh":"日本檜木蒸餾出的純露是紅色的。","en":""},"productUrl":"","confidence":"medium"},{"id":"orange-blossom","name":{"zh":"柳丁花 · 柳橙花","en":"Orange Blossom"},"latin":"Citrus sinensis","type":"hydrosol","originIds":["dongshan"],"part":"flower","productUrl":"","confidence":"medium"},{"id":"kumquat","name":{"zh":"金棗","en":"Kumquat"},"latin":"Fortunella margarita","type":"hydrosol","originIds":["yilan"],"part":"fruit","productUrl":"","confidence":"medium"},{"id":"roselle","name":{"zh":"洛神","en":"Roselle"},"latin":"Hibiscus sabdariffa","type":"hydrosol","originIds":["taitung"],"part":"flower","productUrl":"","confidence":"medium"},{"id":"labrador-tea","name":{"zh":"格陵蘭喇叭茶","en":"Labrador Tea"},"latin":"Rhododendron groenlandicum","type":"hydrosol","originIds":["greenland"],"part":"leaf","videoId":"FK9CiRQ4yKo","series":"純露聆聽","productUrl":"","confidence":"low"},{"id":"vitex","name":{"zh":"貞潔樹","en":"Chaste Tree"},"latin":"Vitex agnus-castus","type":"hydrosol","originIds":["shengen"],"part":"fruit","productUrl":"","confidence":"high"},{"id":"patchouli","name":{"zh":"廣藿香","en":"Patchouli"},"latin":"Pogostemon cablin","type":"hydrosol","originIds":["shengen"],"part":"leaf","productUrl":"","confidence":"high"},{"id":"lemon-basil","name":{"zh":"檸檬羅勒","en":"Lemon Basil"},"latin":"Ocimum × citriodorum","type":"hydrosol","originIds":["shengen"],"part":"herb","productUrl":"","confidence":"high"},{"id":"ammi","name":{"zh":"阿密茴","en":"Khella"},"latin":"Ammi visnaga","type":"hydrosol","originIds":["shengen"],"part":"seed","productUrl":"","confidence":"high"},{"id":"hyssop","name":{"zh":"牛膝草","en":"Hyssop"},"latin":"Hyssopus officinalis","type":"hydrosol","originIds":["shengen"],"part":"herb","productUrl":"","confidence":"high"},{"id":"red-shiso","name":{"zh":"紅紫蘇","en":"Red Shiso"},"latin":"Perilla frutescens var. crispa","type":"hydrosol","originIds":["shengen"],"part":"leaf","productUrl":"","confidence":"high"},{"id":"tuberose","name":{"zh":"晚香玉","en":"Tuberose"},"latin":"Polianthes tuberosa","type":"hydrosol","originIds":["dawushan"],"part":"flower","season":{"zh":"太陽下山以後香氣才開始","en":"Fragrance begins after sundown"},"aroma":{"zh":"屬於水的香氣——更輕、更清透","en":""},"story":{"zh":"晚香玉與茉莉不適合蒸餾取精油，純露卻留下了另一組香氣。都是等待，也都是分寸。","en":""},"videoId":"7IIV6g8NM5U","series":"純露聆聽","productUrl":"","confidence":"high"},{"id":"jasmine","name":{"zh":"茉莉","en":"Jasmine"},"latin":"Jasminum sambac","type":"hydrosol","originIds":["changhua"],"part":"flower","season":{"zh":"夜間","en":"At night"},"story":{"zh":"有些花，白天是安靜的，太陽下山以後香氣才真正開始。","en":""},"videoId":"7IIV6g8NM5U","series":"純露聆聽","productUrl":"","confidence":"high"}],"pending":{"items":["台灣肖楠木","台灣肖楠籽","岩蘭草根","大良薑","紅檜木","土木香","桂花"]},"network":{"partnerFarms":28,"distilleries":[{"zh":"南台灣","note":"投資合作蒸餾廠"},{"zh":"三義"},{"zh":"嘉南"}],"verify":"3 間蒸餾廠只有區域名、沒有座標，暫時不上圖。"}};
+const TW   = {"main":[[121.9062,24.9493],[121.8342,24.8716],[121.8234,24.8547],[121.8162,24.8311],[121.809,24.8058],[121.8054,24.7787],[121.809,24.7534],[121.8198,24.6994],[121.8198,24.6859],[121.8126,24.6724],[121.8162,24.6437],[121.827,24.6234],[121.8522,24.6082],[121.881,24.6048],[121.881,24.5981],[121.8702,24.5998],[121.8594,24.5981],[121.8486,24.5947],[121.8414,24.5896],[121.8522,24.5727],[121.8558,24.5508],[121.8522,24.5305],[121.8306,24.5187],[121.827,24.5103],[121.8306,24.5001],[121.8378,24.4917],[121.8414,24.4816],[121.8306,24.4731],[121.8054,24.4613],[121.7802,24.4326],[121.7802,24.4225],[121.7802,24.3971],[121.7766,24.3887],[121.773,24.3802],[121.7694,24.3701],[121.7658,24.3482],[121.7658,24.3414],[121.7622,24.3363],[121.7586,24.333],[121.7622,24.3262],[121.7658,24.3228],[121.7694,24.3178],[121.773,24.3127],[121.773,24.3093],[121.7658,24.3009],[121.7442,24.2806],[121.7226,24.2519],[121.7046,24.2384],[121.6974,24.2316],[121.701,24.2249],[121.6974,24.2198],[121.6722,24.2012],[121.6614,24.1928],[121.6506,24.1725],[121.6398,24.1303],[121.6146,24.0915],[121.6074,24.0763],[121.6074,24.0611],[121.6146,24.0425],[121.6218,24.0341],[121.6254,24.0307],[121.629,24.0256],[121.629,24.0155],[121.6254,24.002],[121.611,23.9817],[121.6074,23.9699],[121.6074,23.948],[121.593,23.8922],[121.5714,23.8314],[121.539,23.693],[121.521,23.6592],[121.4778,23.4346],[121.4634,23.3434],[121.4526,23.3266],[121.4274,23.2928],[121.4166,23.2759],[121.4094,23.254],[121.4022,23.2151],[121.4022,23.1797],[121.3986,23.1459],[121.3806,23.1104],[121.3734,23.1037],[121.3554,23.0919],[121.3482,23.0834],[121.3446,23.075],[121.3374,23.0547],[121.3194,23.026],[121.3086,22.9804],[121.2978,22.9585],[121.2618,22.9078],[121.2546,22.8977],[121.2042,22.8571],[121.1898,22.8436],[121.1898,22.8335],[121.1898,22.8115],[121.1898,22.8014],[121.1862,22.7913],[121.179,22.7795],[121.161,22.7575],[121.143,22.7423],[121.0818,22.7035],[121.0386,22.663],[121.0278,22.6579],[121.0206,22.6478],[121.0026,22.6005],[120.9918,22.5836],[120.9594,22.5481],[120.9486,22.5262],[120.9414,22.484],[120.9234,22.4249],[120.8874,22.3658],[120.8802,22.3455],[120.8766,22.2898],[120.8766,22.2374],[120.8802,22.0551],[120.873,22.0297],[120.8622,22.0095],[120.8514,22.001],[120.837,21.9875],[120.837,21.9571],[120.8406,21.925],[120.8406,21.9048],[120.8226,21.9284],[120.7974,21.947],[120.7686,21.9588],[120.7362,21.9656],[120.7362,21.9436],[120.729,21.9352],[120.7146,21.9369],[120.7002,21.9487],[120.7002,21.9571],[120.7038,21.9808],[120.6822,22.0145],[120.6822,22.023],[120.6822,22.0297],[120.6822,22.0416],[120.6822,22.0787],[120.6858,22.0905],[120.6966,22.1023],[120.6966,22.1125],[120.621,22.2948],[120.6138,22.305],[120.5922,22.3286],[120.5778,22.3641],[120.5706,22.3742],[120.5382,22.3962],[120.5274,22.4029],[120.5238,22.4046],[120.5166,22.4063],[120.513,22.4198],[120.513,22.4249],[120.495,22.435],[120.459,22.4519],[120.441,22.462],[120.423,22.4772],[120.4122,22.4823],[120.4014,22.4873],[120.3978,22.4857],[120.3906,22.484],[120.3798,22.484],[120.333,22.5194],[120.2862,22.5802],[120.333,22.5262],[120.3294,22.5515],[120.3186,22.565],[120.315,22.5768],[120.2934,22.5988],[120.2574,22.6275],[120.2466,22.6427],[120.2394,22.6596],[120.2466,22.6748],[120.2538,22.69],[120.2466,22.7102],[120.2358,22.7305],[120.2178,22.7575],[120.1998,22.793],[120.1962,22.8082],[120.1962,22.8183],[120.2034,22.8318],[120.2034,22.8403],[120.1998,22.8436],[120.1962,22.847],[120.1926,22.8521],[120.189,22.8605],[120.1782,22.8774],[120.1746,22.8842],[120.1674,22.9314],[120.1638,22.9534],[120.1566,22.9669],[120.1422,22.9804],[120.1602,22.9922],[120.171,23.0142],[120.1674,23.0311],[120.1422,23.0344],[120.1386,23.0277],[120.135,23.0159],[120.1278,23.0074],[120.1134,23.0074],[120.1098,23.0159],[120.1098,23.0395],[120.1062,23.0479],[120.0918,23.0547],[120.0846,23.0479],[120.0774,23.0378],[120.0666,23.0344],[120.0558,23.0429],[120.0522,23.0564],[120.0558,23.0682],[120.0594,23.0767],[120.0702,23.0817],[120.0846,23.0834],[120.0954,23.0868],[120.099,23.0969],[120.0954,23.102],[120.0594,23.1104],[120.0594,23.1172],[120.0882,23.1172],[120.0846,23.1273],[120.0702,23.1391],[120.0594,23.151],[120.063,23.1645],[120.0702,23.1695],[120.081,23.1729],[120.0882,23.1813],[120.0846,23.1965],[120.0774,23.2067],[120.081,23.2168],[120.0882,23.2303],[120.0954,23.2388],[120.0954,23.2472],[120.0954,23.2556],[120.1098,23.286],[120.1134,23.2928],[120.1242,23.2945],[120.1098,23.3029],[120.117,23.3181],[120.1314,23.3181],[120.1422,23.3232],[120.1494,23.3215],[120.1458,23.3333],[120.1386,23.3283],[120.1314,23.3299],[120.1206,23.3299],[120.1206,23.3418],[120.1314,23.3603],[120.1458,23.362],[120.1638,23.362],[120.1494,23.3975],[120.135,23.4262],[120.1422,23.4397],[120.1422,23.4465],[120.1314,23.4515],[120.1314,23.4566],[120.1386,23.465],[120.1422,23.4735],[120.1566,23.492],[120.1242,23.4904],[120.1242,23.5207],[120.1422,23.5376],[120.1422,23.595],[120.1422,23.6373],[120.153,23.6727],[120.171,23.6997],[120.1746,23.7335],[120.1854,23.7639],[120.189,23.774],[120.2142,23.8027],[120.2178,23.8129],[120.2178,23.8179],[120.2394,23.8331],[120.2466,23.8433],[120.2538,23.8686],[120.2574,23.8787],[120.2862,23.9024],[120.2934,23.9125],[120.3042,23.9395],[120.3186,23.9665],[120.3402,24.0223],[120.351,24.0375],[120.3618,24.0493],[120.3726,24.0543],[120.3798,24.0577],[120.387,24.0628],[120.387,24.0729],[120.3906,24.083],[120.4122,24.0966],[120.4158,24.1067],[120.4194,24.1421],[120.423,24.1523],[120.4338,24.1607],[120.477,24.2063],[120.477,24.2097],[120.4806,24.2215],[120.4914,24.23],[120.5022,24.2536],[120.513,24.2958],[120.549,24.3515],[120.5598,24.3853],[120.5706,24.4056],[120.621,24.4562],[120.6498,24.4832],[120.657,24.4984],[120.6606,24.5204],[120.6678,24.5407],[120.6894,24.5761],[120.6966,24.5981],[120.7038,24.6065],[120.729,24.6133],[120.7362,24.6217],[120.7398,24.6301],[120.7434,24.6386],[120.7614,24.6538],[120.7794,24.6656],[120.801,24.6707],[120.8262,24.6656],[120.8226,24.6859],[120.8334,24.6977],[120.8478,24.7112],[120.855,24.7315],[120.8586,24.7365],[120.873,24.7433],[120.8766,24.7619],[120.8982,24.8007],[120.9054,24.8108],[120.909,24.8176],[120.909,24.8226],[120.9054,24.8294],[120.9018,24.8362],[120.909,24.8463],[120.9162,24.853],[120.9198,24.8615],[120.9234,24.875],[120.927,24.8851],[120.9342,24.8953],[120.945,24.902],[120.9522,24.9054],[120.9522,24.9088],[120.9558,24.9189],[120.963,24.9408],[120.9702,24.951],[121.0062,24.9999],[121.0314,25.0286],[121.0602,25.0506],[121.1286,25.0709],[121.1466,25.081],[121.161,25.0911],[121.1754,25.0996],[121.2114,25.1114],[121.287,25.1232],[121.3302,25.13],[121.3482,25.1367],[121.3734,25.1553],[121.377,25.1587],[121.3878,25.1587],[121.3986,25.1587],[121.413,25.1553],[121.4202,25.1468],[121.4238,25.1367],[121.431,25.1317],[121.4418,25.1367],[121.431,25.1553],[121.4058,25.1756],[121.395,25.1823],[121.3986,25.1924],[121.4058,25.1975],[121.413,25.2009],[121.4166,25.2043],[121.4238,25.2211],[121.4346,25.2414],[121.4598,25.2617],[121.4994,25.2786],[121.539,25.287],[121.5822,25.2836],[121.5966,25.2718],[121.6362,25.2228],[121.6506,25.1975],[121.6542,25.1992],[121.665,25.2009],[121.6758,25.2026],[121.683,25.2009],[121.683,25.1975],[121.6794,25.1924],[121.6758,25.1874],[121.6758,25.1789],[121.6794,25.1756],[121.6938,25.1654],[121.6974,25.162],[121.7046,25.157],[121.719,25.1519],[121.8918,25.1131],[121.9062,25.1063],[121.899,25.0945],[121.899,25.0844],[121.899,25.0658],[121.9098,25.0354],[121.9206,25.0219],[121.9278,25.0185],[121.953,25.0219],[121.9674,25.0219],[121.9818,25.0168],[121.9962,25.0101],[122.007,25.0016],[121.9278,24.9662],[121.9062,24.9493]],"islets":[[[119.649,23.6035],[119.667,23.5731],[119.6706,23.5596],[119.667,23.5495],[119.6598,23.5562],[119.6526,23.5613],[119.6418,23.563],[119.6274,23.5562],[119.6166,23.5545],[119.6094,23.5511],[119.6058,23.5461],[119.6022,23.5326],[119.5986,23.5292],[119.5806,23.5191],[119.5626,23.5174],[119.5446,23.5224],[119.5266,23.5393],[119.5302,23.5495],[119.541,23.5376],[119.559,23.5343],[119.5734,23.5393],[119.5878,23.5495],[119.577,23.5511],[119.5698,23.5562],[119.5662,23.5613],[119.559,23.5697],[119.5554,23.5663],[119.5554,23.5647],[119.5518,23.563],[119.5518,23.5765],[119.5518,23.59],[119.559,23.59],[119.5662,23.5883],[119.595,23.6052],[119.613,23.6102],[119.6094,23.595],[119.6058,23.59],[119.6202,23.595],[119.6346,23.5934],[119.6418,23.5934],[119.649,23.6035]],[[118.3926,24.5221],[118.4214,24.5271],[118.4502,24.5052],[118.4682,24.4613],[118.4646,24.4309],[118.4502,24.4157],[118.4214,24.4309],[118.4034,24.436],[118.3746,24.4326],[118.3458,24.4174],[118.3314,24.3971],[118.317,24.3904],[118.3026,24.3971],[118.2918,24.3971],[118.2846,24.4005],[118.281,24.4089],[118.281,24.4106],[118.2882,24.4208],[118.2918,24.4258],[118.2918,24.4326],[118.2918,24.441],[118.2882,24.4562],[118.2846,24.4697],[118.281,24.4782],[118.2882,24.4799],[118.317,24.4934],[118.3566,24.4697],[118.3818,24.4731],[118.3854,24.5035],[118.3926,24.5221]],[[119.4762,23.6035],[119.4906,23.639],[119.5014,23.6508],[119.5158,23.6373],[119.5086,23.6322],[119.5014,23.6204],[119.4906,23.59],[119.4906,23.5832],[119.4942,23.5765],[119.4906,23.5714],[119.4798,23.5697],[119.4726,23.5697],[119.4654,23.568],[119.4618,23.5663],[119.4582,23.563],[119.4438,23.563],[119.4438,23.5697],[119.451,23.5748],[119.4582,23.5765],[119.4654,23.5765],[119.4762,23.5799],[119.4762,23.5866],[119.4762,23.6035]],[[121.5642,22.0449],[121.5822,22.0314],[121.5894,22.023],[121.5894,22.0145],[121.5678,22.0078],[121.539,22.0179],[121.5138,22.0348],[121.4994,22.0483],[121.503,22.0568],[121.503,22.0669],[121.4994,22.0753],[121.4922,22.0821],[121.5678,22.0821],[121.5678,22.0753],[121.5642,22.072],[121.5606,22.0635],[121.5606,22.0534],[121.5642,22.0449]],[[121.4598,22.6596],[121.4562,22.6731],[121.4562,22.6765],[121.4958,22.6781],[121.4994,22.6765],[121.503,22.6697],[121.4994,22.6562],[121.4958,22.6494],[121.4958,22.6444],[121.4958,22.6393],[121.4958,22.6342],[121.4922,22.6359],[121.485,22.6359],[121.4814,22.6359],[121.4814,22.6376],[121.4706,22.641],[121.4598,22.6596]],[[119.5734,23.6271],[119.5698,23.639],[119.5626,23.6491],[119.5446,23.6643],[119.5662,23.6795],[119.5806,23.6727],[119.5914,23.6643],[119.595,23.6525],[119.5878,23.6457],[119.5914,23.6322],[119.5842,23.6254],[119.577,23.6221],[119.5734,23.6271]],[[120.0234,23.4515],[120.0738,23.5005],[120.117,23.5478],[120.1242,23.5511],[120.0918,23.4988],[120.0738,23.4836],[120.063,23.4718],[120.0486,23.4583],[120.0378,23.4515],[120.0198,23.438],[120.009,23.4329],[120.0234,23.4515]]]};
+
+function sorry(title, why, how){
+  document.getElementById('sorry-title').textContent = title;
+  document.getElementById('sorry-why').innerHTML = why;
+  document.getElementById('sorry-how').innerHTML = how || '';
+  document.getElementById('sorry').hidden = false;
+  document.querySelector('.tools').hidden = true;
+  document.getElementById('hint').hidden = true;
+}
+if (typeof THREE === 'undefined'){
+  sorry('3D 函式庫沒有載入', '島群需要從網路載入 three.js。',
+    '<a href="index.html">改看香氣地圖（不需要 WebGL）→</a>');
+  return;
+}
+try {
+  const p = document.createElement('canvas');
+  if (!(p.getContext('webgl2') || p.getContext('webgl'))) throw 0;
+} catch (e){
+  sorry('這個瀏覽器沒有開啟 WebGL',
+    '島群是 3D 的。<b>Safari 的「封閉模式」會停用 WebGL</b>。',
+    `<ol><li>系統<b>設定 → 隱私權與安全性 → 封閉模式</b>，關閉後重開 Safari</li>
+        <li>或改用 Chrome／Edge</li></ol>
+     <a href="index.html">改看香氣地圖（不需要 WebGL）→</a>`);
+  return;
+}
+
+/* ── 資料 ───────────────────────────────── */
+const byOrigin = {};
+DATA.origins.forEach(o => byOrigin[o.id] = Object.assign({items:[]}, o));
+DATA.items.forEach(it => (it.originIds || []).forEach(id =>
+  byOrigin[id] && byOrigin[id].items.push(it)));
+const txt = f => (f && (f.zh || f.en)) || '';
+const low = o => o.confidence === 'low';
+
+const OVERSEAS = DATA.origins.filter(o => o.country !== 'TW').map(o => byOrigin[o.id]);
+const TWSITES  = DATA.origins.filter(o => o.country === 'TW').map(o => byOrigin[o.id]);
+const twItems = new Set();
+TWSITES.forEach(o => o.items.forEach(it => twItems.add(it.id)));
+
+/* 每座島的樣子。沒列到的用預設。 */
+const THEME = {
+  kazanlak:      {ground:0x9ECF78, crop:[0xD98BA8,0xC9719B], trees:5, still:true,  dolls:4, houses:2},
+  andalusia:     {ground:0xCFC98A, soil:0xD6B983, crop:[0xE8DCC0,0xC9B38A], trees:3, still:true, dolls:3, houses:2},
+  dhofar:        {ground:0xE0CB97, soil:0xD2B37E, crop:null, resin:true, trees:4, dolls:2, houses:1},
+  'nile-delta':  {ground:0x8FC47A, pond:true, crop:[0x8E9BE0,0x7F8FD9], trees:3, dolls:3, houses:2},
+  mediterranean: {ground:0xA9C184, cypress:true, trees:6, dolls:2, houses:1},
+  greenland:     {ground:0xE8EDE8, soil:0xBFC7C4, snow:true, trees:2, dolls:2, houses:1}
+};
+const DEF = {ground:0x9BC47E, soil:0xC9A878, crop:[0xBFD16B,0x9B8EC4], trees:4, dolls:2, houses:1};
+
+/* ── 基礎 ───────────────────────────────── */
+const host = document.getElementById('scene');
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+host.appendChild(renderer.domElement);
+
+const DAY = {bg:0xBCDCE8, fog:0xC6E2EC, hemiSky:0xDCEFF5, hemiGnd:0x8FBB72,
+  sun:0xFFF4DC, sunI:0.95, hemiI:0.60, sea:0x5FA8C6};
+const NIGHT = {bg:0x1E2C3A, fog:0x22303E, hemiSky:0x33485F, hemiGnd:0x2A3A24,
+  sun:0xBACFEE, sunI:0.34, hemiI:0.50, sea:0x2A4A62};
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(DAY.bg);
+scene.fog = new THREE.Fog(DAY.fog, 110, 320);
+const camera = new THREE.PerspectiveCamera(32, 1, 0.5, 600);
+
+const hemi = new THREE.HemisphereLight(DAY.hemiSky, DAY.hemiGnd, DAY.hemiI);
+scene.add(hemi);
+const sun = new THREE.DirectionalLight(DAY.sun, DAY.sunI);
+sun.position.set(-40, 60, 34);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+const sc = sun.shadow.camera;
+sc.left = -60; sc.right = 60; sc.top = 60; sc.bottom = -60; sc.near = 1; sc.far = 180;
+sun.shadow.bias = -0.0016;
+scene.add(sun);
+scene.add(new THREE.AmbientLight(0xFFFFFF, 0.17));
+
+const mats = {};
+function mat(color, o){
+  const k = color + JSON.stringify(o || {});
+  if (!mats[k]) mats[k] = new THREE.MeshPhongMaterial(
+    Object.assign({color, flatShading:true, shininess:0, specular:0x000000}, o));
+  return mats[k];
+}
+const world = new THREE.Group();
+scene.add(world);
+
+/* ── 海 ─────────────────────────────────── */
+const seaMat = new THREE.MeshPhongMaterial({color:DAY.sea, flatShading:true,
+  shininess:20, specular:0x335566});
+const sea = new THREE.Mesh(new THREE.CylinderGeometry(260, 260, 2, 80), seaMat);
+sea.position.y = -2.6;
+sea.receiveShadow = true;
+world.add(sea);
+
+/* ── 零件 ───────────────────────────────── */
+function house(roof, s){
+  const g = new THREE.Group();
+  const w = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.7, 0.86), mat(0xFBF3E2));
+  w.position.y = 0.35; w.castShadow = true;
+  const r = new THREE.Mesh(new THREE.ConeGeometry(0.88, 0.56, 4), mat(roof));
+  r.position.y = 0.98; r.rotation.y = Math.PI / 4; r.castShadow = true;
+  g.add(w, r); g.scale.setScalar(s || 1); return g;
+}
+function still(){
+  const g = new THREE.Group();
+  const p = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.34, 0.56, 10), mat(0xCE8B4A));
+  p.position.y = 0.28; p.castShadow = true;
+  const c = new THREE.Mesh(new THREE.ConeGeometry(0.3, 0.34, 10), mat(0xCE8B4A));
+  c.position.y = 0.73;
+  const pipe = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.44, 6), mat(0xCE8B4A));
+  pipe.position.set(0.22, 0.95, 0); pipe.rotation.z = -0.7;
+  g.add(p, c, pipe); return g;
+}
+function patch(cols){
+  const g = new THREE.Group();
+  const b = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.08, 0.8), mat(0xC9A878));
+  b.position.y = 0.04; b.receiveShadow = true; g.add(b);
+  for (let i = 0; i < 12; i++){
+    const s = new THREE.Mesh(new THREE.SphereGeometry(0.095, 6, 5),
+      mat(cols[i % cols.length]));
+    s.position.set((i % 4 - 1.5) * 0.26, 0.15, (Math.floor(i / 4) - 1) * 0.26);
+    g.add(s);
+  }
+  return g;
+}
+function tree(kind){
+  const g = new THREE.Group();
+  const tr = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.09, 0.42, 5), mat(0x8A6A4A));
+  tr.position.y = 0.21; g.add(tr);
+  let top;
+  if (kind === 'cypress'){
+    top = new THREE.Mesh(new THREE.ConeGeometry(0.22, 1.25, 6), mat(0x3F6B4A));
+    top.position.y = 1.0;
+  } else if (kind === 'resin'){
+    top = new THREE.Mesh(new THREE.SphereGeometry(0.42, 7, 5), mat(0x8FA47A));
+    top.position.y = 0.72; top.scale.y = 0.6;
+  } else if (kind === 'snow'){
+    top = new THREE.Mesh(new THREE.ConeGeometry(0.34, 0.8, 6), mat(0x4E7A5E));
+    top.position.y = 0.72;
+  } else {
+    top = new THREE.Mesh(
+      Math.random() < 0.5 ? new THREE.ConeGeometry(0.38, 0.85, 7)
+                          : new THREE.SphereGeometry(0.38, 8, 6),
+      mat(Math.random() < 0.5 ? 0x4E8C5A : 0x6EA863));
+    top.position.y = 0.76;
+  }
+  top.castShadow = true;
+  g.add(top); return g;
+}
+function doll(shirt){
+  const g = new THREE.Group();
+  const b = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.14, 0.34, 7), mat(shirt));
+  b.position.y = 0.34; b.castShadow = true;
+  const h = new THREE.Mesh(new THREE.SphereGeometry(0.145, 8, 7), mat(0xE8B98E));
+  h.position.y = 0.62;
+  const hr = new THREE.Mesh(new THREE.SphereGeometry(0.153, 8, 6), mat(0x3A2E28));
+  hr.position.set(0, 0.655, -0.018);
+  const l1 = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.2, 5), mat(0x4A5560));
+  l1.position.set(-0.055, 0.1, 0);
+  const l2 = l1.clone(); l2.position.x = 0.055;
+  g.add(b, h, hr, l1, l2); return g;
+}
+const ROOFS = [0xD9663F, 0xF2C14E, 0x5C8FB8, 0xE08A5A, 0x7FAE66, 0xC97F9B];
+const SHIRTS = [0xD9663F, 0xF2C14E, 0x5C8FB8, 0xFBF3E2, 0x7FAE66, 0xB8965A];
+
+/* ── 一座六邊形島 ───────────────────────── */
+function hexIsland(r, t){
+  const g = new THREE.Group();
+  const top = new THREE.Mesh(new THREE.CylinderGeometry(r, r * 0.985, 1.1, 6), mat(t.ground));
+  top.position.y = -0.55; top.rotation.y = Math.PI / 6;
+  top.castShadow = true; top.receiveShadow = true;
+  const soil = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.985, r * 0.78, 1.9, 6),
+    mat(t.soil || 0xC9A878));
+  soil.position.y = -2.05; soil.rotation.y = Math.PI / 6; soil.castShadow = true;
+  const rock = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.78, r * 0.26, 3.4, 6), mat(0xBFB49C));
+  rock.position.y = -4.7; rock.rotation.y = Math.PI / 6;
+  const tip = new THREE.Mesh(new THREE.ConeGeometry(r * 0.26, 2.0, 6), mat(0xBFB49C));
+  tip.position.y = -7.4; tip.rotation.y = Math.PI / 6; tip.rotation.x = Math.PI;
+  g.add(top, soil, rock, tip);
+  return g;
+}
+
+/* ── 台灣：真實輪廓的小島 ───────────────── */
+function taiwanIsland(scale){
+  const g = new THREE.Group();
+  const LAT0 = 23.6, LNG0 = 120.98, COS0 = Math.cos(LAT0 * Math.PI / 180);
+  const pts = TW.main.map(([lng, lat]) =>
+    [(lng - LNG0) * COS0 * scale, -(lat - LAT0) * scale]);
+  const s = new THREE.Shape();
+  pts.forEach(([x, z], i) => i ? s.lineTo(x, z) : s.moveTo(x, z));
+  s.closePath();
+  const slab = new THREE.Mesh(
+    new THREE.ExtrudeGeometry(s, {depth:3.0, bevelEnabled:false}),
+    mat(0x9BC47E, {side:THREE.DoubleSide}));
+  slab.rotation.x = Math.PI / 2;
+  slab.castShadow = true; slab.receiveShadow = true;
+  g.add(slab);
+  const base = new THREE.Mesh(
+    new THREE.ExtrudeGeometry(s, {depth:3.4, bevelEnabled:false}),
+    mat(0xC2A87E, {side:THREE.DoubleSide}));
+  base.rotation.x = Math.PI / 2; base.position.y = -3.0; base.scale.set(0.94, 1, 0.94);
+  g.add(base);
+  // 中央山脈，一排由北到南的小山
+  for (let i = 0; i < 9; i++){
+    const t = i / 8;
+    const lat = 24.8 - t * 2.5, lng = 121.6 - t * 0.75;
+    const hh = 1.1 + 2.3 * Math.sin(Math.PI * Math.min(1, Math.max(0, (t - 0.02) / 0.96)));
+    const m = new THREE.Mesh(new THREE.ConeGeometry(1.5 + hh * 0.22, hh, 6),
+      mat(t > 0.3 && t < 0.7 ? 0x6E8A5C : 0x62A05C));
+    m.position.set((lng - LNG0) * COS0 * scale, hh / 2, -(lat - LAT0) * scale);
+    m.rotation.y = i * 0.7;
+    m.castShadow = true;
+    g.add(m);
+  }
+  return g;
+}
+
+/* ── 位置：照真實方位排，再把重疊的推開 ── */
+const SPAN = 0.40;
+const nodes = OVERSEAS.map(o => ({
+  o, x:(o.lng - 60) * SPAN * Math.cos(30 * Math.PI / 180), z:-(o.lat - 25) * SPAN,
+  r:3.2 + Math.min(2.4, o.items.length * 0.55)
+}));
+const twNode = {o:null, tw:true, x:(120.98 - 60) * SPAN * Math.cos(30 * Math.PI / 180),
+  z:-(23.6 - 25) * SPAN, r:7.0};
+nodes.push(twNode);
+/* 鬆弛：只把重疊的推開，大致方位保留 */
+for (let pass = 0; pass < 220; pass++){
+  for (let i = 0; i < nodes.length; i++)
+    for (let j = i + 1; j < nodes.length; j++){
+      const a = nodes[i], b = nodes[j];
+      const dx = b.x - a.x, dz = b.z - a.z;
+      const d = Math.hypot(dx, dz) || 0.01;
+      const need = a.r + b.r + 3.4;
+      if (d < need){
+        const push = (need - d) / 2 / d;
+        a.x -= dx * push; a.z -= dz * push;
+        b.x += dx * push; b.z += dz * push;
+      }
+    }
+}
+
+/* ── 蓋島 ───────────────────────────────── */
+const pins = [], folk = [], steams = [];
+nodes.forEach((nd, n) => {
+  const g = new THREE.Group();
+  g.position.set(nd.x, 0, nd.z);
+
+  if (nd.tw){
+    g.add(taiwanIsland(2.15));
+    for (let i = 0; i < 10; i++){
+      const t = tree();
+      t.position.set(-3 + Math.random() * 5, 0, -6 + Math.random() * 12);
+      t.scale.setScalar(0.9 + Math.random() * 0.4);
+      g.add(t);
+    }
+    for (let i = 0; i < 3; i++){
+      const h = house(ROOFS[i % ROOFS.length], 0.9);
+      h.position.set(-2.2 + i * 1.3, 0, -2 + i * 3.2);
+      h.rotation.y = i; g.add(h);
+    }
+    const st = still(); st.position.set(-1.6, 0, 2.6); g.add(st);
+    steams.push({at:new THREE.Vector3(nd.x - 1.6, 1.0, nd.z + 2.6), puffs:[]});
+    for (let i = 0; i < 5; i++){
+      const d = doll(SHIRTS[i % SHIRTS.length]);
+      d.userData = {cx:nd.x - 1 + Math.random() * 2, cz:nd.z - 3 + Math.random() * 6, h:0,
+        a:Math.random() * 6.28, r:1.1 + Math.random() * 0.8,
+        sp:(0.35 + Math.random() * 0.4) * (i % 2 ? 1 : -1)};
+      world.add(d); folk.push(d);
+    }
+    world.add(g);
+    pins.push({tw:true, g, n, at:new THREE.Vector3(nd.x, 5.6, nd.z)});
+    return;
+  }
+
+  const o = nd.o, t = Object.assign({}, DEF, THEME[o.id] || {});
+  g.add(hexIsland(nd.r, t));
+
+  for (let i = 0; i < t.houses; i++){
+    const h = house(ROOFS[(n + i) % ROOFS.length], 1);
+    h.position.set(-nd.r * 0.42 + i * 1.5, 0, -nd.r * 0.3);
+    h.rotation.y = 0.4 + i; h.castShadow = true;
+    g.add(h);
+  }
+  if (t.crop){
+    for (let i = 0; i < 2; i++){
+      const p = patch(t.crop);
+      p.position.set(nd.r * 0.34, 0, -0.6 + i * 1.1);
+      g.add(p);
+    }
+  }
+  if (t.still){
+    const s = still(); s.position.set(-nd.r * 0.3, 0, nd.r * 0.36); g.add(s);
+    steams.push({at:new THREE.Vector3(nd.x - nd.r * 0.3, 1.0, nd.z + nd.r * 0.36), puffs:[]});
+  }
+  if (t.pond){
+    const pd = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.4, 0.4, 14), mat(0x4A8CA6));
+    pd.position.set(-nd.r * 0.28, -0.14, nd.r * 0.3); g.add(pd);
+    for (let i = 0; i < 5; i++){
+      const lp = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.05, 9), mat(0x6FA86B));
+      lp.position.set(-nd.r * 0.28 + Math.cos(i * 1.3) * 0.85, 0.08,
+                      nd.r * 0.3 + Math.sin(i * 1.3) * 0.85);
+      g.add(lp);
+      if (i % 2 === 0){
+        const fl = new THREE.Mesh(new THREE.ConeGeometry(0.14, 0.3, 6), mat(0x8E9BE0));
+        fl.position.copy(lp.position); fl.position.y = 0.25;
+        g.add(fl);
+      }
+    }
+  }
+  const kind = t.cypress ? 'cypress' : t.resin ? 'resin' : t.snow ? 'snow' : null;
+  for (let i = 0; i < t.trees; i++){
+    const tr = tree(kind);
+    const a = (i / t.trees) * 6.28 + n;
+    tr.position.set(Math.cos(a) * nd.r * 0.72, 0, Math.sin(a) * nd.r * 0.72);
+    tr.scale.setScalar(0.9 + Math.random() * 0.45);
+    g.add(tr);
+  }
+  if (t.snow){
+    const cap = new THREE.Mesh(new THREE.SphereGeometry(nd.r * 0.42, 9, 6), mat(0xF2EFE6));
+    cap.scale.y = 0.35; cap.position.y = 0.2; g.add(cap);
+  }
+
+  const col = low(o) ? 0xA8A29A : 0xB8965A;
+  const post = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 1.5, 6), mat(0xFFF8F0));
+  post.position.y = 0.75;
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.2, 10, 8), mat(col));
+  head.position.y = 1.62;
+  g.add(post, head);
+
+  world.add(g);
+  pins.push({o, g, head, n, at:new THREE.Vector3(nd.x, 3.2, nd.z)});
+
+  for (let i = 0; i < t.dolls; i++){
+    const d = doll(SHIRTS[(n + i) % SHIRTS.length]);
+    d.userData = {cx:nd.x, cz:nd.z, h:0, a:Math.random() * 6.28,
+      r:nd.r * 0.5 + Math.random() * nd.r * 0.25,
+      sp:(0.3 + Math.random() * 0.35) * (i % 2 ? 1 : -1)};
+    world.add(d); folk.push(d);
+  }
+});
+
+/* 蒸氣 */
+const steamMat = new THREE.MeshBasicMaterial({color:0xFFFFFF, transparent:true, opacity:0.5});
+steams.forEach(s => {
+  for (let i = 0; i < 4; i++){
+    const p = new THREE.Mesh(new THREE.SphereGeometry(0.16, 7, 6), steamMat.clone());
+    p.userData.t = i / 4;
+    world.add(p); s.puffs.push(p);
+  }
+});
+
+/* 小船 */
+const boats = [];
+const BB = nodes.reduce((a, n) => ({
+  x0:Math.min(a.x0, n.x), x1:Math.max(a.x1, n.x),
+  z0:Math.min(a.z0, n.z), z1:Math.max(a.z1, n.z)
+}), {x0:1e9, x1:-1e9, z0:1e9, z1:-1e9});
+const CX = (BB.x0 + BB.x1) / 2, CZ = (BB.z0 + BB.z1) / 2;
+const RSPAN = Math.max(BB.x1 - BB.x0, BB.z1 - BB.z0);
+for (let i = 0; i < 7; i++){
+  const g = new THREE.Group();
+  const hull = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.26, 0.5), mat(0xFBF3E2));
+  hull.position.y = 0.13;
+  const sail = new THREE.Mesh(new THREE.ConeGeometry(0.3, 0.72, 4), mat(ROOFS[i % ROOFS.length]));
+  sail.position.y = 0.62; sail.rotation.y = Math.PI / 4;
+  g.add(hull, sail);
+  g.userData = {a:i / 7 * 6.28, r:RSPAN * 0.42 + Math.random() * RSPAN * 0.2,
+    sp:0.035 + Math.random() * 0.03};
+  world.add(g); boats.push(g);
+}
+
+/* 雲 */
+const clouds = [];
+const cloudMat = new THREE.MeshPhongMaterial({color:0xFFFFFF, flatShading:true,
+  shininess:0, specular:0x000000, transparent:true, opacity:0.9});
+for (let i = 0; i < 10; i++){
+  const g = new THREE.Group();
+  [[0,0,0,1.4],[1.2,.15,.3,1.0],[-1.1,.1,-.2,0.95]].forEach(([x,y,z,r]) => {
+    const b = new THREE.Mesh(new THREE.SphereGeometry(r, 8, 6), cloudMat);
+    b.position.set(x, y, z); g.add(b);
+  });
+  g.position.set(BB.x0 - 10 + Math.random() * (RSPAN + 20), 15 + Math.random() * 9,
+                 BB.z0 - 14 + Math.random() * (RSPAN * 0.7 + 28));
+  g.scale.setScalar(0.8 + Math.random() * 0.8);
+  g.userData.s = 0.6 + Math.random() * 0.7;
+  world.add(g); clouds.push(g);
+}
+
+document.getElementById('sub').textContent =
+  `${OVERSEAS.length} 處海外產地 ・ 台灣 ${TWSITES.length} 處 ・ 共 ${DATA.items.length} 個品項`;
+
+/* ── 名牌 ───────────────────────────────── */
+const tagLayer = document.getElementById('tags');
+pins.forEach(p => {
+  const b = document.createElement('button');
+  if (p.tw){
+    b.className = 'tag tw';
+    b.innerHTML = `<span class="dot"></span>台灣<span class="n">${TWSITES.length} 處</span>`;
+    b.addEventListener('click', e => { e.stopPropagation(); openTW(); });
+  } else {
+    b.className = 'tag' + (low(p.o) ? ' low' : '');
+    b.innerHTML = `<span class="dot"></span>${txt(p.o.name)}`;
+    b.addEventListener('click', e => { e.stopPropagation(); open(p.o.id, true); });
+  }
+  tagLayer.appendChild(b);
+  p.tag = b;
+});
+
+const v3 = new THREE.Vector3();
+function placeTags(){
+  const W = innerWidth, H = innerHeight;
+  const vis = [];
+  pins.forEach(p => {
+    v3.copy(p.at).project(camera);
+    const ok = v3.z < 1;
+    p.tag.classList.toggle('off', !ok);
+    if (!ok) return;
+    vis.push({p, x:(v3.x * 0.5 + 0.5) * W, y:(-v3.y * 0.5 + 0.5) * H});
+  });
+  vis.sort((a, b) => a.y - b.y);
+  for (let i = 1; i < vis.length; i++)
+    for (let j = 0; j < i; j++)
+      if (Math.abs(vis[i].x - vis[j].x) < 112 && Math.abs(vis[i].y - vis[j].y) < 26)
+        vis[i].y = vis[j].y + 26;
+  vis.forEach(({p, x, y}) => {
+    p.tag.style.left = x.toFixed(0) + 'px';
+    p.tag.style.top = y.toFixed(0) + 'px';
+  });
+}
+
+/* ── 卡片 ───────────────────────────────── */
+const card = document.getElementById('card');
+const PARTS = DATA.parts || {};
+function itemRows(items){
+  if (!items.length) return '<p style="color:var(--faint);font-size:.82rem">還沒有品項掛在這裡。</p>';
+  return items.map(it => {
+    const inner = `<span><span class="zh">${txt(it.name)}</span>
+      <span class="lat">${it.latin || ''}</span></span>
+      <span class="part">${PARTS[it.part] ? txt(PARTS[it.part]) : ''}</span>`;
+    return it.articleUrl
+      ? `<a class="item" href="${it.articleUrl}" target="_blank" rel="noopener">${inner}</a>`
+      : `<div class="item">${inner}</div>`;
+  }).join('');
+}
+function open(id, fly){
+  const o = byOrigin[id]; if (!o) return;
+  document.getElementById('c-eyebrow').textContent =
+    DATA.kinds[o.kind] ? txt(DATA.kinds[o.kind]) : '產地';
+  document.getElementById('c-title').textContent = txt(o.name);
+  document.getElementById('c-where').textContent =
+    `${txt(o.where)}　${o.lat.toFixed(2)}° ${o.lng.toFixed(2)}°`;
+  document.getElementById('c-body').innerHTML = `
+    ${o.confidence !== 'high' ? `<span class="flag">${low(o) ? '產地待確認' : '細節待確認'}</span>` : ''}
+    ${o.verify ? `<p class="verify">${o.verify}</p>` : ''}
+    ${o.note && txt(o.note) ? `<p class="note">${txt(o.note)}</p>` : ''}
+    ${o.facts ? `<ul class="facts">${o.facts.map(f => `<li>${f}</li>`).join('')}</ul>` : ''}
+    <div class="sect"><h3>這裡來的 ${o.items.length} 項</h3>${itemRows(o.items)}</div>`;
+  document.getElementById('c-body').scrollTop = 0;
+  card.hidden = false;
+  pins.forEach(p => p.tag.classList.toggle('on', !p.tw && p.o.id === id));
+  hideHint();
+  if (fly){ const nd = nodes.find(n => n.o && n.o.id === id); if (nd) flyTo(nd); }
+}
+function openTW(){
+  document.getElementById('c-eyebrow').textContent = '島嶼';
+  document.getElementById('c-title').textContent = '台灣';
+  document.getElementById('c-where').textContent =
+    `${TWSITES.length} 處產地 ・ ${twItems.size} 個品項`;
+  const all = [];
+  TWSITES.forEach(o => o.items.forEach(it => all.indexOf(it) < 0 && all.push(it)));
+  document.getElementById('c-body').innerHTML = `
+    <p class="note">從深根大地的實驗田，到大武山入夜後才開始的採花，到新竹五峰一百一十四年的柳杉。</p>
+    <a class="go" href="taiwan.html">進入台灣島，看 ${TWSITES.length} 處產地的實際位置 →</a>
+    <div class="sect"><h3>台灣來的 ${twItems.size} 項</h3>${itemRows(all)}</div>`;
+  document.getElementById('c-body').scrollTop = 0;
+  card.hidden = false;
+  pins.forEach(p => p.tag.classList.toggle('on', !!p.tw));
+  hideHint();
+  flyTo(twNode);
+}
+document.getElementById('card-x').onclick = () => {
+  card.hidden = true; pins.forEach(p => p.tag.classList.remove('on'));
+};
+addEventListener('keydown', e => { if (e.key === 'Escape') card.hidden = true; });
+
+const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+renderer.domElement.addEventListener('click', e => {
+  if (moved) return;
+  ndc.x = (e.clientX / innerWidth) * 2 - 1;
+  ndc.y = -(e.clientY / innerHeight) * 2 + 1;
+  ray.setFromCamera(ndc, camera);
+  for (const p of pins)
+    if (ray.intersectObject(p.g, true).length){
+      p.tw ? openTW() : open(p.o.id, true);
+      return;
+    }
+});
+
+/* ── 鏡頭 ───────────────────────────────── */
+const HOME = {theta:-0.3, phi:0.78, dist:RSPAN * 1.45, tx:CX, tz:CZ};
+const CAM = Object.assign({}, HOME);
+const TARGET = new THREE.Vector3(CX, 1.5, CZ);
+let anim = null;
+function applyCam(){
+  CAM.phi = Math.max(0.16, Math.min(1.40, CAM.phi));
+  CAM.dist = Math.max(10, Math.min(RSPAN * 2.4, CAM.dist));
+  TARGET.set(CAM.tx, 1.5, CAM.tz);
+  camera.position.set(
+    TARGET.x + CAM.dist * Math.sin(CAM.phi) * Math.sin(CAM.theta),
+    TARGET.y + CAM.dist * Math.cos(CAM.phi),
+    TARGET.z + CAM.dist * Math.sin(CAM.phi) * Math.cos(CAM.theta));
+  camera.lookAt(TARGET);
+}
+/* 飛到一座島：這是「親民」的關鍵，一鍵就站到島邊 */
+function flyTo(nd){
+  const a = {tx:CAM.tx, tz:CAM.tz, d:CAM.dist, phi:CAM.phi};
+  const b = {tx:nd.x, tz:nd.z, d:nd.r * 3.4 + 8, phi:0.95};
+  const t0 = performance.now(), me = anim = {};
+  (function step(now){
+    if (anim !== me) return;
+    const k = Math.min(1, (now - t0) / 950);
+    const e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+    CAM.tx = a.tx + (b.tx - a.tx) * e;
+    CAM.tz = a.tz + (b.tz - a.tz) * e;
+    CAM.dist = a.d + (b.d - a.d) * e;
+    CAM.phi = a.phi + (b.phi - a.phi) * e;
+    applyCam();
+    if (k < 1) requestAnimationFrame(step); else if (anim === me) anim = null;
+  })(t0);
+}
+
+let dragging = false, moved = false, lx = 0, ly = 0;
+const tp = new Map();
+const gap = () => { const [a, b] = [...tp.values()]; return Math.hypot(a.x - b.x, a.y - b.y); };
+let gap0 = 0, d0 = 0;
+host.addEventListener('pointerdown', e => {
+  tp.set(e.pointerId, {x:e.clientX, y:e.clientY});
+  host.setPointerCapture(e.pointerId);
+  moved = false; anim = null;
+  if (tp.size === 1){ dragging = true; lx = e.clientX; ly = e.clientY; host.classList.add('grabbing'); }
+  else if (tp.size === 2){ dragging = false; host.classList.remove('grabbing'); gap0 = gap(); d0 = CAM.dist; }
+});
+host.addEventListener('pointermove', e => {
+  if (!tp.has(e.pointerId)) return;
+  tp.set(e.pointerId, {x:e.clientX, y:e.clientY});
+  if (tp.size === 2){ if (gap0 > 0){ CAM.dist = d0 * gap0 / gap(); applyCam(); moved = true; } return; }
+  if (!dragging) return;
+  const dx = e.clientX - lx, dy = e.clientY - ly;
+  if (Math.abs(dx) + Math.abs(dy) > 3) moved = true;
+  CAM.theta -= dx * 0.005; CAM.phi -= dy * 0.004;
+  lx = e.clientX; ly = e.clientY;
+  applyCam(); hideHint();
+});
+['pointerup','pointercancel'].forEach(t => host.addEventListener(t, e => {
+  tp.delete(e.pointerId);
+  if (tp.size < 2) gap0 = 0;
+  if (tp.size === 0){ dragging = false; host.classList.remove('grabbing'); }
+}));
+host.addEventListener('wheel', e => {
+  e.preventDefault(); CAM.dist *= 1 + e.deltaY * 0.0014; applyCam(); hideHint();
+}, {passive:false});
+
+/* ── 工具列 ─────────────────────────────── */
+const hint = document.getElementById('hint');
+let hintGone = false;
+function hideHint(){ if (!hintGone){ hintGone = true; hint.classList.add('gone'); } }
+setTimeout(hideHint, 8000);
+
+const tTags = document.getElementById('t-tags');
+tTags.onclick = () => {
+  const on = tTags.getAttribute('aria-pressed') === 'true';
+  tTags.setAttribute('aria-pressed', String(!on));
+  document.body.classList.toggle('notags', on);
+};
+document.getElementById('t-reset').onclick = () => {
+  anim = null; Object.assign(CAM, HOME); applyCam();
+  card.hidden = true; pins.forEach(p => p.tag.classList.remove('on'));
+};
+
+const tNight = document.getElementById('t-night');
+let night = false, k = 1, from = DAY, to = DAY;
+tNight.onclick = () => {
+  night = !night; tNight.setAttribute('aria-pressed', String(night));
+  from = night ? DAY : NIGHT; to = night ? NIGHT : DAY; k = 0;
+};
+const cA = new THREE.Color(), cB = new THREE.Color();
+const mix = (t, a, b, q) => { cA.setHex(a); cB.setHex(b); t.copy(cA).lerp(cB, q); };
+function mood(q){
+  mix(scene.background, from.bg, to.bg, q);
+  mix(scene.fog.color, from.fog, to.fog, q);
+  mix(hemi.color, from.hemiSky, to.hemiSky, q);
+  mix(hemi.groundColor, from.hemiGnd, to.hemiGnd, q);
+  mix(sun.color, from.sun, to.sun, q);
+  mix(seaMat.color, from.sea, to.sea, q);
+  sun.intensity = from.sunI + (to.sunI - from.sunI) * q;
+  hemi.intensity = from.hemiI + (to.hemiI - from.hemiI) * q;
+}
+
+/* ── 動畫 ───────────────────────────────── */
+function resize(){
+  renderer.setSize(innerWidth, innerHeight);
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  applyCam();
+}
+addEventListener('resize', resize);
+
+let last = performance.now();
+function loop(now){
+  const dt = Math.min(0.05, (now - last) / 1000); last = now;
+  requestAnimationFrame(loop);
+  if (k < 1){ k = Math.min(1, k + dt * 1.4); mood(k); }
+  folk.forEach(d => {
+    const u = d.userData;
+    u.a += u.sp * dt;
+    d.position.set(u.cx + Math.cos(u.a) * u.r,
+                   u.h + Math.abs(Math.sin(u.a * 20)) * 0.04,
+                   u.cz + Math.sin(u.a) * u.r);
+    d.rotation.y = -u.a + (u.sp > 0 ? Math.PI / 2 : -Math.PI / 2);
+  });
+  steams.forEach(s => s.puffs.forEach(p => {
+    p.userData.t = (p.userData.t + dt * 0.32) % 1;
+    const t = p.userData.t;
+    p.position.set(s.at.x + Math.sin(t * 5) * 0.14, s.at.y + t * 1.8,
+                   s.at.z + Math.cos(t * 4) * 0.12);
+    p.scale.setScalar(0.5 + t * 1.4);
+    p.material.opacity = 0.45 * (1 - t);
+  }));
+  boats.forEach(b => {
+    const u = b.userData;
+    u.a += u.sp * dt;
+    b.position.set(CX + Math.cos(u.a) * u.r, -1.6 + Math.sin(now / 700 + u.a) * 0.08,
+                   CZ + Math.sin(u.a) * u.r);
+    b.rotation.y = -u.a;
+  });
+  clouds.forEach(c => {
+    c.position.x += c.userData.s * dt * 2.2;
+    if (c.position.x > BB.x1 + 24) c.position.x = BB.x0 - 24;
+  });
+  pins.forEach(p => {
+    if (p.head) p.head.position.y = 1.62 + Math.sin(now / 560 + p.n) * 0.06;
+  });
+  placeTags();
+  renderer.render(scene, camera);
+}
+resize(); applyCam(); mood(1);
+requestAnimationFrame(loop);
+
+})();
+</script>
+
+</body>
+</html>
