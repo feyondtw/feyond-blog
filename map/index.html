@@ -879,6 +879,40 @@ function confFlag(x){
   return `<span class="flag">${label}</span>`;
 }
 
+
+/* ── 親緣：從學名自動算，不是手填 ──────────────────
+   同種＝同一個學名的不同產地或不同部位（柳杉／吉野杉／北山杉
+   都是 Cryptomeria japonica，差的是育林傳統）。
+   同屬＝同一個屬的不同種（四種檀香、四種乳香）。
+   學名已經在資料裡，這一層是免費的。              */
+function binomial(lat){
+  if (!lat) return [null, null];
+  const k = String(lat).trim().split(/\s+/);
+  const g = (k[0] || '').replace(/[^A-Za-z]/g, '') || null;
+  let s = null;
+  if (k[1] === '×' || k[1] === 'x'){ if (k[2]) s = '× ' + k[2]; }
+  else if (k[1] && !/^sp+\.$/i.test(k[1])) s = k[1];
+  return [g, s];
+}
+const byGenus = {}, bySpecies = {};
+ITEMS.forEach(it => {
+  const [g, s] = binomial(it.latin);
+  it.__g = g; it.__s = s;
+  if (g) (byGenus[g] = byGenus[g] || []).push(it);
+  if (g && s) { const k = g + ' ' + s; (bySpecies[k] = bySpecies[k] || []).push(it); }
+});
+function kinRows(list, it){
+  return list.filter(x => x.id !== it.id).map(x => {
+    const o2 = originOf(x);
+    return `<button class="row" data-k="item" data-id="${x.id}">
+      <span><span class="zh">${txt(x.name)}</span>
+      <span class="lat">${x.latin || ''}</span>
+      <span class="sub">${o2 ? txt(o2.name) : '尚無產地'}</span></span>
+      <span class="n">${DATA.parts[x.part] ? txt(DATA.parts[x.part]) : ''}</span>
+    </button>`;
+  }).join('');
+}
+
 function itemBlock(it){
   const o = originOf(it);
   const kv = [];
@@ -896,7 +930,19 @@ function itemBlock(it){
     ${it.verify ? `<p class="verify">${it.verify}</p>` : ''}
     <dl class="kv">${kv.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
     ${it.story && txt(it.story) ? `<p class="story">${txt(it.story)}</p>` : ''}
+    ${kin(it)}
     ${links.length ? `<div class="dsec"><h4>延伸</h4>${links.join('')}</div>` : ''}`;
+}
+function kin(it){
+  const same = (bySpecies[it.__g + ' ' + it.__s] || []).filter(x => x.id !== it.id);
+  const genus = (byGenus[it.__g] || []).filter(x =>
+    x.id !== it.id && !same.some(y => y.id === x.id));
+  let h = '';
+  if (same.length) h += `<div class="dsec"><h4>同一個種 · ${it.__g} ${it.__s}</h4>` +
+    kinRows(same, it) + '</div>';
+  if (genus.length) h += `<div class="dsec"><h4>同屬 · ${it.__g}</h4>` +
+    kinRows(genus, it) + '</div>';
+  return h;
 }
 
 function select(kind, id, fly){
