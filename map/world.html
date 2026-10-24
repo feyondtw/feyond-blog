@@ -330,8 +330,12 @@ const NIGHT = {bg:0x20303C, fog:0x253642, hemiSky:0x3A5062, hemiGnd:0x2C3A2A,
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(DAY.bg);
-scene.fog = new THREE.Fog(DAY.fog, 110, 320);
-const camera = new THREE.PerspectiveCamera(32, 1, 0.5, 600);
+/* 長焦：視角壓到 16 度、距離拉一倍。
+   廣角斜看一張平面地圖，遠端（北半球）會被透視壓扁；
+   長焦接近等角投影，南北比例才會一致。
+   霧也要跟著退到很遠，否則北半球會泡在霧裡發白。 */
+scene.fog = new THREE.Fog(DAY.fog, 420, 1500);
+const camera = new THREE.PerspectiveCamera(16, 1, 1, 1600);
 
 const hemi = new THREE.HemisphereLight(DAY.hemiSky, DAY.hemiGnd, DAY.hemiI);
 scene.add(hemi);
@@ -361,9 +365,21 @@ function mat(color, o){
 const world = new THREE.Group();
 scene.add(world);
 
-/* ── 投影：等距長方。底圖與產地共用，位置才會一致 ── */
-const K = 0.62;
-const px = lng => lng * K, pz = lat => -lat * K;
+/* ── 投影：Equal Earth ─────────────────────────────────
+   等距長方把高緯度的經線拉得跟赤道一樣寬，加拿大、俄羅斯、
+   格陵蘭會被橫向撐開，看起來就扁。Equal Earth 會正確收窄，
+   而且保持面積比例。底圖與產地共用同一個投影。      */
+const RAD = Math.PI / 180, SQ3 = Math.sqrt(3);
+const A1 = 1.340264, A2 = -0.081106, A3 = 0.000893, A4 = 0.003796;
+const SCALE = 41.2;
+function P(lng, lat){
+  const th = Math.asin(SQ3 / 2 * Math.sin(lat * RAD));
+  const t2 = th * th, t6 = t2 * t2 * t2;
+  const den = A1 + 3 * A2 * t2 + t6 * (7 * A3 + 9 * A4 * t2);
+  const x = 2 * SQ3 * (lng * RAD) * Math.cos(th) / (3 * den);
+  const y = th * (A1 + A2 * t2 + t6 * (A3 + A4 * t2));
+  return [x * SCALE, -y * SCALE];
+}
 
 /* ── 海 ─────────────────────────────────── */
 const seaMat = new THREE.MeshPhongMaterial({color:DAY.sea, flatShading:true,
@@ -414,7 +430,8 @@ let landTris = 0;
 
 function emit(a, b, c){
   for (const p of [a, b, c]){
-    mpos.push(px(p[0]), 0.12, pz(p[1]));
+    const q = P(p[0], p[1]);
+    mpos.push(q[0], 0.12, q[1]);
     cTmp.setHex(clim(p[1], p[0]).ground);
     mcol.push(cTmp.r, cTmp.g, cTmp.b);
   }
@@ -608,11 +625,11 @@ function taiwanIsland(scale){
 
 /* ── 位置：直接用真實經緯度。新增產地給座標就落對地方 ── */
 const nodes = OVERSEAS.map(o => ({
-  o, x:px(o.lng), z:pz(o.lat), lat:o.lat, lng:o.lng,
+  o, x:P(o.lng, o.lat)[0], z:P(o.lng, o.lat)[1], lat:o.lat, lng:o.lng,
   r:3.0 + Math.min(1.6, o.items.length * 0.32),
   c:clim(o.lat, o.lng)
 }));
-const twNode = {tw:true, x:px(120.98), z:pz(23.6), lat:23.6, lng:120.98,
+const twNode = {tw:true, x:P(120.98, 23.6)[0], z:P(120.98, 23.6)[1], lat:23.6, lng:120.98,
   r:4.2, c:clim(23.6, 120.98)};
 nodes.push(twNode);
 /* 只有真的畫不下才微調，而且記錄移動了多少，不能悄悄騙人 */
@@ -632,7 +649,8 @@ for (let pass = 0; pass < 160; pass++){
     }
 }
 nodes.forEach(n => {
-  maxShift = Math.max(maxShift, Math.hypot(n.x - px(n.lng), n.z - pz(n.lat)) / K);
+  const t0 = P(n.lng, n.lat);
+  maxShift = Math.max(maxShift, Math.hypot(n.x - t0[0], n.z - t0[1]));
 });
 
 /* ── 蓋島 ───────────────────────────────── */
@@ -643,7 +661,7 @@ nodes.forEach((nd, n) => {
 
   if (nd.tw){
     // 台灣真實比例只有 2 單位高，看不見。放大 3.4 倍當地圖上的標記
-    g.add(taiwanIsland(K * 3.4));
+    g.add(taiwanIsland(2.3));
     for (let i = 0; i < 10; i++){
       const t = tree();
       t.position.set(-3 + Math.random() * 5, 0, -6 + Math.random() * 12);
@@ -909,13 +927,13 @@ renderer.domElement.addEventListener('click', e => {
 });
 
 /* ── 鏡頭 ───────────────────────────────── */
-const HOME = {theta:-0.06, phi:0.34, dist:RSPAN * 1.35 + 24, tx:CX, tz:CZ};
+const HOME = {theta:-0.05, phi:0.40, dist:RSPAN * 2.75 + 50, tx:CX, tz:CZ};
 const CAM = Object.assign({}, HOME);
 const TARGET = new THREE.Vector3(CX, 1.5, CZ);
 let anim = null;
 function applyCam(){
   CAM.phi = Math.max(0.16, Math.min(1.40, CAM.phi));
-  CAM.dist = Math.max(10, Math.min(RSPAN * 2.4, CAM.dist));
+  CAM.dist = Math.max(20, Math.min(RSPAN * 5, CAM.dist));
   TARGET.set(CAM.tx, 1.5, CAM.tz);
   camera.position.set(
     TARGET.x + CAM.dist * Math.sin(CAM.phi) * Math.sin(CAM.theta),
@@ -926,7 +944,8 @@ function applyCam(){
 /* 飛到一座島：這是「親民」的關鍵，一鍵就站到島邊 */
 function flyTo(nd){
   const a = {tx:CAM.tx, tz:CAM.tz, d:CAM.dist, phi:CAM.phi};
-  const b = {tx:nd.x, tz:nd.z, d:nd.r * 3.4 + 8, phi:0.95};
+  // 長焦之後要拉遠兩倍才是同樣的取景
+  const b = {tx:nd.x, tz:nd.z, d:nd.r * 6.9 + 16, phi:0.95};
   const t0 = performance.now(), me = anim = {};
   (function step(now){
     if (anim !== me) return;
