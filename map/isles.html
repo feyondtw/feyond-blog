@@ -1356,9 +1356,18 @@ let shownIsle = null;           // 只有打開的那座島會露出品項號碼
 const v3 = new THREE.Vector3();
 function placeTags(){
   const W = innerWidth, H = innerHeight, vis = [];
+  /* 島在畫面上太小時，第二層的號碼先收起來：擠成一團讀不了，
+     硬要避讓就會像之前那樣連成一串掉進海裡 */
+  let itemsOn = false;
+  if (shownIsle){
+    v3.set(shownIsle.x, 0, shownIsle.z).project(camera);
+    const cx = v3.x, cy = v3.y;
+    v3.set(shownIsle.x + shownIsle.R, 0, shownIsle.z).project(camera);
+    itemsOn = Math.hypot((v3.x - cx) * W / 2, (v3.y - cy) * H / 2) > 150;
+  }
   pins.forEach(p => {
     v3.copy(p.at).project(camera);
-    const ok = v3.z < 1 && (p.kind === 'isle' || p.isle === shownIsle);
+    const ok = v3.z < 1 && (p.kind === 'isle' || (p.isle === shownIsle && itemsOn));
     /* 進到第二層時，那座島的第一層名牌換成整塊島色，當這一層的標題 */
     if (p.kind === 'isle') p.tag.classList.toggle('cur', p.isle === shownIsle);
     p.tag.classList.toggle('off', !ok);
@@ -1369,6 +1378,7 @@ function placeTags(){
   vis.forEach(v => {
     v.w = v.p.tag.offsetWidth || (v.p.kind === 'isle' ? 190 : 34);
     v.h = v.p.tag.offsetHeight || (v.p.kind === 'isle' ? 42 : 34);
+    v.y0 = v.y;
   });
   vis.sort((a, b) => a.y - b.y);
   for (let pass = 0; pass < 3; pass++)
@@ -1376,8 +1386,11 @@ function placeTags(){
       for (let j = 0; j < i; j++){
         const A = vis[i], B = vis[j];
         if (Math.abs(A.x - B.x) < (A.w + B.w) / 2 + 6 &&
-            Math.abs(A.y - B.y) < (A.h + B.h) / 2 + 4)
+            Math.abs(A.y - B.y) < (A.h + B.h) / 2 + 4){
           A.y = B.y + (A.h + B.h) / 2 + 4;
+          /* 號碼章最多讓 18px，讓不開就容許一點重疊，絕不離開原位太遠 */
+          if (A.p.kind === 'item' && A.y - A.y0 > 18) A.y = A.y0 + 18;
+        }
       }
   pins.forEach(p => { if (p.stem) p.stem.classList.add('off'); });
   vis.forEach(({p, x, y}) => {
