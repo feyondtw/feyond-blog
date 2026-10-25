@@ -781,13 +781,36 @@ const SCENE = {
       });
       return tg;
     };
-    [[0.55, -0.15, yA, 1.15], [-0.05, 0.62, yA, 0.95], [-0.3, -0.22, yB, 1.0]]
-      .forEach(([fx, fz, y, s]) => {
-        const f = frank();
-        f.position.set(fx * top.r, y, fz * top.r);
-        f.rotation.y = rnd() * 6.28; f.scale.setScalar(s);
-        near.add(f);
-      });
+    /* 沒藥樹：比乳香更矮，灰樹皮，枝條細而多、往上斜伸，葉子很碎 */
+    const myrrh = () => {
+      const tg = new THREE.Group();
+      tg.add(cyl(0.14, 0.22, 0.6, 7, 0x9A9488, 0, 0.3, 0));
+      for (let i = 0; i < 7; i++){
+        const a = i / 7 * 6.28;
+        const br = cyl(0.035, 0.06, 0.85, 5, 0x8E887C,
+          Math.cos(a) * 0.22, 0.85, Math.sin(a) * 0.22);
+        br.rotation.z = Math.cos(a) * 0.6; br.rotation.x = -Math.sin(a) * 0.6;
+        tg.add(br);
+        tg.add(ball(0.12, i % 2 ? 0x5F7A48 : 0x6E8A52,
+          Math.cos(a) * 0.5, 1.22, Math.sin(a) * 0.5));
+      }
+      return tg;
+    };
+
+    /* 第二層只有這一處：一個小植栽台，圍住凝脂島的主角——乳香與沒藥。
+       墊高一點自然成為焦點，其餘地面整片留給人、帳篷與陶罐。 */
+    const GX = 0.5, GZ = -0.38, GR = 0.22;
+    const bed = slab(blobShape(top.r * GR, 10, 0.1, rnd), 0.45, 0xB58A5A, 0xC9B79A, yA);
+    bed.position.set(GX * top.r, 0, GZ * top.r);
+    near.add(bed);
+    const yG = yA + 0.45;
+    [[0, 0, 'f', 1.0], [0.11, 0.08, 'f', 0.8], [-0.1, 0.06, 'f', 0.85],
+     [0.06, -0.11, 'm', 0.95], [-0.08, -0.08, 'm', 0.8]].forEach(([dx, dz, k, s]) => {
+      const tr = k === 'f' ? frank() : myrrh();
+      tr.position.set((GX + dx) * top.r, yG, (GZ + dz) * top.r);
+      tr.rotation.y = rnd() * 6.28; tr.scale.setScalar(s * 0.85);
+      near.add(tr);
+    });
 
     /* 椰棗：細高的分節樹幹、垂下來的長葉、一串串橘色果實 */
     const datePalm = () => {
@@ -820,7 +843,7 @@ const SCENE = {
 
     /* 陶罐：一群一群擺，大小高矮不一 */
     const POT = [0xB9774A, 0xC98A5A, 0xA0623E, 0xD49B6A];
-    [[-0.12, -0.5, yA], [0.28, 0.12, yA], [-0.42, -0.25, yB]].forEach(([fx, fz, y], gi) => {
+    [[0.1, -0.5, yA], [0.28, 0.12, yA], [-0.5, -0.2, yA]].forEach(([fx, fz, y], gi) => {
       const n = 3 + Math.floor(rnd() * 3);
       for (let i = 0; i < n; i++){
         const a = rnd() * 6.28, rr = rnd() * 0.7;
@@ -838,7 +861,7 @@ const SCENE = {
 
     /* 帳篷：三頂，大小不一，門口朝外 */
     const TENT = [[0xC4714B, 0x9E5536], [0xE6D6B8, 0xBFA987], [0x8E5A3C, 0x6E4430]];
-    [[0.42, -0.52, 1.0], [-0.74, 0.28, 0.85], [-0.14, -0.04, 0.8]].forEach(([fx, fz, sc], i) => {
+    [[-0.4, -0.6, 0.9], [-0.74, 0.28, 0.85], [-0.12, -0.05, 0.8]].forEach(([fx, fz, sc], i) => {
       const tg = new THREE.Group();
       const [c1, c2] = TENT[i % TENT.length];
       tg.add(cone(1.7, 1.9, 6, c1, 0, 0.95, 0));
