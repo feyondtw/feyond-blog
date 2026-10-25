@@ -50,8 +50,8 @@ svg{display:block;width:100%;height:100%}
 .spot .cap{font-family:var(--sans);font-size:13px;font-weight:500;fill:var(--ink);
   text-anchor:middle;letter-spacing:.06em;
   paint-order:stroke;stroke:var(--paper);stroke-width:4px;stroke-linejoin:round}
-.spot .sub{font-family:var(--latin);font-size:11px;fill:var(--faint);
-  text-anchor:middle;letter-spacing:.1em;font-style:italic;
+.spot .sub{font-family:var(--sans);font-size:11px;fill:var(--faint);
+  text-anchor:middle;letter-spacing:.08em;
   paint-order:stroke;stroke:var(--paper);stroke-width:3.5px;stroke-linejoin:round}
 .spot:hover .cap{fill:var(--brick)}
 .spot .glyph{transition:transform .18s}
@@ -395,7 +395,7 @@ spots.forEach((g, i) => {
   cap.textContent = txt(o.name);
   g.appendChild(cap);
   const sub = mk('text', {class:'sub'});
-  sub.textContent = o.items.length + (o.items.length > 1 ? ' kinds' : ' kind');
+  sub.textContent = o.items.length + ' 種';
   g.appendChild(sub);
   g.appendChild(mk('circle', {class:'pinring', cx:0, cy:0, r:7}));
   g.appendChild(mk('circle', {class:'pindot' + (low(o) ? ' low' : ''), cx:0, cy:0, r:7}));
@@ -411,55 +411,90 @@ spots.forEach((g, i) => {
 /* 每次縮放都重排一次：在螢幕座標裡把標註推開，
    引線仍然拉回真實座標，位置不會騙人。 */
 function layout(){
-  const W = host.clientWidth || 1, u = VB.w / W;          // 一個像素 = u 個使用者單位
+  const W = host.clientWidth || 1, H = host.clientHeight || 1, u = VB.w / W;   // 一個像素 = u 個使用者單位
   const far = VB.w > 150;                                 // 太遠就只留圖示與圓點
   const vis = [];
   spots.forEach(g => {
     const sx = (g.__x - VB.x) / u, sy = (g.__y - VB.y) / u;
-    const on = sx > -80 && sy > -80 && sx < W + 80 && sy < host.clientHeight + 80;
+    const on = sx > -40 && sy > -40 && sx < W + 40 && sy < H + 40;
     g.style.display = on ? '' : 'none';
-    if (on) vis.push({g, sx, sy, ox:0, oy:-26});
-  });
-  for (let pass = 0; pass < 50; pass++)
-    for (let i = 0; i < vis.length; i++)
-      for (let j = i + 1; j < vis.length; j++){
-        const a = vis[i], b = vis[j];
-        const dx = (b.sx + b.ox) - (a.sx + a.ox), dy = (b.sy + b.oy) - (a.sy + a.oy);
-        const d = Math.hypot(dx, dy) || 0.01;
-        const need = far ? 30 : 74;
-        if (d < need){
-          const p = (need - d) / 2 / d;
-          a.ox -= dx * p; a.oy -= dy * p;
-          b.ox += dx * p; b.oy += dy * p;
-        }
-      }
-  vis.forEach(({g, ox, oy}) => {
+    if (!on) return;
     const q = g.__parts;
+    if (!g.__tw){ try { g.__tw = q.cap.getComputedTextLength(); } catch (e) {} if (!g.__tw) g.__tw = txt(g.__o.name).length * 14; }
+    /* 標註區塊（圖示＋地名＋種數）預設放在圓點正上方，不再壓在圓點上 */
+    vis.push({g, sx, sy, cx:0, cy:-52, hw:Math.max(20, g.__tw / 2 + 6), n:g.__o.items.length});
+  });
+  const TOP = 29, BOT = 33;                                // 區塊中心往上 29、往下 33
+  const rectOf = v => [v.sx + v.cx - v.hw, v.sy + v.cy - TOP, v.sx + v.cx + v.hw, v.sy + v.cy + BOT];
+  const hit = (a, b) => a[0] < b[2] && b[0] < a[2] && a[1] < b[3] && b[1] < a[3];
+  if (!far){
+    for (let pass = 0; pass < 60; pass++){
+      /* 標註互推 */
+      for (let i = 0; i < vis.length; i++) for (let j = i + 1; j < vis.length; j++){
+        const A = vis[i], B = vis[j], ra = rectOf(A), rb = rectOf(B);
+        if (!hit(ra, rb)) continue;
+        const ox = Math.min(ra[2], rb[2]) - Math.max(ra[0], rb[0]), oy = Math.min(ra[3], rb[3]) - Math.max(ra[1], rb[1]);
+        if (ox < oy){ const d = (ra[0] + ra[2] < rb[0] + rb[2] ? -1 : 1) * ox / 2; A.cx += d; B.cx -= d; }
+        else { const d = (ra[1] + ra[3] < rb[1] + rb[3] ? -1 : 1) * oy / 2; A.cy += d; B.cy -= d; }
+      }
+      /* 標註不能蓋住任何一個圓點（圓點固定在真實座標） */
+      vis.forEach(A => vis.forEach(P => {
+        const r = rectOf(A), pr = [P.sx - 10, P.sy - 10, P.sx + 10, P.sy + 10];
+        if (!hit(r, pr)) return;
+        const up = pr[1] - r[3], dn = pr[3] - r[1];      // 往上推或往下推，取小的
+        A.cy += Math.abs(up) < Math.abs(dn) ? up : dn;
+      }));
+      /* 不能出畫面 */
+      vis.forEach(A => {
+        const r = rectOf(A);
+        if (r[0] < 6) A.cx += 6 - r[0]; if (r[2] > W - 6) A.cx -= r[2] - (W - 6);
+        if (r[1] < 6) A.cy += 6 - r[1]; if (r[3] > H - 6) A.cy -= r[3] - (H - 6);
+      });
+    }
+  }
+  /* 推完還是擠在一起的：品項多的先放，放不下的只留圓點，不硬疊 */
+  const shown = [];
+  vis.slice().sort((a, b) => b.n - a.n).forEach(v => {
+    const r = rectOf(v);
+    const ok = !far && !shown.some(s2 => hit(r, rectOf(s2))) &&
+      !vis.some(P => hit(r, [P.sx - 10, P.sy - 10, P.sx + 10, P.sy + 10])) &&
+      Math.hypot(v.cx, v.cy) < 170;
+    v.show = ok; if (ok) shown.push(v);
+  });
+  layout.last = vis;                              // 給驗證用
+  vis.forEach(v => {
+    const {g, cx, cy} = v, q = g.__parts;
     g.setAttribute('transform', `translate(${g.__x} ${g.__y}) scale(${u})`);
-    q.lead.setAttribute('d', `M0 0L${ox.toFixed(1)} ${(oy + 14).toFixed(1)}`);
-    q.ic.setAttribute('transform',
-      `translate(${(ox - 15).toFixed(1)} ${(oy - 16).toFixed(1)}) scale(0.78)`);
-    q.cap.setAttribute('x', ox.toFixed(1)); q.cap.setAttribute('y', (oy + 26).toFixed(1));
-    q.sub.setAttribute('x', ox.toFixed(1)); q.sub.setAttribute('y', (oy + 38).toFixed(1));
-    q.cap.style.display = far ? 'none' : '';
-    q.sub.style.display = far ? 'none' : '';
+    /* 引線：從圓點邊緣拉到區塊最近的一邊 */
+    const ty = cy > 0 ? cy - TOP : cy + BOT, l = Math.hypot(cx, ty) || 1;
+    q.lead.setAttribute('d', `M${(cx / l * 8).toFixed(1)} ${(ty / l * 8).toFixed(1)}L${cx.toFixed(1)} ${ty.toFixed(1)}`);
+    q.ic.setAttribute('transform', `translate(${(cx - 15).toFixed(1)} ${(cy - TOP).toFixed(1)}) scale(0.78)`);
+    q.cap.setAttribute('x', cx.toFixed(1)); q.cap.setAttribute('y', (cy + 14).toFixed(1));
+    q.sub.setAttribute('x', cx.toFixed(1)); q.sub.setAttribute('y', (cy + 28).toFixed(1));
+    const d = v.show ? '' : 'none';
+    q.cap.style.display = d; q.sub.style.display = d; q.lead.style.display = d;
+    q.ic.style.display = (v.show || far) ? '' : 'none';
+    if (far) q.ic.setAttribute('transform', 'translate(-15 -34) scale(0.78)');
   });
 }
 
 /* ── 平移與縮放 ────────────────────────────────────── */
 let VB = {x:-180, y:-84, w:360, h:168};
+const ASP = () => (host.clientHeight || 1) / (host.clientWidth || 1);
 function apply(){
   VB.w = Math.max(26, Math.min(360, VB.w));
-  VB.h = VB.w * 168 / 360;
+  /* 可視範圍的長寬比跟著地圖框走（原本寫死 360:168，框比較高時 slice 會改用高度
+     縮放，標註就整個放大兩倍、位置也算錯） */
+  VB.h = VB.w * ASP();
   VB.x = Math.max(-180, Math.min(180 - VB.w, VB.x));
-  VB.y = Math.max(-84, Math.min(84 - VB.h, VB.y));
+  VB.y = VB.h >= 168 ? -VB.h / 2 : Math.max(-84, Math.min(84 - VB.h, VB.y));
   svg.setAttribute('viewBox', `${VB.x} ${VB.y} ${VB.w} ${VB.h}`);
   if (typeof layout === 'function') layout();
 }
 function goTo(lng, lat, w, ms){
   const a = {x:VB.x, y:VB.y, w:VB.w};
   const [tx, ty] = prj(lng, lat);
-  const b = {w, x:tx - w / 2, y:ty - w * 168 / 360 / 2};
+  const b = {w, x:tx - w / 2, y:ty - w * ASP() / 2};
   const t0 = performance.now();
   (function step(now){
     const k = Math.min(1, (now - t0) / (ms || 800));
@@ -493,10 +528,11 @@ host.addEventListener('wheel', e => {
   const fx = (e.clientX - r.left) / r.width, fy = (e.clientY - r.top) / r.height;
   const cx = VB.x + VB.w * fx, cy = VB.y + VB.h * fy;
   const nw = Math.max(26, Math.min(360, VB.w * (1 + e.deltaY * 0.0014)));
-  VB.x = cx - nw * fx; VB.y = cy - (nw * 168 / 360) * fy; VB.w = nw;
+  VB.x = cx - nw * fx; VB.y = cy - (nw * ASP()) * fy; VB.w = nw;
   apply();
 }, {passive:false});
 apply();
+addEventListener('resize', apply);          // 框的長寬比變了，重算可視範圍與標註
 
 document.getElementById('t-med').onclick = () => goTo(12, 40, 72);
 document.getElementById('t-asia').onclick = () => goTo(112, 10, 90);
