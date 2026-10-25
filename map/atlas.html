@@ -385,6 +385,17 @@ host.appendChild(svg);
 
 const gSea = mk('g', {}), gLand = mk('g', {}), gGrat = mk('g', {}),
       gFill = mk('g', {class:'filler'}), gSpot = mk('g', {});
+/* 依國家中心判斷地形帶，台地顏色跟著變：[草地上緣, 草地下緣, 崖壁] */
+const BIOME = {
+  polar:   ['#E6EADB', '#CDD6C2', '#A79A86'],
+  boreal:  ['#C8D9A6', '#9DB884', '#8E7458'],
+  temp:    ['#D6E2A0', '#B6CC7E', '#A8815A'],
+  med:     ['#E0E0A4', '#C4C682', '#B08658'],
+  steppe:  ['#E8E2B0', '#D2C88E', '#B48A5C'],
+  desert:  ['#F0DFAE', '#E2C688', '#B9734A'],
+  savanna: ['#E2DE94', '#C8C870', '#AE7A4E'],
+  rain:    ['#A9CC84', '#7EAA62', '#7E5E40']
+};
 const gRelief = mk('g', {});
 svg.append(gSea, gGrat, gLand, gRelief, gFill, gSpot);
 {
@@ -392,7 +403,7 @@ svg.append(gSea, gGrat, gLand, gRelief, gFill, gSpot);
   defs.innerHTML = [
     ['gLeaf', '#D9DE6A', '#7E9A3E'], ['gPine', '#6E9A5C', '#2E5A3E'], ['gTeal', '#5E8A7A', '#24484A'],
     ['gSage', '#B9CDB0', '#7E9A86'], ['gGold', '#F2D86A', '#D4A23C'], ['gGrass', '#D6E2A0', '#B6CC7E']
-  ].map(([id, a, b]) => `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`).join('') +
+  ].concat(Object.keys(BIOME).map(k => ['gB_' + k, BIOME[k][0], BIOME[k][1]])).map(([id, a, b]) => `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`).join('') +
   /* 原型範圍：地中海一帶 */
   '';
   svg.appendChild(defs);                    // <defs> 放哪裡都可以，不會畫出來
@@ -422,9 +433,31 @@ function countryCont(c){
     let a = 0; for (let k = 0; k < ring.length; k++){ const p = ring[k], q = ring[(k + 1) % ring.length]; a += p[0] * q[1] - q[0] * p[1]; }
     if (Math.abs(a) > ba){ ba = Math.abs(a); best = ring; }
   });
-  if (!best) return 'as';
+  if (!best) return ['as', 0, 0];
   let x = 0, y = 0; best.forEach(([lng, lat]) => { x += lng; y += lat; });
-  return contOf({lng:x / best.length, lat:y / best.length});
+  const lng = x / best.length, lat = y / best.length;
+  return [contOf({lng, lat}), lng, lat];
+}
+function biomeOf(lng, lat){
+  const a = Math.abs(lat);
+  if (a > 64) return 'polar';
+  if (a > 50) return 'boreal';
+  /* 沙漠：撒哈拉、阿拉伯、伊朗、塔爾、澳洲內陸、美墨西南、喀拉哈里、阿塔卡馬、戈壁 */
+  /* 個別修正：摩洛哥北部地中海型、南非高原草原、伊朗高原、墨西哥高原、印度次大陸 */
+  if (lat > 26 && lat < 36 && lng > -14 && lng < -1) return lat > 30 ? 'med' : 'steppe';
+  if (lat < -22 && lat > -35 && lng > 16 && lng < 33) return 'steppe';
+  if (lat > 25 && lat < 40 && lng > 44 && lng < 63) return 'steppe';
+  if (lat > 16 && lat < 33 && lng > -118 && lng < -96 && lat < 28) return 'steppe';
+  if (lat > 8 && lat < 30 && lng > 68 && lng < 90) return 'savanna';
+  if ((lat > 15 && lat < 33 && lng > -18 && lng < 62) || (lat > 24 && lat < 30 && lng > 66 && lng < 76) ||
+      (lat < -18 && lat > -32 && lng > 118 && lng < 142) || (lat > 24 && lat < 36 && lng > -118 && lng < -103) ||
+      (lat < -18 && lat > -30 && lng > 12 && lng < 26) || (lat < -15 && lat > -30 && lng > -72 && lng < -68) ||
+      (lat > 38 && lat < 48 && lng > 90 && lng < 115)) return 'desert';
+  if ((lat > 35 && lat < 55 && lng > 46 && lng < 90) || (lat > 40 && lat < 50 && lng > 90 && lng < 120)) return 'steppe';
+  if (lat > 30 && lat < 45 && lng > -10 && lng < 40) return 'med';
+  if (a < 10) return 'rain';
+  if (a < 23) return 'savanna';
+  return 'temp';
 }
 C50.forEach((c, i) => {
   let d = '';
@@ -437,10 +470,10 @@ C50.forEach((c, i) => {
     }).join('L') + 'Z';
   });
   if (d){
-    const ct = countryCont(c);
+    const [ct, cx0, cy0] = countryCont(c), bm = biomeOf(cx0, cy0);
     const el = mk('path', {class:'land' + (i % 3 === 0 ? ' b' : ''), d, 'fill-rule':'evenodd'});
     gLand.appendChild(el); LANDS.push({el, ct});
-    (RELIEF_D[ct] = RELIEF_D[ct] || []).push(d);
+    ((RELIEF_D[ct] = RELIEF_D[ct] || {})[bm] = RELIEF_D[ct][bm] || []).push(d);
   }
 });
 
@@ -449,10 +482,13 @@ C50.forEach((c, i) => {
    分洲建群組，選洲時其他洲才能一起淡下去。 */
 const RELIEF_G = {};
 Object.keys(RELIEF_D).forEach(ct => {
-  const grp = mk('g', {}), all = RELIEF_D[ct].join('');
-  grp.appendChild(mk('path', {d:all, 'fill-rule':'evenodd', fill:'#A8815A', transform:'translate(0 0.45)'}));
-  grp.appendChild(mk('path', {d:all, 'fill-rule':'evenodd', fill:'url(#gGrass)', stroke:'#E4EDB4',
-    'stroke-width':'1.2', 'vector-effect':'non-scaling-stroke'}));
+  const grp = mk('g', {});
+  /* 先畫這一洲所有崖壁，再畫草地，鄰國的草地才不會被別國崖壁蓋住 */
+  const bms = Object.keys(RELIEF_D[ct]);
+  bms.forEach(bm => grp.appendChild(mk('path', {d:RELIEF_D[ct][bm].join(''), 'fill-rule':'evenodd',
+    fill:BIOME[bm][2], transform:'translate(0 0.45)'})));
+  bms.forEach(bm => grp.appendChild(mk('path', {d:RELIEF_D[ct][bm].join(''), 'fill-rule':'evenodd',
+    fill:`url(#gB_${bm})`, stroke:'#F2F4D8', 'stroke-opacity':'.75', 'stroke-width':'1.2', 'vector-effect':'non-scaling-stroke'})));
   gRelief.appendChild(grp); RELIEF_G[ct] = grp;
 });
 
