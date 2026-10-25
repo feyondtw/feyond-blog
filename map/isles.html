@@ -696,7 +696,7 @@ function doll(shirt, style){
                style === 'muslim_m' || style === 'muslim_f' ||
                style === 'sari' || style === 'egypt_f' || style === 'maori' ||
                style === 'berber_m' || style === 'berber_f' ||
-               style === 'muslim_cap' || style === 'hindu' || style === 'nepali_f';
+               style === 'muslim_cap' || style === 'hindu' || style === 'nepali_f' || style === 'tealady';
   const skirt = style === 'rosemaid';
   const body = robe
     ? cyl(0.17, 0.26, 0.56, 8, shirt, 0, 0.69, 0)
@@ -769,6 +769,12 @@ function doll(shirt, style){
     g.add(box(0.12, 0.55, 0.38, 0xFBF7EE, 0.07, 0.72, 0.02).rotateZ(-0.5));
     [-0.03, 0, 0.03].forEach(y => g.add(box(0.14, 0.012, 0.01, 0xFBF7EE, 0, 1.06 + y, 0.27)));
     g.add(box(0.025, 0.06, 0.012, 0xC7243A, 0, 1.06, 0.275));
+  } else if (style === 'tealady'){                // 喝下午茶的婦女：寬邊草帽綁緞帶、帽上一朵花、珍珠項鍊
+    g.add(cyl(0.42, 0.42, 0.04, 14, 0xF2E3C0, 0, 1.17, 0));
+    g.add(cyl(0.2, 0.22, 0.16, 12, 0xF2E3C0, 0, 1.25, 0));
+    g.add(cyl(0.225, 0.225, 0.05, 12, 0xD98A9A, 0, 1.2, 0));
+    g.add(ball(0.07, 0xE85A7A, 0.18, 1.27, 0.08));
+    for (let k = 0; k < 7; k++){ const a = -0.9 + k * 0.3; g.add(ball(0.025, 0xFBF7EE, Math.sin(a) * 0.17, 0.9, Math.cos(a) * 0.17)); }
   } else if (style === 'egypt_f'){                 // 埃及婦女：長袍、黑頭巾、頭頂一籃花
     const hj = ball(0.31, 0x2E2A2E, 0, 1.0, -0.03); hj.scale.set(1, 1.02, 1.1); g.add(hj);
     g.add(cyl(0.2, 0.3, 0.32, 9, 0x2E2A2E, 0, 0.8, -0.03));
@@ -2636,6 +2642,108 @@ const crossers = [];
     isle.near.add(t); placed.push([x, z]); OB.push({x, z, r:0.8});
   }
   isle.g.__treesN = placed.length;
+})();
+
+/* ── 草本島：婦女喝下午茶、工人採收（老闆清單） ─────────── */
+(function herbPeople(){
+  const isle = ISLES.find(i => i.part === 'herb'); if (!isle || !isle.near) return;
+  const g = isle.g, R = isle.R * 0.92, yA = 0.6, OB = g.__ob || [], rv = g.__river, Z = g.__zones || {};
+  const ground = g.children[5]; g.updateMatrixWorld(true);
+  const onGround = (x, z) => { _rc.set(new THREE.Vector3(isle.x + x, 20, isle.z + z), _DOWN); return _rc.intersectObject(ground, true).length > 0; };
+  const riverD = (x, z) => {
+    if (!rv) return 99; let m = Math.hypot(x - rv.ex, z - rv.ez) - 0.8;
+    for (let k = 0; k <= 20; k++){
+      const t = k / 20, rx = (1 - t) * (1 - t) * rv.sx + 2 * (1 - t) * t * rv.mx + t * t * rv.ex,
+            rz = (1 - t) * (1 - t) * rv.sz + 2 * (1 - t) * t * rv.mz + t * t * rv.ez;
+      m = Math.min(m, Math.hypot(x - rx, z - rz) - 0.3);
+    }
+    return m;
+  };
+  const bridgeAngs = BRIDGES.filter(B => B.a === isle || B.b === isle).map(B => B.a === isle ? B.ax : B.ax + Math.PI);
+  const clearOf = (x, z, rad) => !OB.some(o => Math.hypot(x - o.x, z - o.z) < o.r + rad) && riverD(x, z) > rad &&
+    !bridgeAngs.some(b => { const a = Math.atan2(z, x); return Math.abs(Math.atan2(Math.sin(a - b), Math.cos(a - b))) < 0.35 && Math.hypot(x, z) > R * 0.55; });
+
+  /* 下午茶：在空地裡找一塊夠大的地方（半徑 1.3），越靠島中央越好 */
+  let best = null, bd = 1e9;
+  for (let x = -R; x <= R; x += 0.35) for (let z = -R; z <= R; z += 0.35){
+    if (!clearOf(x, z, 1.3)) continue;
+    if (![0, 1, 2, 3, 4, 5].every(q => onGround(x + Math.cos(q * 1.05) * 1.3, z + Math.sin(q * 1.05) * 1.3))) continue;
+    const d = Math.hypot(x, z); if (d < bd){ bd = d; best = [x, z]; }
+  }
+  if (best){
+    const [tx, tz] = best, tg = new THREE.Group();
+    tg.add(cyl(0.55, 0.55, 0.05, 18, 0xFBF7EE, 0, 0.7, 0));                 // 白色圓桌
+    tg.add(cyl(0.05, 0.08, 0.68, 8, 0xE6E0D2, 0, 0.34, 0));
+    tg.add(cyl(0.25, 0.25, 0.03, 14, 0xE6E0D2, 0, 0.02, 0));
+    tg.add(ball(0.13, 0xFBF7EE, -0.15, 0.84, 0)); tg.add(cyl(0.03, 0.03, 0.14, 5, 0xFBF7EE, -0.02, 0.86, 0).rotateZ(-1.1));  // 茶壺
+    tg.add(ball(0.04, 0xD98A9A, -0.15, 0.98, 0));
+    [[0.2, 0.18], [0.22, -0.2], [-0.05, 0.3]].forEach(([cx, cz]) => {        // 茶杯與小碟
+      tg.add(cyl(0.08, 0.08, 0.015, 10, 0xFBF7EE, cx, 0.73, cz));
+      tg.add(cyl(0.045, 0.035, 0.07, 8, 0xFBF7EE, cx, 0.77, cz));
+    });
+    [0.76, 0.9, 1.04].forEach((y, k) => {                                     // 三層點心架
+      tg.add(cyl(0.16 - k * 0.03, 0.16 - k * 0.03, 0.015, 12, 0xFBF7EE, 0.05, y, -0.05));
+      [0, 2.1, 4.2].forEach(a => tg.add(ball(0.035, [0xF4C2CE, 0xF2D43A, 0xC9A06A][k], 0.05 + Math.cos(a) * 0.09, y + 0.03, -0.05 + Math.sin(a) * 0.09)));
+    });
+    tg.add(cyl(0.008, 0.008, 0.32, 4, 0xC9A97E, 0.05, 0.9, -0.05));
+    const SEATS = [0.4, 2.5, 4.4];
+    SEATS.forEach(a => {                                                       // 三張白椅
+      const cx = Math.cos(a) * 0.95, cz = Math.sin(a) * 0.95, ch = new THREE.Group();
+      ch.add(box(0.36, 0.05, 0.36, 0xFBF7EE, 0, 0.42, 0));
+      ch.add(box(0.36, 0.42, 0.05, 0xFBF7EE, 0, 0.66, -0.17));
+      [[-0.15, -0.15], [0.15, -0.15], [-0.15, 0.15], [0.15, 0.15]].forEach(([lx, lz]) => ch.add(box(0.04, 0.42, 0.04, 0xE6E0D2, lx, 0.21, lz)));
+      ch.position.set(cx, 0, cz); ch.rotation.y = Math.atan2(-cx, -cz) + Math.PI; tg.add(ch);
+    });
+    tg.position.set(tx, yA, tz); isle.near.add(tg);
+    /* 婦女：兩位站在椅邊端茶、面向桌子；一位剛走過來 */
+    [[0xF4C2CE, 0.4], [0xB9D4E8, 2.5]].forEach(([c, a]) => {
+      const d = doll(c, 'tealady');
+      const x = tx + Math.cos(a) * 1.25, z = tz + Math.sin(a) * 1.25;
+      d.position.set(x, yA, z); d.rotation.y = Math.atan2(tx - x, tz - z);
+      d.add(cyl(0.045, 0.035, 0.07, 8, 0xFBF7EE, 0.24, 0.7, 0.14));             // 手上端著茶杯
+      isle.near.add(d);
+    });
+    { const d = doll(0xE6D4F0, 'tealady'), a = 4.4, x = tx + Math.cos(a) * 1.25, z = tz + Math.sin(a) * 1.25;
+      d.position.set(x, yA, z); d.rotation.y = Math.atan2(tx - x, tz - z); isle.near.add(d); }
+    OB.push({x:tx, z:tz, r:1.3});
+    g.__tea = best;
+  }
+
+  /* 採收的工人：沿香草花圃外緣來回走，提布包；一人蹲在小河邊剪百里香 */
+  const ZG = Z.herbgarden;
+  if (ZG){
+    const c0 = Math.atan2(-ZG.z, -ZG.x);
+    outer:
+    for (const off of [0, 0.5, -0.5, 1, -1, 1.5, -1.5, 2, -2, 2.6, -2.6, 3.14])
+    for (let span = 2.0; span >= 0.8; span -= 0.4){
+      const a0 = c0 + off;
+      const pts = [];
+      for (let k = 0; k <= 14; k++){
+        const a = a0 - span / 2 + span * k / 14, rr = ZG.r + 0.5;
+        pts.push([ZG.x + Math.cos(a) * rr, ZG.z + Math.sin(a) * rr]);
+      }
+      const ok = pts.every(([x, z]) => onGround(x, z) && riverD(x, z) > 0.3 &&
+        !OB.some(o => Math.abs(o.x - ZG.x) + Math.abs(o.z - ZG.z) > 0.01 && Math.hypot(x - o.x, z - o.z) < o.r + 0.3));
+      if (!ok) continue;
+      const P = pts.map(([x, z]) => new THREE.Vector3(isle.x + x, yA, isle.z + z));
+      const path = P.concat(P.slice(1, -1).reverse());
+      [[0x7FAE66, 0], [0xD9C6A0, path.length / 2]].forEach(([c, t]) => {
+        const d = doll(c, 'herbalist');
+        d.userData = {path, t, seg:path[0].distanceTo(path[1]), sp:0.6, y:yA};
+        world.add(d); folk.push(d);
+      });
+      g.__harvest = path; break outer;
+    }
+  }
+  const ZB = Z.brook;
+  if (ZB){
+    for (let a = 0; a < 6.28; a += 0.3){
+      const x = ZB.x + Math.cos(a) * (ZB.r + 0.4), z = ZB.z + Math.sin(a) * (ZB.r + 0.4);
+      if (!onGround(x, z) || !clearOf(x, z, 0.35)) continue;
+      const d = doll(0xC9A06A, 'farmer'); d.position.set(x, yA, z); d.rotation.y = Math.atan2(ZB.x - x, ZB.z - z);
+      d.scale.y = 0.85; isle.near.add(d); OB.push({x, z, r:0.35}); g.__brookWorker = [x, z]; break;
+    }
+  }
 })();
 
 /* ── 海 ─────────────────────────────────────────────── */
