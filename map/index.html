@@ -38,7 +38,7 @@
   --sans:"Noto Sans TC","PingFang TC",system-ui,sans-serif;
 }
 *{box-sizing:border-box}
-html,body{height:100%}
+html,body{height:100%;height:100dvh}
 body{
   margin:0; background:var(--ground); color:var(--ink);
   font-family:var(--serif); font-weight:300; line-height:1.75;
@@ -47,7 +47,7 @@ body{
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:2px}
 
-.app{height:100%;display:grid;grid-template-columns:1fr minmax(340px,400px)}
+.app{height:100%;height:100dvh;display:grid;grid-template-columns:1fr minmax(340px,400px)}
 
 /* ── stage ───────────────────────────────── */
 .stage{position:relative;overflow:hidden;background:var(--ground);min-width:0}
@@ -298,6 +298,33 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   .list,.dbody{padding-left:1.1rem;padding-right:1.1rem}
   .dhead{padding:1.1rem 1.1rem .8rem}
 }
+/* 觸控沒有 hover，小點要好按：外面套一圈看不見的大命中區 */
+@media (hover:none){
+  .globe-svg .dot .tap{fill:none;pointer-events:all}
+  .globe-svg .cn .hit{transform:scale(1.35)}
+}
+
+/* 手機：地球佔上半、清單在下半。圖例讓位給地球，
+   按鈕縮成一列不換行，字卡維持貼底的抽屜。 */
+@media (max-width:560px){
+  .app{grid-template-rows:46dvh 1fr}
+  .brandmark{padding:.8rem .9rem;gap:.3rem}
+  .brandmark .mk{font-size:.62rem;letter-spacing:.28em}
+  .brandmark h1{font-size:1.05rem}
+  .brandmark .draft{font-size:.62rem;padding:.14rem .5rem}
+  .stagebtns{padding:.8rem .9rem;gap:.3rem;flex-wrap:nowrap}
+  .sbtn{font-size:.66rem;padding:.3rem .55rem;letter-spacing:.04em}
+  .sbtn.ico{width:1.7rem}
+  .legend{display:none}
+  .rhead{padding:.9rem .9rem 0}
+  .rhead h2{font-size:1.15rem}
+  .lede{font-size:.78rem}
+  .list,.dbody{padding-left:.9rem;padding-right:.9rem}
+  .dhead{padding:1rem 2.4rem .7rem .9rem}
+  .detail{max-height:70dvh}
+  .search{font-size:16px}
+}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -555,11 +582,12 @@ const gratPaths = GRAT.map(line => {
 const dotNodes = ORIGINS.map(o => {
   const g = mk('g', {class: 'dot' + (o.hero ? ' hero' : '') + (lowConf(o) ? ' low' : '') +
                              (isTW(o) ? ' tw' : ' os'), tabindex: '0', role: 'button'});
+  const tap = mk('circle', {class: 'tap', r: 17, fill: 'none'});
   const halo = mk('circle', {class: 'halo', r: o.hero ? 13 : 9});
   const dot = mk('circle', {class: 'core', r: o.hero ? 6 : 4.6});
   const lbl = mk('text', {class: 'lbl', x: o.hero ? 12 : 10, y: 4.5});
   lbl.textContent = txt(o.name);
-  g.append(halo, dot, lbl);
+  g.append(tap, halo, dot, lbl);
   g.addEventListener('click', () => select('origin', o.id, true));
   g.addEventListener('keydown', e => {
     if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); select('origin', o.id, true); }

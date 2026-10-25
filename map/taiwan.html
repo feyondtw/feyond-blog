@@ -35,8 +35,18 @@ canvas{display:block}
   font-family:var(--sans);font-size:.78rem;font-weight:500;letter-spacing:.04em;
   display:flex;align-items:center;gap:.4rem;transition:transform .16s,box-shadow .16s,opacity .2s
 }
-.tag:hover,.tag.on{transform:translate(-50%,-100%) scale(1.07);
+/* 十六處擠在一座島上，名牌全開會把島蓋掉。
+   平常只留一顆會發光的點，滑過去（或選中）才長出文字。 */
+.tag{background:transparent;box-shadow:none;padding:0;gap:0;
+  transition:gap .18s,padding .18s,background .18s,box-shadow .18s,opacity .2s}
+.tag .no,.tag .nm,.tag .n{max-width:0;opacity:0;overflow:hidden;
+  transition:max-width .22s,opacity .16s}
+.tag:hover,.tag.on{z-index:2;background:var(--cream);padding:.34rem .75rem;gap:.4rem;
   box-shadow:0 5px 18px rgba(42,39,36,.22)}
+.tag:hover .no,.tag:hover .nm,.tag:hover .n,
+.tag.on .no,.tag.on .nm,.tag.on .n{max-width:15rem;opacity:1}
+@media (hover:none){ .tag .dot{width:15px;height:15px;width:11px;height:11px;box-shadow:0 0 0 2.5px rgba(255,255,255,.8),0 0 11px 3px rgba(184,150,90,.5)}
+.tag:hover .dot,.tag.on .dot{width:6px;height:6px;box-shadow:none} .tag{padding:5px} }
 .tag .n{font-family:var(--latin);font-size:.74rem;color:var(--gold)}
 
 .tag .no{font-family:var(--latin);font-size:.74rem;font-weight:500;color:var(--gold);
@@ -45,7 +55,8 @@ canvas{display:block}
 .tag .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex:none}
 .tag.low .dot{background:var(--faint)}
 .tag::after{content:"";position:absolute;left:50%;top:100%;transform:translateX(-50%);
-  border:5px solid transparent;border-top-color:var(--cream)}
+  border:5px solid transparent;border-top-color:var(--cream);opacity:0;transition:opacity .16s}
+.tag:hover::after,.tag.on::after{opacity:1}
 .tag.off{opacity:0;pointer-events:none}
 body.notags .tag{opacity:0;pointer-events:none}
 
@@ -166,6 +177,19 @@ button.item:hover .zh{color:var(--gold)}
   .card{right:0;left:0;bottom:0;top:auto;transform:none;width:100%;
     max-height:60vh;border-radius:14px 14px 0 0}
   .hint{bottom:.8rem}
+}
+
+/* 小尺寸手機：控制列縮一排、提示收掉、字卡貼底留住地圖 */
+@media (max-width:560px){
+  .brand{padding:.75rem .9rem}
+  .brand h1{font-size:1.08rem}
+  .tools{padding:.75rem .9rem;gap:.3rem}
+  .tool,.seg button{font-size:.66rem;padding:.28rem .5rem}
+  .views{font-size:.66rem;gap:.55rem;bottom:2.6rem}
+  .hint{display:none}
+  .card{max-height:68dvh}
+  .card-h{padding:1.05rem 1.05rem .8rem}
+  .card-b{padding:.95rem 1.05rem 1.2rem}
 }
 </style>
 </head>
@@ -578,10 +602,21 @@ function doll(shirt){
   hd.position.y = 0.55;
   const hr = new THREE.Mesh(new THREE.SphereGeometry(0.132, 8, 6), mat(0x3A2E28));
   hr.position.set(0, 0.585, -0.015);
-  const l1 = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.18, 5), mat(0x4A5560));
-  l1.position.set(-0.05, 0.09, 0);
-  const l2 = l1.clone(); l2.position.x = 0.05;
+  /* 腳要能擺動，所以每一隻包一個以髖部為原點的 pivot，
+     腿往下掛一半、腳掌再掛到底——不然旋轉會變成繞著腿的中心轉。 */
+  const legMat = mat(0x4A5560), shoeMat = mat(0x3A2E28);
+  const leg = () => {
+    const pv = new THREE.Group();
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.18, 5), legMat);
+    m.position.y = -0.09;
+    const foot = new THREE.Mesh(new THREE.BoxGeometry(0.068, 0.042, 0.11), shoeMat);
+    foot.position.set(0, -0.18, 0.02);
+    pv.add(m, foot); return pv;
+  };
+  const l1 = leg(); l1.position.set(-0.05, 0.18, 0);
+  const l2 = leg(); l2.position.set(0.05, 0.18, 0);
   g.add(b, hd, hr, l1, l2);
+  g.__legs = [l1, l2];
   return g;
 }
 
@@ -672,7 +707,8 @@ const tagLayer = document.getElementById('tags');
 pins.forEach(p => {
   const b = document.createElement('button');
   b.className = 'tag' + (low(p.o) ? ' low' : '');
-  b.innerHTML = `<span class="no">${no(p.o)}</span><span class="dot"></span>${txt(p.o.name)}`;
+  b.innerHTML = `<span class="no">${no(p.o)}</span><span class="dot"></span>` +
+                  `<span class="nm">${txt(p.o.name)}</span>`;
   b.addEventListener('click', e => { e.stopPropagation(); open(p.o.id, true); });
   tagLayer.appendChild(b);
   p.tag = b;
@@ -693,8 +729,8 @@ function placeTags(){
   vis.sort((a, b) => a.y - b.y);
   for (let i = 1; i < vis.length; i++){
     for (let j = 0; j < i; j++){
-      if (Math.abs(vis[i].x - vis[j].x) < 104 && Math.abs(vis[i].y - vis[j].y) < 26){
-        vis[i].y = vis[j].y + 26;
+      if (Math.abs(vis[i].x - vis[j].x) < 22 && Math.abs(vis[i].y - vis[j].y) < 19){
+        vis[i].y = vis[j].y + 19;
       }
     }
   }
@@ -997,10 +1033,15 @@ function loop(now){
   folk.forEach(d => {
     const u = d.userData;
     u.a += u.sp * dt;
+    /* 步頻跟著實際走的線速度走，不然會踩碎步滑過去，像幽靈 */
+    u.ph = (u.ph || 0) + Math.abs(u.sp) * u.r * dt * 3.6;
+    const sw = Math.sin(u.ph);
     d.position.set(u.cx + Math.cos(u.a) * u.r,
-                   u.h + Math.abs(Math.sin(u.a * 22)) * 0.035,
+                   u.h + Math.abs(sw) * 0.03,
                    u.cz + Math.sin(u.a) * u.r);
     d.rotation.y = -u.a + (u.sp > 0 ? Math.PI / 2 : -Math.PI / 2);
+    if (d.__legs){ d.__legs[0].rotation.x = sw * 0.6;
+                   d.__legs[1].rotation.x = -sw * 0.6; }
   });
   steams.forEach(s => s.puffs.forEach(p => {
     p.userData.t = (p.userData.t + dt * 0.34) % 1;

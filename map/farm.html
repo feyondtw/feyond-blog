@@ -155,6 +155,18 @@ body.notags .tag{opacity:0;pointer-events:none}
     max-height:62vh;border-radius:14px 14px 0 0}
   .hint{bottom:.8rem}
 }
+/* 小尺寸手機：控制列縮一排、提示收掉、字卡貼底留住地圖 */
+@media (max-width:560px){
+  .brand{padding:.75rem .9rem}
+  .brand h1{font-size:1.08rem}
+  .tools{padding:.75rem .9rem;gap:.3rem}
+  .tool,.seg button{font-size:.66rem;padding:.28rem .5rem}
+  .views{font-size:.66rem;gap:.55rem;bottom:2.6rem}
+  .hint{display:none}
+  .card{max-height:68dvh}
+  .card-h{padding:1.05rem 1.05rem .8rem}
+  .card-b{padding:.95rem 1.05rem 1.2rem}
+}
 @media (prefers-reduced-motion:reduce){.tag{transition:none}}
 </style>
 </head>
@@ -718,8 +730,20 @@ world.add(buildPaths());
 function person(shirt){
   const g = new THREE.Group();
   g.add(cyl(0.17, 0.2, 0.5, 8, shirt, 0, 0.5, 0));
-  g.add(cyl(0.1, 0.1, 0.32, 6, 0x4A5560, -0.09, 0.16, 0));
-  g.add(cyl(0.1, 0.1, 0.32, 6, 0x4A5560, 0.09, 0.16, 0));
+  /* 腳包在以髖部為原點的 pivot 裡才擺得動，
+     不然旋轉會變成繞著腿的中心轉。 */
+  const leg = x => {
+    const pv = new THREE.Group();
+    pv.position.set(x, 0.32, 0);
+    pv.add(cyl(0.1, 0.1, 0.32, 6, 0x4A5560, 0, -0.16, 0));
+    const foot = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.07, 0.24),
+      new THREE.MeshPhongMaterial({color:0x3A2E28, flatShading:true, shininess:0}));
+    foot.position.set(0, -0.32, 0.05);
+    pv.add(foot); return pv;
+  };
+  const l1 = leg(-0.09), l2 = leg(0.09);
+  g.add(l1, l2);
+  g.__legs = [l1, l2];
   g.add(ball(0.19, C.skin, 0, 0.92, 0));
   g.add(ball(0.2, C.hair, 0, 0.97, -0.02));
   return g;
@@ -994,9 +1018,12 @@ function walk(p, dt){
   const n = WALK.length, f = p.userData.t * n, i = Math.floor(f), k = f - i;
   const a = WALK[i], b = WALK[(i + 1) % n];
   tmp.copy(a).lerp(b, k);
-  p.position.set(tmp.x, TOP_Y + Math.abs(Math.sin(p.userData.t * 64)) * 0.055, tmp.z);
+  const sw = Math.sin(p.userData.t * 64);
+  p.position.set(tmp.x, TOP_Y + Math.abs(sw) * 0.05, tmp.z);
   tmp2.copy(b).sub(a);
   p.rotation.y = Math.atan2(tmp2.x, tmp2.z);
+  if (p.__legs){ p.__legs[0].rotation.x = sw * 0.6;
+                 p.__legs[1].rotation.x = -sw * 0.6; }
 }
 
 let last = performance.now();
