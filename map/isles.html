@@ -18,7 +18,7 @@
 }
 *{box-sizing:border-box}
 html,body{height:100%;height:100dvh}
-body{margin:0;overflow:hidden;background:#9FCBD8;color:var(--ink);
+body{margin:0;overflow:hidden;background:#DCE4CC;color:var(--ink);
   font-family:var(--sans);font-weight:400;-webkit-font-smoothing:antialiased}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:3px}
@@ -49,14 +49,14 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .tool[aria-pressed="true"]{background:var(--ink);color:var(--cream)}
 .seg{display:flex;gap:.15rem;background:color-mix(in srgb,var(--cream) 90%,transparent);
   border-radius:999px;padding:.15rem}
-.seg button{background:none;padding:.3rem .5rem;border-radius:999px;font-size:.85rem;line-height:1}
+.seg button{background:none;padding:.32rem .55rem;border-radius:999px;line-height:0;display:grid;place-items:center}
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--cream)}
 .hint{bottom:1.1rem;left:50%;transform:translateX(-50%);font-family:var(--sans);
   font-size:.7rem;letter-spacing:.08em;color:#3E6A78}
 
 /* ── 名牌：平常是光點，滑過才長出字 ───────── */
 #tags{position:fixed;inset:0;z-index:2;pointer-events:none}
-.tag{position:absolute;transform:translate(-50%,-100%);pointer-events:auto;
+.tag{position:absolute;transform:translate(-50%,-100%);transform-origin:50% 100%;pointer-events:auto;
   background:transparent;border-radius:999px;padding:0;box-shadow:none;gap:0;
   white-space:nowrap;cursor:pointer;display:flex;align-items:center;
   font-family:var(--sans);font-size:.78rem;font-weight:500;letter-spacing:.04em;
@@ -236,10 +236,10 @@ body.notags .tag,body.notags .stem{opacity:0;pointer-events:none}
   <button class="tool" id="t-tags" aria-pressed="true">名牌</button>
   <button class="tool" id="t-bird" aria-pressed="false">鳥瞰</button>
   <div class="seg" role="group" aria-label="光線">
-    <button id="m-dawn" aria-pressed="false" title="清晨">&#9697;</button>
-    <button id="m-day" aria-pressed="true" title="白天">&#9728;</button>
-    <button id="m-dusk" aria-pressed="false" title="黃昏">&#9696;</button>
-    <button id="m-night" aria-pressed="false" title="夜晚">&#9789;</button>
+    <button id="m-dawn" aria-pressed="false" title="清晨" aria-label="清晨"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17h18"/><path d="M7 17a5 5 0 0 1 10 0"/><path d="M12 6v3M5.6 10.6l1.6 1.6M18.4 10.6l-1.6 1.6M3.5 13.8h1.8M18.7 13.8h1.8"/><path d="M10 21l2-2 2 2"/></svg></button>
+    <button id="m-day" aria-pressed="true" title="白天" aria-label="白天"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/></svg></button>
+    <button id="m-dusk" aria-pressed="false" title="黃昏" aria-label="黃昏"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17h18"/><path d="M7 17a5 5 0 0 1 10 0"/><path d="M12 6v3M5.6 10.6l1.6 1.6M18.4 10.6l-1.6 1.6M3.5 13.8h1.8M18.7 13.8h1.8"/><path d="M10 19l2 2 2-2"/></svg></button>
+    <button id="m-night" aria-pressed="false" title="夜晚" aria-label="夜晚"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
   </div>
 </div>
 
@@ -340,8 +340,8 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 host.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x9FCBD8);
-scene.fog = new THREE.Fog(0x9FCBD8, 90, 260);
+scene.background = new THREE.Color(0xDCE4CC);
+scene.fog = new THREE.Fog(0xDCE4CC, 90, 260);
 /* 等角投影，不是透視。那張分層岩盤地圖的立體感有一半來自這個：
    遠近不縮、邊緣互相平行，才會像一塊切出來的地景模型。 */
 const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 900);
@@ -365,6 +365,7 @@ const hemi = new THREE.HemisphereLight(0xDCEEF4, 0x9C8E74, 0.62);
 const sun = new THREE.DirectionalLight(0xFFF4E2, 0.92);
 sun.position.set(34, 52, 24);
 sun.castShadow = true;
+sun.shadow.bias = -0.0009; sun.shadow.normalBias = 0.04;
 sun.shadow.mapSize.set(2048, 2048);
 const sc = sun.shadow.camera;
 sc.left = -70; sc.right = 70; sc.top = 70; sc.bottom = -70; sc.near = 1; sc.far = 190;
@@ -1253,49 +1254,58 @@ ISLES.forEach(i => {
 const CX = (minX + maxX) / 2, CZ = (minZ + maxZ) / 2;
 const SPAN = Math.max(maxX - minX, maxZ - minZ);
 /* ── 海與海岸 ─────────────────────────────────────────
-   PUMA 的第一層是一個海灣：群島在中間，四周一整圈連續的海岸丘陵把它
-   包住。原本我放的是二十幾座各自獨立的尖錐山，看起來像擺飾；海又是
-   一塊有硬邊的亮青色圓盤。現在海改成一整片沉穩的藍綠，鋪到海岸底下；
-   海岸是一圈連續的低多邊形地形：內緣是沙灘，往外慢慢升成丘陵，
-   再撒一圈成叢的樹。全部是程式產生的幾何，沒有用圖片。 */
-const seaMat = new THREE.MeshPhongMaterial({color:0x6FAAB8, flatShading:true, shininess:0});
-const sea = new THREE.Mesh(new THREE.CircleGeometry(SPAN * 4, 72), seaMat);
+   第一版用「圓環切 120 份」做海岸，每片三角形各上一色，結果沙灘邊
+   是一圈鋸齒、丘陵是一條條往中心射的楔形。改用 PUMA 那種方格地形：
+   高低用平滑雜訊算，顏色依高度上，海岸線自然彎曲；粉彩低多邊形
+   丘陵、零星深綠小針葉樹，海灣裡有衛星小島、帆船與浮標。
+   全部是程式產生的幾何，沒有圖片。 */
+const seaMat = new THREE.MeshPhongMaterial({color:0x5E9DAD, flatShading:true, shininess:0});
+const sea = new THREE.Mesh(new THREE.PlaneGeometry(SPAN * 9, SPAN * 9), seaMat);
 sea.rotation.x = -Math.PI / 2;
 sea.position.set(CX, -2.3, CZ);
-sea.receiveShadow = true;
+/* 海面不接陰影：陽光幾乎貼著平面照，陰影貼圖精度不夠，會在海面上
+   畫出一條條蜘蛛網似的細線（shadow acne） */
+sea.receiveShadow = false;
 world.add(sea);
-
 scene.fog.near = SPAN * 1.15;      // 開場值，之後由 applyCam 接手
 
-const RIN = SPAN * 0.98, ROUT = SPAN * 2.7;
-const coastH = (r, a) => {
-  const t2 = Math.max(0, (r - RIN) / (ROUT - RIN));
-  const n = 0.62 + 0.22 * Math.sin(3 * a + 1.3) + 0.12 * Math.sin(7 * a + r * 0.05)
-          + 0.08 * Math.sin(13 * a + 2.1);
-  /* 內緣先是一段幾乎平的沙灘，再慢慢升成丘陵 */
-  const rise = t2 < 0.06 ? t2 * 2 : 0.12 + Math.pow(t2 - 0.06, 1.25) * 15 * n;
-  return -2.25 + rise;
+/* 會動的背景：洋流、島邊浪花、天上的雲 */
+const currents = [], skyClouds = [];
+const foamMat = new THREE.MeshBasicMaterial({color:0xFFFFFF, transparent:true, opacity:0.28,
+  depthWrite:false, side:THREE.DoubleSide});
+let MAXR = 0;
+ISLES.forEach(i => { MAXR = Math.max(MAXR, Math.hypot(i.x - CX, i.z - CZ) + i.R); });
+const BAY = MAXR + 12;
+const nz = (x, z) =>
+  Math.sin(x * 0.045 + 1.3) * Math.cos(z * 0.052 + 0.7) * 0.5 +
+  Math.sin(x * 0.11 + z * 0.09) * 0.25 +
+  Math.sin(x * 0.023 - z * 0.031 + 2.1) * 0.55;
+const landH = (x, z) => {
+  const d = Math.hypot(x - CX, z - CZ);
+  const e = d - (BAY + nz(x * 1.6, z * 1.6) * 6);
+  if (e < 0) return -4 + e * 0.02;
+  const t2 = Math.min(1, e / 45);
+  return -2.15 + e * 0.05 + t2 * t2 * 15 * (0.55 + 0.45 * nz(x, z));
 };
-(function coast(){
-  const AS = 120, RS = 9;
+(function land(){
+  const CELL = 4.2, HALF = SPAN * 3.6;
   const pos = [], col = [];
-  const cSand = new THREE.Color(0xE6D3A4), cG1 = new THREE.Color(0xA9C48A),
-        cG2 = new THREE.Color(0x8AAE74), cG3 = new THREE.Color(0x77976A);
-  const P = (ri, ai) => {
-    const k = ri / RS;
-    const r = RIN + (ROUT - RIN) * Math.pow(k, 1.35);
-    const a = ai / AS * Math.PI * 2;
-    return [CX + Math.cos(a) * r, coastH(r, a), CZ + Math.sin(a) * r, k];
-  };
-  const tri = (A, B, Cc) => {
-    const k = (A[3] + B[3] + Cc[3]) / 3;
-    const c = k < 0.07 ? cSand : (k < 0.3 ? cG1 : (k < 0.6 ? cG2 : cG3));
-    [A, B, Cc].forEach(v => { pos.push(v[0], v[1], v[2]); col.push(c.r, c.g, c.b); });
-  };
-  for (let ri = 0; ri < RS; ri++)
-    for (let ai = 0; ai < AS; ai++){
-      const a = P(ri, ai), b = P(ri + 1, ai), c = P(ri + 1, ai + 1), d = P(ri, ai + 1);
-      tri(a, c, b); tri(a, d, c);
+  const cols = [[-1.75, 0xEDE3C5], [1.2, 0xD9E4BC], [4.5, 0xCBDAAE], [8.5, 0xBCCE9E], [99, 0xAFC293]]
+    .map(([h, c]) => [h, new THREE.Color(c)]);
+  const colOf = h => cols.find(([lim]) => h < lim)[1];
+  const P = (x, z) => [x, landH(x, z), z];
+  for (let gx = CX - HALF; gx < CX + HALF; gx += CELL)
+    for (let gz = CZ - HALF; gz < CZ + HALF; gz += CELL){
+      /* 交錯半格，三角形才不會排成整齊的斜紋 */
+      const ox = ((Math.round(gz / CELL) % 2) ? CELL * 0.5 : 0);
+      const a = P(gx + ox, gz), b = P(gx + CELL + ox, gz),
+            c = P(gx + ox + CELL * 0.5, gz + CELL), d = P(gx + ox - CELL * 0.5, gz + CELL);
+      [[a, c, b], [a, d, c]].forEach(tri => {
+        const hm = (tri[0][1] + tri[1][1] + tri[2][1]) / 3;
+        if (hm < -2.6) return;                       // 整片在海裡的不畫
+        const cc = colOf(hm);
+        tri.forEach(v => { pos.push(v[0], v[1], v[2]); col.push(cc.r, cc.g, cc.b); });
+      });
     }
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
@@ -1306,37 +1316,221 @@ const coastH = (r, a) => {
   m.receiveShadow = true;
   world.add(m);
 
-  /* 海岸上的樹：成叢，合併成三個網格，幾百棵也不卡 */
-  const ni = gg => gg.index ? gg.toNonIndexed() : gg;
+  /* 陸地上零星的深綠小針葉樹，成叢 */
   let s3 = 4242;
   const rr = () => (s3 = (s3 * 9301 + 49297) % 233280) / 233280;
+  const ni = gg => gg.index ? gg.toNonIndexed() : gg;
   const gA = [], gB = [], gT = [];
-  for (let c3 = 0; c3 < 46; c3++){
-    const a0 = rr() * Math.PI * 2;
-    const r0 = RIN + (ROUT - RIN) * (0.12 + rr() * 0.5);
-    const n3 = 4 + Math.floor(rr() * 6);
+  for (let c3 = 0; c3 < 150; c3++){
+    const a0 = rr() * 6.283, r0 = BAY + 6 + rr() * SPAN * 1.5;
+    const x0 = CX + Math.cos(a0) * r0, z0 = CZ + Math.sin(a0) * r0;
+    const n3 = 3 + Math.floor(rr() * 6);
     for (let i = 0; i < n3; i++){
-      const a = a0 + (rr() - 0.5) * 0.09, r = r0 + (rr() - 0.5) * 6;
-      const x = CX + Math.cos(a) * r, z = CZ + Math.sin(a) * r, y = coastH(r, a);
-      const s = 0.8 + rr() * 0.9;
-      gT.push(ni(new THREE.CylinderGeometry(0.16 * s, 0.22 * s, 0.7 * s, 5))
-        .translate(x, y + 0.35 * s, z));
-      if (rr() < 0.6){
-        gA.push(ni(new THREE.ConeGeometry(0.95 * s, 2.2 * s, 7))
-          .translate(x, y + 1.6 * s, z));
-        gB.push(ni(new THREE.ConeGeometry(0.62 * s, 1.5 * s, 7))
-          .translate(x, y + 2.5 * s, z));
-      } else {
-        gB.push(ni(new THREE.IcosahedronGeometry(1.0 * s, 0))
-          .translate(x, y + 1.5 * s, z));
-      }
+      const x = x0 + (rr() - 0.5) * 9, z = z0 + (rr() - 0.5) * 9, y = landH(x, z);
+      if (y < -1.6) continue;
+      const s = 0.7 + rr() * 0.7;
+      gT.push(ni(new THREE.CylinderGeometry(0.14 * s, 0.2 * s, 0.6 * s, 5)).translate(x, y + 0.3 * s, z));
+      gA.push(ni(new THREE.ConeGeometry(0.85 * s, 2.0 * s, 6)).translate(x, y + 1.45 * s, z));
+      gB.push(ni(new THREE.ConeGeometry(0.58 * s, 1.4 * s, 6)).translate(x, y + 2.3 * s, z));
     }
   }
-  [[gA, 0x5E8A62], [gB, 0x739E6A], [gT, 0x8A6A4A]].forEach(([list, c]) => {
+  [[gA, 0x5A7E5E], [gB, 0x6A8F68], [gT, 0x8A6A4A]].forEach(([list, c]) => {
     if (!list.length) return;
     const tm = new THREE.Mesh(mergeGeos(list), mat(c));
     tm.castShadow = true; world.add(tm);
   });
+
+  /* 海灣裡的衛星小島：圓形、沙色邊、綠頂，上面幾棵樹或幾塊石頭 */
+  const isl = [];
+  for (let k = 0; k < 60 && isl.length < 7; k++){
+    const a = rr() * 6.283, r = MAXR + 4 + rr() * (BAY - MAXR - 8);
+    const x = CX + Math.cos(a) * r, z = CZ + Math.sin(a) * r, rad = 2.2 + rr() * 2.2;
+    if (ISLES.some(i => Math.hypot(i.x - x, i.z - z) < i.R + rad + 3)) continue;
+    if (isl.some(q => Math.hypot(q.x - x, q.z - z) < q.r + rad + 3)) continue;
+    isl.push({x, z, r:rad});
+  }
+  isl.forEach((q, k) => {
+    const ig = new THREE.Group();
+    ig.add(cyl(q.r, q.r * 1.04, 0.9, 10, 0xE6D8B4, 0, -2.0, 0));
+    ig.add(cyl(q.r * 0.9, q.r * 0.9, 0.22, 10, 0xCFDDB0, 0, -1.48, 0));
+    if (k % 2 === 0){
+      for (let i = 0; i < 3; i++){
+        const tr = new THREE.Group();
+        tr.add(cyl(0.12, 0.16, 0.5, 5, 0x8A6A4A, 0, 0.25, 0));
+        tr.add(cone(0.7, 1.7, 6, 0x5A7E5E, 0, 1.2, 0));
+        tr.position.set((rr() - 0.5) * q.r, -1.37, (rr() - 0.5) * q.r);
+        ig.add(tr);
+      }
+    } else {
+      for (let i = 0; i < 3; i++){
+        const rk = ball(0.5 + rr() * 0.4, 0xBDB6A8, (rr() - 0.5) * q.r, -1.2, (rr() - 0.5) * q.r);
+        rk.scale.y = 0.65; ig.add(rk);
+      }
+    }
+    ig.position.set(q.x, 0, q.z);
+    world.add(ig);
+  });
+
+  /* 小帆船與浮標 */
+  for (let k = 0; k < 7; k++){
+    const a = rr() * 6.283, r = MAXR + 3 + rr() * (BAY - MAXR - 6);
+    const x = CX + Math.cos(a) * r, z = CZ + Math.sin(a) * r;
+    if (ISLES.some(i => Math.hypot(i.x - x, i.z - z) < i.R + 2)) continue;
+    if (k < 4){
+      const bt = new THREE.Group();
+      bt.add(box(1.4, 0.3, 0.5, k % 2 ? 0xC4714B : 0xF4EFE4, 0, -2.1, 0));
+      bt.add(cyl(0.03, 0.03, 1.4, 4, 0x8A6A4A, 0, -1.3, 0));
+      const sail = new THREE.Mesh(new THREE.ConeGeometry(0.5, 1.2, 3), mat(0xFFFFFF));
+      sail.position.set(0.15, -1.25, 0); sail.scale.z = 0.12; bt.add(sail);
+      bt.position.set(x, 0, z); bt.rotation.y = rr() * 6.28;
+      world.add(bt);
+    } else {
+      world.add(cyl(0.18, 0.22, 0.8, 8, 0xF4EFE4, x, -1.9, z));
+      world.add(cyl(0.19, 0.19, 0.2, 8, 0xC4714B, x, -1.65, z));
+    }
+  }
+
+  /* 島邊的浪花：每座島外圍一圈白色細邊，會一亮一暗 */
+  ISLES.forEach(i => {
+    const fm = new THREE.Mesh(new THREE.RingGeometry(i.R * 1.03, i.R * 1.13, 6, 1, Math.PI / 6),
+      foamMat);
+    fm.rotation.x = -Math.PI / 2;
+    fm.position.set(i.x, -2.25, i.z);
+    world.add(fm);
+  });
+
+  /* 洋流：海灣裡一道道彎曲的白色細流，繞著海灣慢慢流 */
+  const curMat = new THREE.MeshBasicMaterial({color:0xFFFFFF, transparent:true, opacity:0.32,
+    depthWrite:false, side:THREE.DoubleSide});
+  for (let k = 0; k < 16; k++){
+    const r = MAXR + 2 + rr() * (BAY - MAXR - 3);
+    const len = 0.35 + rr() * 0.45;
+    const arc = new THREE.Mesh(new THREE.RingGeometry(r, r + 0.16 + rr() * 0.1, 24, 1, 0, len), curMat);
+    arc.rotation.x = -Math.PI / 2;
+    const pivot = new THREE.Group();
+    pivot.position.set(CX, -2.24, CZ);
+    pivot.rotation.y = rr() * 6.283;
+    pivot.add(arc);
+    pivot.userData.sp = (0.025 + rr() * 0.03) * (k % 3 === 0 ? -1 : 1);
+    world.add(pivot); currents.push(pivot);
+  }
+  /* 島與島之間也有短短的細流 */
+  for (let k = 0; k < 10; k++){
+    const a = ISLES[k % ISLES.length], b = ISLES[(k + 3) % ISLES.length];
+    const mx = (a.x + b.x) / 2 + (rr() - 0.5) * 4, mz = (a.z + b.z) / 2 + (rr() - 0.5) * 4;
+    if (ISLES.some(i => Math.hypot(i.x - mx, i.z - mz) < i.R + 1.2)) continue;
+    const arc = new THREE.Mesh(new THREE.RingGeometry(3.2, 3.36, 16, 1, 0, 0.7), curMat);
+    arc.rotation.x = -Math.PI / 2;
+    const pivot = new THREE.Group();
+    pivot.position.set(mx, -2.24, mz); pivot.rotation.y = rr() * 6.283;
+    pivot.add(arc); pivot.userData.sp = 0.12 * (k % 2 ? 1 : -1);
+    world.add(pivot); currents.push(pivot);
+  }
+
+  /* 陸地上找一個合適的點：高度在範圍內、坡度不大 */
+  const landSpot = (hmin, hmax, rmin, rmax) => {
+    for (let k = 0; k < 60; k++){
+      const a = rr() * 6.283, r = rmin + rr() * (rmax - rmin);
+      const x = CX + Math.cos(a) * r, z = CZ + Math.sin(a) * r, h = landH(x, z);
+      if (h < hmin || h > hmax) continue;
+      if (Math.abs(landH(x + 1.5, z) - h) > 0.6 || Math.abs(landH(x, z + 1.5) - h) > 0.6) continue;
+      return [x, h, z];
+    }
+    return null;
+  };
+
+  /* 村落：幾處小屋聚落，粉彩屋頂 */
+  const ROOFC = [0xD98A5E, 0xE2B062, 0x8FB0C8, 0xC97F7F, 0x9CB07E];
+  for (let v = 0; v < 6; v++){
+    const c = landSpot(-1.4, 3.5, BAY + 4, BAY + 26); if (!c) continue;
+    const n = 4 + Math.floor(rr() * 4);
+    for (let i = 0; i < n; i++){
+      const x = c[0] + (rr() - 0.5) * 7, z = c[2] + (rr() - 0.5) * 7, h = landH(x, z);
+      if (h < -1.6) continue;
+      const hg = new THREE.Group();
+      hg.add(box(1.3, 0.9, 1.1, 0xF4EEE0, 0, 0.45, 0));
+      const rf = cone(1.05, 0.8, 4, ROOFC[(v + i) % ROOFC.length], 0, 1.3, 0);
+      rf.rotation.y = Math.PI / 4; hg.add(rf);
+      hg.position.set(x, h, z); hg.rotation.y = rr() * 6.28;
+      world.add(hg);
+    }
+    /* 村邊一兩塊田 */
+    for (let i = 0; i < 2; i++){
+      const x = c[0] + (rr() - 0.5) * 12, z = c[2] + (rr() - 0.5) * 12, h = landH(x, z);
+      if (h < -1.6) continue;
+      const fl = box(4 + rr() * 3, 0.12, 3 + rr() * 2,
+        [0xE6CF7A, 0xC9B6D8, 0xB9CC86, 0xE8B98A][(v + i) % 4], x, h + 0.06, z);
+      fl.rotation.y = rr() * 6.28; fl.castShadow = false; world.add(fl);
+    }
+  }
+
+  /* 靜態的動物與花叢：羊、牛、鹿，散在草地上 */
+  const animal = kind => {
+    const ag = new THREE.Group();
+    if (kind === 0){                          // 羊
+      const b = ball(0.42, 0xF6F2E8, 0, 0.55, 0); b.scale.set(1.25, 0.95, 0.95); ag.add(b);
+      ag.add(ball(0.2, 0x3A3530, 0.52, 0.66, 0));
+      [[-0.22, -0.16], [0.22, -0.16], [-0.22, 0.16], [0.22, 0.16]].forEach(([x, z]) =>
+        ag.add(cyl(0.05, 0.05, 0.32, 4, 0x3A3530, x, 0.16, z)));
+    } else if (kind === 1){                   // 牛
+      ag.add(box(1.0, 0.5, 0.5, 0xF4EFE6, 0, 0.62, 0));
+      ag.add(box(0.36, 0.26, 0.4, 0x6E5240, 0.12, 0.66, 0));
+      ag.add(box(0.3, 0.3, 0.3, 0xF4EFE6, 0.62, 0.78, 0));
+      [[-0.38, -0.17], [0.38, -0.17], [-0.38, 0.17], [0.38, 0.17]].forEach(([x, z]) =>
+        ag.add(box(0.1, 0.38, 0.1, 0x6E5240, x, 0.19, z)));
+    } else {                                  // 鹿
+      ag.add(box(0.8, 0.36, 0.3, 0xB0835A, 0, 0.7, 0));
+      ag.add(box(0.12, 0.42, 0.12, 0xB0835A, 0.42, 0.98, 0));
+      ag.add(box(0.26, 0.18, 0.18, 0xB0835A, 0.52, 1.2, 0));
+      [[-0.3, -0.1], [0.3, -0.1], [-0.3, 0.1], [0.3, 0.1]].forEach(([x, z]) =>
+        ag.add(cyl(0.04, 0.04, 0.52, 4, 0x8A6342, x, 0.26, z)));
+    }
+    return ag;
+  };
+  for (let k = 0; k < 26; k++){
+    const c = landSpot(-1.5, 4.5, BAY + 3, BAY + 30); if (!c) continue;
+    const a = animal(k % 3);
+    a.position.set(c[0], c[1], c[2]); a.rotation.y = rr() * 6.28;
+    a.scale.setScalar(0.9 + rr() * 0.3);
+    world.add(a);
+  }
+  const FLC = [0xF2C6CF, 0xF4E08A, 0xC9B6E4, 0xFFFFFF];
+  const fp = [];
+  for (let k = 0; k < 40; k++){
+    const c = landSpot(-1.6, 6, BAY + 2, BAY + 34); if (!c) continue;
+    for (let i = 0; i < 6; i++)
+      fp.push(ni(new THREE.SphereGeometry(0.16, 5, 4))
+        .translate(c[0] + (rr() - 0.5) * 2.2, c[1] + 0.12, c[2] + (rr() - 0.5) * 2.2));
+    if (fp.length > 200) break;
+  }
+  if (fp.length) world.add(new THREE.Mesh(mergeGeos(fp), mat(FLC[0])));
+
+  /* 天上的雲：低多邊形白雲團，飄在外圍陸地上空，不擋島 */
+  const cloudM = new THREE.MeshPhongMaterial({color:0xFFFFFF, flatShading:true, shininess:0,
+    transparent:true, opacity:0.93});
+  for (let k = 0; k < 9; k++){
+    const cg = new THREE.Group();
+    const n = 3 + Math.floor(rr() * 3);
+    for (let i = 0; i < n; i++){
+      const b = new THREE.Mesh(new THREE.IcosahedronGeometry(1.4 + rr() * 1.3, 1), cloudM);
+      b.position.set(i * 1.7 - n * 0.85, rr() * 0.8, (rr() - 0.5) * 1.6);
+      b.scale.y = 0.7; cg.add(b);
+    }
+    const a = rr() * 6.283, r = BAY + 6 + rr() * SPAN * 1.2;
+    cg.position.set(CX + Math.cos(a) * r, 16 + rr() * 8, CZ + Math.sin(a) * r);
+    cg.userData.sp = 0.35 + rr() * 0.5;
+    world.add(cg); skyClouds.push(cg);
+  }
+
+  /* 海面一點點亮點 */
+  const sp = [];
+  for (let k = 0; k < 140; k++){
+    const a = rr() * 6.283, r = rr() * BAY;
+    sp.push(new THREE.CircleGeometry(0.22 + rr() * 0.25, 6).rotateX(-Math.PI / 2)
+      .translate(CX + Math.cos(a) * r, -2.27, CZ + Math.sin(a) * r));
+  }
+  world.add(new THREE.Mesh(mergeGeos(sp), new THREE.MeshBasicMaterial({color:0xFFFFFF,
+    transparent:true, opacity:0.22, depthWrite:false})));
 })();
 
 /* 霧團拿掉了（看起來像海上的白色污漬），留下空陣列給動畫迴圈用 */
@@ -1348,8 +1542,8 @@ const FAR = new THREE.Group();
 const MOODS = {
   dawn:  {bg:0xE8D6CE, fog:0xE8D6CE, sky:0xF4DCD2, gnd:0xA08A74, sun:0xFFD9B0,
           sunI:0.62, hemiI:0.60, amb:0.16, sea:0x8FAFC0, mist:0.22, lit:false, pos:[-44, 26, 30]},
-  day:   {bg:0x9FCBD8, fog:0x9FCBD8, sky:0xDCEEF4, gnd:0x9C8E74, sun:0xFFF4E2,
-          sunI:0.92, hemiI:0.62, amb:0.14, sea:0x7FB6C6, mist:0.16, lit:false, pos:[34, 52, 24]},
+  day:   {bg:0xDCE4CC, fog:0xDCE4CC, sky:0xE6EFE4, gnd:0x9C8E74, sun:0xFFF4E2,
+          sunI:0.85, hemiI:0.62, amb:0.16, sea:0x5E9DAD, mist:0.16, lit:false, pos:[34, 52, 24]},
   dusk:  {bg:0xE3B99A, fog:0xE3B99A, sky:0xF0C9A4, gnd:0x8A6E54, sun:0xFFB877,
           sunI:0.72, hemiI:0.50, amb:0.15, sea:0xA8906F, mist:0.20, lit:true, pos:[46, 16, -26]},
   night: {bg:0x2E3C50, fog:0x2E3C50, sky:0x3E5270, gnd:0x1E2838, sun:0x9FB4D8,
@@ -1553,8 +1747,12 @@ function placeTags(){
         }
       }
   pins.forEach(p => { if (p.stem) p.stem.classList.add('off'); });
+  /* 第一層島名牌跟著鏡頭遠近縮放：拉遠時島小，名牌也跟著小 */
+  const sIsle = Math.max(0.58, Math.min(1, 38 / CAM.dist));
   vis.forEach(({p, x, y}) => {
     p.tag.style.left = x + 'px'; p.tag.style.top = y + 'px';
+    if (p.kind === 'isle')
+      p.tag.style.transform = `translate(-50%,-100%) scale(${p.tag.classList.contains('cur') ? 1 : sIsle})`;
     if (p.stem){
       v3.copy(p.gnd).project(camera);
       const gyS = (-v3.y * 0.5 + 0.5) * H;
@@ -1700,6 +1898,13 @@ function loop(now){
     d.position.y = (u.y || 0) + Math.abs(sw) * 0.032;
     d.__legs[0].rotation.x = sw * 0.62;
     d.__legs[1].rotation.x = -sw * 0.62;
+  });
+  /* 洋流慢慢繞、浪花一亮一暗、雲往東飄 */
+  currents.forEach(c => { c.rotation.y += c.userData.sp * dt; });
+  foamMat.opacity = 0.22 + 0.12 * Math.sin(now / 1000 * 1.3);
+  skyClouds.forEach(c => {
+    c.position.x += c.userData.sp * dt;
+    if (c.position.x > CX + SPAN * 2.6) c.position.x = CX - SPAN * 2.6;
   });
   mists.forEach(m => {
     const u = m.userData;
