@@ -220,7 +220,7 @@ body.notags .tag,body.notags .stem{opacity:0;pointer-events:none}
   .tools{padding:1rem 1.1rem}
   .views{top:auto;bottom:3.1rem;font-size:.7rem}
   .card{right:0;left:0;bottom:0;top:auto;transform:none;width:100%;
-    max-height:62dvh;border-radius:14px 14px 0 0}
+    max-height:46dvh;border-radius:14px 14px 0 0}
   .hint{display:none}
 }
 @media (max-width:560px){
@@ -2264,6 +2264,11 @@ function applyCam(){
   CAM.dist = Math.max(24, Math.min(SPAN * 5.5 + 80, CAM.dist));
   camera.aspect = innerWidth / Math.max(1, innerHeight);
   camera.far = CAM.dist * 4 + 900;
+  /* 手機版字卡從下面蓋上來：整個畫面往上挪半張卡，島才會落在卡片上方
+     看得到的那一塊，而不是被壓在卡片底下 */
+  const sh = sheetPx();
+  if (sh) camera.setViewOffset(innerWidth, innerHeight, 0, sh / 2, innerWidth, innerHeight);
+  else camera.clearViewOffset();
   camera.updateProjectionMatrix();
   /* 霧的遠近一定要跟著鏡頭距離走。原本用島群尺寸算死，鏡頭一拉遠
      島的視距就超出霧的範圍，整片被吃掉七成，看起來就像島不見了。 */
@@ -2530,6 +2535,20 @@ function isleMenu(isle){
         <span class="n">${(originOf(x) && txt(originOf(x).name)) || ''}</span>
       </button>`).join('')).join('');
 }
+/* 手機版：字卡是底部抽屜時，它佔掉的高度（桌機版字卡在側邊，回 0） */
+function sheetPx(){
+  return (innerWidth <= 760 && !card.hidden) ? card.getBoundingClientRect().height : 0;
+}
+/* 島要整座放得進「看得到的那一塊」：高度扣掉字卡，寬度看手機直立的窄視角 */
+function fitDist(R){
+  const visH = Math.max(120, innerHeight - sheetPx());
+  const vt = Math.tan(FOV / 2 * Math.PI / 180);
+  const byH = R * 1.25 / (vt * visH / innerHeight);
+  const byW = R * 1.15 / (vt * innerWidth / innerHeight);
+  return Math.max(R * 5.2 + 8, Math.max(byH, byW) * 1.05);
+}
+/* 字卡內容換了、高度跟著變，畫面也要重新對位 */
+if (window.ResizeObserver) new ResizeObserver(() => applyCam()).observe(card);
 function openIsle(isle){
   cameFrom = null;
   head(isle.en.toUpperCase(), isle.zh, '',
@@ -2542,7 +2561,7 @@ function openIsle(isle){
   card.hidden = false;
   shownIsle = isle;
   pins.forEach(p => p.tag.classList.toggle('on', p.kind === 'isle' && p.isle === isle));
-  glide({x:isle.x, z:isle.z, d:isle.R * 5.2 + 8, ph:0.6155}, 1000);
+  glide({x:isle.x, z:isle.z, d:fitDist(isle.R), ph:0.6155}, 1000);
 }
 function openItem(id){
   const it = ITEMS.find(x => x.id === id); if (!it) return;
