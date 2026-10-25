@@ -261,14 +261,15 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 /* 字卡裡的細項做成一顆顆圓角列：好點，也看得出還有下一層 */
 .dbody .row .zh{font-weight:500}
 .dbody .row{
-  grid-template-columns:auto 1fr auto auto;align-items:center;gap:0 .7rem;
+  grid-template-columns:auto 1fr auto auto;align-items:start;gap:0 .7rem;
   background:var(--ground);border:1px solid transparent;border-bottom:0;
   border-radius:8px;padding:.7rem .85rem;margin-bottom:.4rem;
   transition:background .2s,border-color .2s
 }
 .dbody .row:hover{background:var(--paper);border-color:var(--line)}
 .dbody .row::before{content:'';width:6px;height:6px;border-radius:50%;
-  background:var(--gold);display:block}
+  background:var(--gold);display:block;margin-top:.52rem}
+.dbody .row .n,.dbody .row::after{align-self:center}
 .dbody .row::after{content:'\203A';font-family:var(--latin);font-size:1.05rem;
   line-height:1;color:var(--faint)}
 .dbody .row:hover::after{color:var(--gold)}
@@ -276,6 +277,34 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .dsec{margin-top:1.4rem;padding-top:1rem;border-top:1px solid var(--line)}
 .dsec h4{margin:0 0 .6rem;font-family:var(--sans);font-size:.72rem;letter-spacing:.11em;
   color:var(--faint);font-weight:400}
+
+/* 親緣整段框起來，和主體內容分開。同一個種用磚紅（就是同一株
+   植物，只是落在不同產地），同屬用藍綠（是親戚，不是同一種）——
+   顏色本身就說明了關係的遠近。 */
+.dsec.kin{
+  margin-top:1.2rem;padding:.85rem .85rem .5rem;border-top:0;border-radius:10px;
+  background:color-mix(in srgb,var(--mat) 8%,transparent);
+  border:1px solid color-mix(in srgb,var(--mat) 20%,transparent)
+}
+.dsec.kin.same{
+  background:color-mix(in srgb,var(--dot-tw) 7%,transparent);
+  border-color:color-mix(in srgb,var(--dot-tw) 22%,transparent)
+}
+.dsec.kin h4{
+  display:inline-flex;align-items:center;margin:0 0 .65rem;
+  background:var(--mat);color:#FBFAF5;border-radius:999px;
+  padding:.26rem .72rem;font-size:.68rem;letter-spacing:.1em;font-weight:500
+}
+.dsec.kin.same h4{background:var(--dot-tw)}
+.dsec.kin .row{background:#FFFFFF;
+  border-color:color-mix(in srgb,var(--mat) 16%,transparent)}
+.dsec.kin.same .row{border-color:color-mix(in srgb,var(--dot-tw) 18%,transparent)}
+.dsec.kin .row::before{background:var(--mat)}
+.dsec.kin.same .row::before{background:var(--dot-tw)}
+.dsec.kin .row:hover{border-color:var(--mat)}
+.dsec.kin.same .row:hover{border-color:var(--dot-tw)}
+.dsec.kin .row:hover::after{color:var(--mat)}
+.dsec.kin.same .row:hover::after{color:var(--dot-tw)}
 .plink{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--sans);
   font-size:.75rem;letter-spacing:.07em;color:var(--gold);text-decoration:none;
   border-bottom:1px solid transparent;padding-bottom:1px;margin-right:1rem}
@@ -1175,9 +1204,9 @@ function kin(it){
   const genus = (byGenus[it.__g] || []).filter(x =>
     x.id !== it.id && !same.some(y => y.id === x.id));
   let h = '';
-  if (same.length) h += `<div class="dsec"><h4>同一個種 · ${it.__g} ${it.__s}</h4>` +
+  if (same.length) h += `<div class="dsec kin same"><h4>同一個種 · ${it.__g} ${it.__s}</h4>` +
     kinRows(same, it) + '</div>';
-  if (genus.length) h += `<div class="dsec"><h4>同屬 · ${it.__g}</h4>` +
+  if (genus.length) h += `<div class="dsec kin genus"><h4>同屬 · ${it.__g}</h4>` +
     kinRows(genus, it) + '</div>';
   return h;
 }

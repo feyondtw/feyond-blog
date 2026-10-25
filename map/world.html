@@ -1146,12 +1146,20 @@ for (let i = 0; i < 7; i++){
 
 /* 雲 */
 const clouds = [];
-const cloudMat = new THREE.MeshPhongMaterial({color:0xFFFFFF, flatShading:true,
-  shininess:0, specular:0x000000, transparent:true, opacity:0.9});
+/* 白天的天空本來就淡，純白的雲等於看不見。照這一頁平面插畫的
+   語彙處理：雲體仍是白的，外面套一圈反面渲染的灰藍描邊——
+   不靠光影，靠輪廓把體積交代出來，從哪個角度看都在。 */
+const cloudMat = new THREE.MeshPhongMaterial({color:0xFBFDFE, flatShading:true,
+  shininess:0, specular:0x000000, transparent:true, opacity:0.95});
+const cloudEdge = new THREE.MeshBasicMaterial({color:0x9DB4C7, side:THREE.BackSide,
+  transparent:true, opacity:0.9});
 for (let i = 0; i < 10; i++){
   const g = new THREE.Group();
   [[0,0,0,1.4],[1.2,.15,.3,1.0],[-1.1,.1,-.2,0.95]].forEach(([x,y,z,r]) => {
-    const b = new THREE.Mesh(new THREE.SphereGeometry(r, 8, 6), cloudMat);
+    const geo = new THREE.SphereGeometry(r, 8, 6);
+    const e = new THREE.Mesh(geo, cloudEdge);
+    e.position.set(x, y, z); e.scale.setScalar(1.075); g.add(e);
+    const b = new THREE.Mesh(geo, cloudMat);
     b.position.set(x, y, z); g.add(b);
   });
   g.position.set(BB.x0 - 10 + Math.random() * (RSPAN + 20), 15 + Math.random() * 9,
