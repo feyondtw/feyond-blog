@@ -2837,6 +2837,66 @@ const crossers = [];
   }
 })();
 
+/* ── 籽香島：回教婦女曬種子、剝種子，小朋友在玩（老闆清單） ─────── */
+const shellers = [];
+(function seedPeople(){
+  const isle = ISLES.find(i => i.part === 'seed'); if (!isle || !isle.near) return;
+  const g = isle.g, R = isle.R * 0.92, yA = 0.6, OB = g.__ob || [], near = isle.near;
+  const ground = g.children[5]; g.updateMatrixWorld(true);
+  const onGround = (x, z) => { _rc.set(new THREE.Vector3(isle.x + x, 20, isle.z + z), _DOWN); return _rc.intersectObject(ground, true).length > 0; };
+  const bridgeAngs = BRIDGES.filter(B => B.a === isle || B.b === isle).map(B => B.a === isle ? B.ax : B.ax + Math.PI);
+  const free = (x, z, rad) => !OB.some(o => Math.hypot(x - o.x, z - o.z) < o.r + rad) &&
+    !bridgeAngs.some(b => { const a = Math.atan2(z, x); return Math.abs(Math.atan2(Math.sin(a - b), Math.cos(a - b))) < 0.35 && Math.hypot(x, z) > R * 0.5; }) &&
+    [0, 1, 2, 3, 4, 5].every(q => onGround(x + Math.cos(q * 1.05) * rad, z + Math.sin(q * 1.05) * rad));
+  const findSpot = (rad, prefer) => {
+    let best = null, bd = 1e9;
+    for (let x = -R; x <= R; x += 0.3) for (let z = -R; z <= R; z += 0.3){
+      if (!free(x, z, rad)) continue;
+      const d = Math.hypot(x - prefer[0], z - prefer[1]); if (d < bd){ bd = d; best = [x, z]; }
+    }
+    if (best) OB.push({x:best[0], z:best[1], r:rad});
+    return best;
+  };
+  const SEEDC = [0x8E6B3A, 0xC9A05C, 0x3A3230, 0xB08A5E];
+  /* 曬種子：三張布蓆，各攤一種顏色的種子，兩位婦女站在蓆邊 */
+  const dry = findSpot(1.5, [0, R * 0.1]);
+  if (dry){
+    const [dx, dz] = dry;
+    [[-0.75, -0.3], [0.75, -0.3], [0, 0.55]].forEach(([ox, oz], k) => {
+      const x = dx + ox, z = dz + oz;
+      near.add(box(0.95, 0.03, 0.7, [0xE6D3AE, 0xD9C6A0, 0xEFE3CC][k], x, yA + 0.02, z).rotateY(k * 0.3));
+      for (let j = 0; j < 22; j++) near.add(ball(0.035, SEEDC[k], x + (Math.random() - 0.5) * 0.75, yA + 0.05, z + (Math.random() - 0.5) * 0.5));
+      near.add(cone(0.16, 0.12, 8, SEEDC[k], x + 0.25, yA + 0.08, z - 0.12));
+    });
+    [[0x3E3A44, -1.35, 0.45], [0x5A3E48, 1.3, 0.5]].forEach(([c, ox, oz]) => {
+      const d = doll(c, 'muslim_f'); d.position.set(dx + ox, yA, dz + oz); d.rotation.y = Math.atan2(-ox, -oz); near.add(d);
+    });
+  }
+  /* 剝種子：一位婦女面前一籃待剝的莢、一小堆剝好的籽，邊剝邊點頭 */
+  const sh = findSpot(0.7, dry ? [dry[0] + 2.2, dry[1]] : [0, 0]);
+  if (sh){
+    const [sx, sz] = sh;
+    near.add(cyl(0.26, 0.2, 0.24, 10, 0xC9A06A, sx + 0.35, yA + 0.12, sz + 0.2));
+    for (let j = 0; j < 6; j++) near.add(box(0.05, 0.05, 0.18, 0x9DAA6E, sx + 0.3 + (j % 3) * 0.06, yA + 0.27, sz + 0.15 + Math.floor(j / 3) * 0.08).rotateY(j));
+    near.add(cone(0.14, 0.1, 8, 0x8E6B3A, sx - 0.3, yA + 0.05, sz + 0.3));
+    const d = doll(0x2E5A6A, 'muslim_f'); d.position.set(sx, yA, sz - 0.15); d.rotation.y = 0.3; near.add(d);
+    shellers.push(d);
+  }
+  /* 小朋友：三個小孩繞著一小圈追著跑 */
+  const play = findSpot(1.1, [0, -R * 0.1]);
+  if (play){
+    const [px, pz] = play, P = [];
+    for (let k = 0; k < 18; k++){ const a = k / 18 * 6.283; P.push(new THREE.Vector3(isle.x + px + Math.cos(a) * 0.75, yA, isle.z + pz + Math.sin(a) * 0.6)); }
+    [[0xF2C14E, 0], [0x5C8FB8, 6], [0xE85A7A, 12]].forEach(([c, t]) => {
+      const d = doll(c, null); d.scale.setScalar(0.62);
+      d.userData = {path:P, t, seg:P[0].distanceTo(P[1]), sp:1.4, y:yA};
+      world.add(d); folk.push(d);
+    });
+    near.add(ball(0.1, 0xD9402E, isle.x * 0 + px + 0.1, yA + 0.1, pz));     // 一顆紅球
+  }
+  g.__seedPeople = {dry:!!dry, shell:!!sh, play:!!play};
+})();
+
 /* ── 夜晚的燈：島上步道邊的路燈、橋中央的燈籠、每座島一盞暖光 ───────
    白天燈泡是不亮的乳白玻璃；黃昏漸亮、夜裡全亮，暖光真的照亮地面。 */
 const bulbMat = new THREE.MeshBasicMaterial({color:0xE8E0C8});
@@ -3866,6 +3926,9 @@ function loop(now){
     m.rotation.x = ts * 2 + u.sw; m.rotation.z = ts * 1.5 + u.sw;
     m.visible = t < 0.92;
   });
+
+  /* 剝種子的婦女：低頭、抬頭，一下一下 */
+  shellers.forEach((d, k) => { d.rotation.x = 0.12 + Math.max(0, Math.sin(ts * 2.4 + k)) * 0.18; });
 
   /* 劈柴：舉起慢、劈下快 */
   choppers.forEach(c => {
