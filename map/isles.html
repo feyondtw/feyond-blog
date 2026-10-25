@@ -2084,10 +2084,23 @@ function applyCam(){
     folk.forEach(d => d.visible = want);
   }
   TARGET.set(CAM.tx, 1.2, CAM.tz);
-  camera.position.set(
-    CAM.tx + CAM.dist * Math.cos(CAM.phi) * Math.cos(CAM.theta),
-    CAM.dist * Math.sin(CAM.phi),
-    CAM.tz + CAM.dist * Math.cos(CAM.phi) * Math.sin(CAM.theta));
+  /* 鏡頭不能鑽進山裡：山變高之後，拉近又壓低時鏡頭會落在山坡底下，
+     從裡面看地面是背面、不會畫，只剩樹和房子懸在半空。鏡頭本身與
+     到湖心的視線都要高過地面，不夠就把仰角往上抬。 */
+  /* 只抬這一幀，不改寫 CAM.phi——否則自轉一圈仰角會一路被墊高回不來 */
+  let ph = CAM.phi;
+  const camAt = () => [CAM.tx + CAM.dist * Math.cos(ph) * Math.cos(CAM.theta),
+                       CAM.dist * Math.sin(ph),
+                       CAM.tz + CAM.dist * Math.cos(ph) * Math.sin(CAM.theta)];
+  const buried = ([x, y, z]) => {
+    for (let t = 0; t <= 0.6; t += 0.1){
+      const px = x + (CAM.tx - x) * t, pz = z + (CAM.tz - z) * t, py = y + (1.2 - y) * t;
+      if (landH(px, pz) > py - (t === 0 ? 3 : 0.5)) return true;
+    }
+    return false;
+  };
+  for (let k = 0; k < 60 && ph < 1.45 && buried(camAt()); k++) ph += 0.02;
+  camera.position.set(...camAt());
   camera.lookAt(TARGET);
 }
 applyCam();
