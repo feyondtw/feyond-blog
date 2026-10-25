@@ -93,6 +93,12 @@ body.notags .tag{opacity:0;pointer-events:none}
 .tag.isle .n{font-family:Arial,"Helvetica Neue",Helvetica,sans-serif;font-weight:400;
   font-size:.86rem;color:var(--muted)}
 .tag.isle::after{opacity:1}
+/* 第二層打開時，第一層名牌改成整塊島色、白字，和奶油色的品項小編號分開 */
+.tag.isle.cur{background:var(--ic);color:#FFFFFF;z-index:3;
+  box-shadow:0 6px 22px rgba(42,39,36,.3)}
+.tag.isle.cur .badge{background:#FFFFFF !important;color:var(--ic)}
+.tag.isle.cur .n{color:rgba(255,255,255,.82)}
+.tag.isle.cur::after{border-top-color:var(--ic)}
 @media (hover:none){ .tag .badge{font-size:.82rem;padding:.26rem .56rem} }
 
 /* ── 字卡 ───────────────────────────────── */
@@ -753,6 +759,34 @@ const SCENE = {
     const yA = top.y + 0.7, yB = yA;
     const yAt = () => yA;
 
+    /* 先決定人走的路，再擺東西。凡是壓到路的東西，沿著離路心的方向
+       往外推，推到和路至少隔開「自身半徑＋0.6」為止——人才不會穿過
+       帳篷、陶罐或樹。OB 記下每樣東西的位置與半徑，給驗證用。 */
+    const LC = [top.r * 0.12, top.r * 0.18], LRX = top.r * 0.32, LRZ = top.r * 0.22;
+    const LOOP = [];
+    for (let i = 0; i < 32; i++){
+      const a = i / 32 * 6.283;
+      LOOP.push([LC[0] + LRX * Math.cos(a), LC[1] + LRZ * Math.sin(a)]);
+    }
+    const toLoop = (x, z) => {
+      let b = 1e9;
+      for (let i = 0; i < LOOP.length; i++){
+        const [ax, az] = LOOP[i], [bx, bz] = LOOP[(i + 1) % LOOP.length];
+        const dx = bx - ax, dz = bz - az;
+        const t2 = Math.max(0, Math.min(1, ((x - ax) * dx + (z - az) * dz) / (dx * dx + dz * dz)));
+        b = Math.min(b, Math.hypot(x - ax - dx * t2, z - az - dz * t2));
+      }
+      return b;
+    };
+    const OB = [];
+    const keepOff = (x, z, rad) => {
+      let ux = x - LC[0], uz = z - LC[1], l = Math.hypot(ux, uz) || 1;
+      ux /= l; uz /= l;
+      for (let k = 0; k < 80 && toLoop(x, z) < rad + 0.6; k++){ x += ux * 0.12; z += uz * 0.12; }
+      OB.push({x, z, r:rad});
+      return [x, z];
+    };
+
     /* 層次不靠架高，靠地面分區（PUMA 的作法）：中間帳篷與人聚集處
        鋪一片夯實的深色地坪，人走的那一圈鋪成淺色沙徑。都只高出地面
        幾公分，人照樣走在同一個平面上。 */
@@ -809,7 +843,9 @@ const SCENE = {
 
     /* 第二層只有這一處：一個小植栽台，圍住凝脂島的主角——乳香與沒藥。
        墊高一點自然成為焦點，其餘地面整片留給人、帳篷與陶罐。 */
-    const GX = 0.5, GZ = -0.38, GR = 0.22;
+    const GR = 0.22;
+    const [gxw, gzw] = keepOff(0.5 * top.r, -0.38 * top.r, GR * top.r);
+    const GX = gxw / top.r, GZ = gzw / top.r;
     const bed = slab(blobShape(top.r * GR, 10, 0.1, rnd), 0.45, 0xB58A5A, 0xC9B79A, yA);
     bed.position.set(GX * top.r, 0, GZ * top.r);
     near.add(bed);
@@ -846,7 +882,8 @@ const SCENE = {
     [[0.62, 0.42, yA, 1.0], [0.72, 0.1, yA, 0.85], [-0.62, -0.02, yA, 0.95], [-0.48, 0.6, yA, 0.8]]
       .forEach(([fx, fz, y, s]) => {
         const d = datePalm();
-        d.position.set(fx * top.r, y, fz * top.r);
+        const [px, pz] = keepOff(fx * top.r, fz * top.r, 0.45);
+        d.position.set(px, y, pz);
         d.rotation.y = rnd() * 6.28; d.scale.setScalar(s);
         near.add(d);
       });
@@ -863,8 +900,9 @@ const SCENE = {
         const body = ball(w, POT[(gi + i) % 4], 0, h * 0.42, 0);
         body.scale.set(1, h / (w * 2) * 1.1, 1); pg.add(body);
         pg.add(cyl(w * 0.42, w * 0.5, h * 0.22, 9, POT[(gi + i + 1) % 4], 0, h * 0.86, 0));
-        const px = fx * top.r + Math.cos(a) * rr, pz = fz * top.r + Math.sin(a) * rr;
-        pg.position.set(px, yAt(px / top.r, pz / top.r), pz);
+        const [px, pz] = keepOff(fx * top.r + Math.cos(a) * rr,
+                                 fz * top.r + Math.sin(a) * rr, w + 0.05);
+        pg.position.set(px, yA, pz);
         near.add(pg);
       }
     });
@@ -877,33 +915,32 @@ const SCENE = {
       tg.add(cone(1.7, 1.9, 6, c1, 0, 0.95, 0));
       tg.add(box(0.7, 1.0, 0.12, c2, 0, 0.5, 1.28));
       tg.add(cyl(0.07, 0.07, 2.4, 5, 0x7A5C3E, 0, 1.2, 0));
-      tg.position.set(fx * top.r, yAt(fx, fz), fz * top.r);
-      tg.rotation.y = Math.atan2(fx, fz);
+      const [tx, tz] = keepOff(fx * top.r, fz * top.r, 1.7 * sc + 0.15);
+      tg.position.set(tx, yA, tz);
+      tg.rotation.y = Math.atan2(tx, tz);
       tg.scale.setScalar(sc);
       near.add(tg);
     });
 
     /* 回教族人民：男子白長袍白頭巾、女子深色長袍頭巾。
        兩個人沿沙地走一圈，其餘站著。 */
-    const loop = [];
-    for (let i = 0; i < 16; i++){
-      const a = i / 16 * 6.28;
-      loop.push(new THREE.Vector3(g.position.x + Math.cos(a) * top.r * 0.32 + top.r * 0.12,
-        yA, g.position.z + Math.sin(a) * top.r * 0.22 + top.r * 0.18));
-    }
+    /* 走的就是上面那條 LOOP，和地上的淺色沙徑同一條 */
+    const loop = LOOP.map(([x, z]) => new THREE.Vector3(g.position.x + x, yA, g.position.z + z));
     [['muslim_m', 0xF4EFE4], ['muslim_f', 0x3E3A44]].forEach(([st, c], i) => {
       const d = doll(c, st);
-      d.userData = {path:loop, t:i * 8, seg:loop[0].distanceTo(loop[1]),
+      d.userData = {path:loop, t:i * 16, seg:loop[0].distanceTo(loop[1]),
                     sp:0.9 * (i ? -1 : 1), y:yA};
       world.add(d); folk.push(d);
     });
     [['muslim_m', 0xEFE6D2, 0.18, -0.05], ['muslim_f', 0x5A3E48, -0.05, -0.32],
      ['muslim_m', 0xF4EFE4, 0.4, 0.55]].forEach(([st, c, fx, fz]) => {
       const d = doll(c, st);
-      d.position.set(fx * top.r, yAt(fx, fz), fz * top.r);
+      const [sx, sz] = keepOff(fx * top.r, fz * top.r, 0.4);
+      d.position.set(sx, yA, sz);
       d.rotation.y = rnd() * 6.28;
       near.add(d);
     });
+    g.__ob = OB; g.__loop = LOOP;
   }
 };
 
@@ -1184,6 +1221,7 @@ pins.forEach(p => {
   if (p.kind === 'isle'){
     b.className = 'tag isle';
     const col = '#' + p.isle.side.toString(16).padStart(6, '0');
+    b.style.setProperty('--ic', col);
     b.innerHTML = `<span class="badge" style="background:${col}">` +
                   `${String(p.isle.no).padStart(2, '0')}</span>` +
                   `<span class="nm">${p.isle.zh}</span>` +
@@ -1207,6 +1245,8 @@ function placeTags(){
   pins.forEach(p => {
     v3.copy(p.at).project(camera);
     const ok = v3.z < 1 && (p.kind === 'isle' || p.isle === shownIsle);
+    /* 進到第二層時，那座島的第一層名牌換成整塊島色，當這一層的標題 */
+    if (p.kind === 'isle') p.tag.classList.toggle('cur', p.isle === shownIsle);
     p.tag.classList.toggle('off', !ok);
     if (ok) vis.push({p, x:(v3.x * 0.5 + 0.5) * W, y:(-v3.y * 0.5 + 0.5) * H});
   });
