@@ -1247,7 +1247,11 @@ pins.forEach(p => {
                   `${String(p.isle.no).padStart(2, '0')}</span>` +
                   `<span class="nm">${p.isle.zh}</span>` +
                   `<span class="n">${p.isle.items.length}</span>`;
-    b.addEventListener('click', e => { e.stopPropagation(); openIsle(p.isle); });
+    /* 已經在這座島的第二層時，再點一次它的名牌＝回到第一層 */
+    b.addEventListener('click', e => {
+      e.stopPropagation();
+      if (shownIsle === p.isle) closeCard(); else openIsle(p.isle);
+    });
   } else {
     b.className = 'tag';
     const c2 = '#' + p.isle.side.toString(16).padStart(6, '0');
