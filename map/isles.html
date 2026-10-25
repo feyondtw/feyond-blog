@@ -82,11 +82,16 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .tag.off{opacity:0;pointer-events:none}
 body.notags .tag{opacity:0;pointer-events:none}
 /* 島名：比品項大一階，永遠展開 */
-.tag.isle{padding:.26rem .8rem .26rem .26rem;gap:.45rem;font-size:.9rem;font-weight:500;
+/* 第一層的島名牌：比第二層大一號。數字用 Arial、Book 字重（正常粗細，
+   不加粗），和第二層粗體的小編號分得出主從。 */
+.tag.isle{padding:.32rem .95rem .32rem .32rem;gap:.55rem;font-size:1.06rem;font-weight:600;
   box-shadow:0 5px 18px rgba(42,39,36,.2)}
 .tag.isle .nm{max-width:15rem;opacity:1}
-.tag.isle .badge{font-size:.82rem;padding:.26rem .56rem}
-.tag.isle .n{font-family:var(--latin);font-size:.76rem;color:var(--faint)}
+.tag.isle .badge{font-family:Arial,"Helvetica Neue",Helvetica,sans-serif;font-weight:400;
+  font-size:1.02rem;letter-spacing:.04em;padding:.3rem .62rem;
+  font-variant-numeric:lining-nums tabular-nums}
+.tag.isle .n{font-family:Arial,"Helvetica Neue",Helvetica,sans-serif;font-weight:400;
+  font-size:.86rem;color:var(--muted)}
 .tag.isle::after{opacity:1}
 @media (hover:none){ .tag .badge{font-size:.82rem;padding:.26rem .56rem} }
 
