@@ -842,6 +842,8 @@ function hexIsland(r, t){
 }
 
 /* ── 台灣：真實輪廓的小島 ───────────────── */
+/* 回傳的群組上掛著 __pts（島的輪廓）與 __hills（山的佔地），
+   房子、樹、娃娃都要拿它們驗過才擺——不然會蓋到海裡或山上。 */
 function taiwanIsland(scale){
   const g = new THREE.Group();
   const LAT0 = 23.6, LNG0 = 120.98, COS0 = Math.cos(LAT0 * Math.PI / 180);
@@ -856,12 +858,14 @@ function taiwanIsland(scale){
   slab.rotation.x = Math.PI / 2;
   slab.castShadow = true; slab.receiveShadow = true;
   g.add(slab);
+  g.__pts = pts;
   const base = new THREE.Mesh(
     new THREE.ExtrudeGeometry(s, {depth:3.4, bevelEnabled:false}),
     mat(0xC2A87E, {side:THREE.DoubleSide}));
   base.rotation.x = Math.PI / 2; base.position.y = -3.0; base.scale.set(0.94, 1, 0.94);
   g.add(base);
   // 中央山脈，一排由北到南的小山
+  const hills = [];
   for (let i = 0; i < 9; i++){
     const t = i / 8;
     const lat = 24.8 - t * 2.5, lng = 121.6 - t * 0.75;
@@ -872,7 +876,9 @@ function taiwanIsland(scale){
     m.rotation.y = i * 0.7;
     m.castShadow = true;
     g.add(m);
+    hills.push({x:m.position.x, z:m.position.z, r:1.5 + hh * 0.22});
   }
+  g.__hills = hills;
   return g;
 }
 
@@ -1009,26 +1015,77 @@ nodes.forEach((nd, n) => {
 
   if (nd.tw){
     // 台灣真實比例只有 2 單位高，看不見。放大 3.4 倍當地圖上的標記
-    g.add(taiwanIsland(2.3));
+    const tw = taiwanIsland(2.3);
+    g.add(tw);
+
+    /* 原本房子與樹是亂數撒的，第三棟房子落在 z=4.4——換算是
+       北緯 21.7 度，已經在台灣最南端以南的海上了；樹的 z 更到
+       6。現在一律先驗過：要在輪廓內、而且不在山的佔地上。 */
+    const inTW = (px, pz) => {
+      const q = tw.__pts; let hit = false;
+      for (let i = 0, j = q.length - 1; i < q.length; j = i++){
+        if ((q[i][1] > pz) !== (q[j][1] > pz) &&
+            px < (q[j][0] - q[i][0]) * (pz - q[i][1]) / (q[j][1] - q[i][1]) + q[i][0])
+          hit = !hit;
+      }
+      return hit;
+    };
+    const taken = [];
+    const freeAt = (px, pz, need) => {
+      if (!inTW(px, pz)) return false;
+      for (const h of tw.__hills) if (Math.hypot(px - h.x, pz - h.z) < h.r + need) return false;
+      for (const h of taken) if (Math.hypot(px - h.x, pz - h.z) < h.r + need) return false;
+      return true;
+    };
+    const spot = (need, tries) => {
+      for (let k = 0; k < (tries || 90); k++){
+        const px = -2.6 + Math.random() * 4.4, pz = -3.4 + Math.random() * 7.2;
+        if (freeAt(px, pz, need)){ taken.push({x:px, z:pz, r:need}); return [px, pz]; }
+      }
+      return null;
+    };
+
+    for (let i = 0; i < 3; i++){
+      const at = spot(0.55);
+      if (!at) continue;
+      const h = house(ROOFS[i % ROOFS.length], 0.9);
+      h.position.set(at[0], 0, at[1]);
+      h.rotation.y = i; g.add(h);
+    }
+    const sat = spot(0.5);
+    if (sat){
+      const st = still(); st.position.set(sat[0], 0, sat[1]); g.add(st);
+      steams.push({at:new THREE.Vector3(nd.x + sat[0], 1.0, nd.z + sat[1]), puffs:[]});
+    }
     for (let i = 0; i < 10; i++){
+      const at = spot(0.34);
+      if (!at) continue;
       const t = tree();
-      t.position.set(-3 + Math.random() * 5, 0, -6 + Math.random() * 12);
+      t.position.set(at[0], 0, at[1]);
       t.scale.setScalar(0.9 + Math.random() * 0.4);
       g.add(t);
     }
-    for (let i = 0; i < 3; i++){
-      const h = house(ROOFS[i % ROOFS.length], 0.9);
-      h.position.set(-2.2 + i * 1.3, 0, -2 + i * 3.2);
-      h.rotation.y = i; g.add(h);
-    }
-    const st = still(); st.position.set(-1.6, 0, 2.6); g.add(st);
-    steams.push({at:new THREE.Vector3(nd.x - 1.6, 1.0, nd.z + 2.6), puffs:[]});
-    for (let i = 0; i < 5; i++){
-      const d = doll(SHIRTS[i % SHIRTS.length]);
-      d.userData = {cx:nd.x - 1 + Math.random() * 2, cz:nd.z - 3 + Math.random() * 6, h:0,
-        a:Math.random() * 6.28, r:1.1 + Math.random() * 0.8,
-        sp:(0.35 + Math.random() * 0.4) * (i % 2 ? 1 : -1)};
-      world.add(d); folk.push(d);
+
+    /* 娃娃走的是定半徑的圓，整圈都要在島上、而且不碰到山與房子 */
+    const ringOK = (cx, cz, rr) => {
+      for (let s = 0; s < 20; s++){
+        const a = s / 20 * 6.283;
+        const px = cx + Math.cos(a) * rr, pz = cz + Math.sin(a) * rr;
+        if (!inTW(px, pz)) return false;
+        for (const h of tw.__hills) if (Math.hypot(px - h.x, pz - h.z) < h.r + 0.25) return false;
+        for (const h of taken) if (Math.hypot(px - h.x, pz - h.z) < h.r + 0.25) return false;
+      }
+      return true;
+    };
+    let made = 0;
+    for (let k = 0; k < 400 && made < 5; k++){
+      const cx = -2.4 + Math.random() * 4, cz = -3.2 + Math.random() * 6.8;
+      const rr = 0.45 + Math.random() * 0.5;
+      if (!ringOK(cx, cz, rr)) continue;
+      const d = doll(SHIRTS[made % SHIRTS.length]);
+      d.userData = {cx:nd.x + cx, cz:nd.z + cz, h:0, a:Math.random() * 6.28, r:rr,
+        sp:(0.35 + Math.random() * 0.4) * (made % 2 ? 1 : -1)};
+      world.add(d); folk.push(d); made++;
     }
     world.add(g);
     pins.push({tw:true, g, n, at:new THREE.Vector3(nd.x, 5.6, nd.z)});
@@ -1126,20 +1183,20 @@ nodes.forEach((nd, n) => {
      淨空的半徑就不會穿過房子。上限 0.6r 也保證走不到岸外
      （六邊形的內切半徑是 0.866r）。 */
   const pickR = () => {
-    let best = nd.r * 0.42, bestGap = -1e9;
-    for (let k = 0; k < 32; k++){
-      const rr = nd.r * (0.3 + Math.random() * 0.3);
+    for (let k = 0; k < 80; k++){
+      const rr = nd.r * (0.26 + Math.random() * 0.34);
       let gap = 1e9;
       obst.forEach(ob => { gap = Math.min(gap, Math.abs(ob.d - rr) - ob.clr); });
       if (gap > 0.12) return rr;
-      if (gap > bestGap){ bestGap = gap; best = rr; }
     }
-    return best;
+    return null;                       // 這座島擺不下，就不放人
   };
   for (let i = 0; i < t.dolls; i++){
+    const rr = pickR();
+    if (rr === null) continue;
     const d = doll(SHIRTS[(n + i) % SHIRTS.length]);
     d.scale.setScalar(0.6 + 0.4 * S);
-    d.userData = {cx:nd.x, cz:nd.z, h:0, a:Math.random() * 6.28, r:pickR(),
+    d.userData = {cx:nd.x, cz:nd.z, h:0, a:Math.random() * 6.28, r:rr,
       sp:(0.3 + Math.random() * 0.35) * (i % 2 ? 1 : -1)};
     world.add(d); folk.push(d);
   }

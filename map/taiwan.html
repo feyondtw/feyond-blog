@@ -627,7 +627,30 @@ SITES.forEach((o, n) => {
   const h = inPoly(x, z, MAIN) ? heightAt(x, z) : 0;
   const scene0 = new THREE.Group();
   scene0.position.set(x, h, z);
-  scene0.rotation.y = (n * 1.7) % (Math.PI * 2);
+
+  /* 產地的房子、作物畦、蒸餾器都是固定的局部座標。產地一靠海岸，
+     轉到哪個方向就決定了它們會不會掛到海上。所以先轉一圈找角度：
+     把每個東西的位置換算到世界座標，全部要在島上、而且和產地的
+     高度差要小（不然房子會卡在山壁上）。 */
+  const LOCAL = [[-0.55,-0.35,0.55],[0.62,0.1,0.45],[0.62,-0.62,0.45],
+                 [-0.45,0.6,0.42],[0.55,0.3,0.3],[1.0,-0.12,0.3]];
+  let bestA = 0, bestS = 1e9;
+  for (let k = 0; k < 48; k++){
+    const th = k / 48 * 6.283, ca = Math.cos(th), sa = Math.sin(th);
+    let bad = 0, dh = 0;
+    LOCAL.forEach(([lx, lz]) => {
+      const wx = x + lx * ca + lz * sa, wz = z - lx * sa + lz * ca;
+      if (!inPoly(wx, wz, MAIN)){ bad++; return; }
+      dh = Math.max(dh, Math.abs(heightAt(wx, wz) - h));
+    });
+    const s = bad * 20 + dh;
+    if (s < bestS){ bestS = s; bestA = th; }
+  }
+  scene0.rotation.y = bestA;
+  /* 這些東西實際落在哪，待會兒讓娃娃繞開 */
+  const caB = Math.cos(bestA), saB = Math.sin(bestA);
+  const props = LOCAL.map(([lx, lz, rr]) =>
+    ({x:x + lx * caB + lz * saB, z:z - lx * saB + lz * caB, r:rr}));
 
   const roof = ROOFS[n % ROOFS.length];
   const house = littleHouse(roof, o.hero ? 1.35 : 1.0);
@@ -664,11 +687,46 @@ SITES.forEach((o, n) => {
   world.add(scene0);
   pins.push({o, g:scene0, head, at:new THREE.Vector3(x, h + 2.0, z), n});
 
-  /* 娃娃：繞著自己的產地走 */
+  /* 娃娃：繞著自己的產地走。路徑要先挑過——沿著這個圓採樣一圈，
+     整圈都要在島上，而且高低差要小，不然娃娃會走進中央山脈裡。
+     半徑下限 1.25 讓它避開自家的房子、蒸餾器與作物區。 */
+  /* 娃娃走的圓：圓心可以離產地一段距離，半徑也可變。整圈都要在
+     島上、高低差要小、還不能碰到剛剛擺好的房子與作物畦。
+     只調半徑是不夠的——產地本身就貼著海岸時，再小的圓也會出海，
+     得讓圓心往內陸挪。 */
+  /* 條件是硬的，不是「挑最不糟的」：整圈都要在島上、不能碰到
+     房子與作物、而且高低差要小於 0.34 單位（約 260 公尺）。
+     關山那種四周都是陡坡的產地本來就沒有平地可走，找不到就
+     不放人——寧可少一個人偶，也不要一個爬上山頂的幽靈。 */
+  const MAXDROP = 0.34;
+  const pickOrbit = () => {
+    for (let k = 0; k < 500; k++){
+      const ang = Math.random() * 6.283, off = Math.random() * 1.6;
+      const ox = x + Math.cos(ang) * off, oz = z + Math.sin(ang) * off;
+      const rr = 0.25 + Math.random() * 1.0;
+      let lo = 1e9, hi = -1e9, ok = true;
+      for (let s = 0; s < 20 && ok; s++){
+        const a = s / 20 * 6.283;
+        const px = ox + Math.cos(a) * rr, pz = oz + Math.sin(a) * rr;
+        if (!inPoly(px, pz, MAIN)){ ok = false; break; }
+        for (const q of props)
+          if (Math.hypot(px - q.x, pz - q.z) < q.r){ ok = false; break; }
+        if (!ok) break;
+        const hh = heightAt(px, pz);
+        if (hh < lo) lo = hh;
+        if (hh > hi) hi = hh;
+        if (hi - lo > MAXDROP){ ok = false; break; }
+      }
+      if (ok) return {ox, oz, rr};
+    }
+    return null;
+  };
   const many = o.hero ? 4 : 2;
   for (let i = 0; i < many; i++){
+    const ob = pickOrbit();
+    if (!ob) continue;                 // 這個產地四周沒有平地可走
     const d = doll(SHIRTS[(n + i) % SHIRTS.length]);
-    d.userData = {cx:x, cz:z, h, r:1.0 + Math.random() * 0.7,
+    d.userData = {cx:ob.ox, cz:ob.oz, h, r:ob.rr,
       a:Math.random() * 6.28, sp:(0.3 + Math.random() * 0.4) * (i % 2 ? 1 : -1)};
     world.add(d); folk.push(d);
   }
@@ -1037,9 +1095,11 @@ function loop(now){
     /* 步頻跟著實際走的線速度走，不然會踩碎步滑過去，像幽靈 */
     u.ph = (u.ph || 0) + Math.abs(u.sp) * u.r * dt * 3.6;
     const sw = Math.sin(u.ph);
-    d.position.set(u.cx + Math.cos(u.a) * u.r,
-                   u.h + Math.abs(sw) * 0.03,
-                   u.cz + Math.sin(u.a) * u.r);
+    /* 踩著地形走，不是浮在固定高度上——不然會穿進山裡 */
+    const px = u.cx + Math.cos(u.a) * u.r, pz = u.cz + Math.sin(u.a) * u.r;
+    const gy = inPoly(px, pz, MAIN) ? heightAt(px, pz) : u.h;
+    u.y = u.y === undefined ? gy : u.y + (gy - u.y) * Math.min(1, dt * 9);
+    d.position.set(px, u.y + Math.abs(sw) * 0.03, pz);
     d.rotation.y = -u.a + (u.sp > 0 ? Math.PI / 2 : -Math.PI / 2);
     if (d.__legs){ d.__legs[0].rotation.x = sw * 0.6;
                    d.__legs[1].rotation.x = -sw * 0.6; }
