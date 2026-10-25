@@ -703,25 +703,40 @@ function doll(shirt, style){
   } else if (style === 'muslim_f'){                // 回教族女子：深色頭巾包到肩
     const hj = ball(0.31, shirt, 0, 1.0, -0.03); hj.scale.set(1, 1.02, 1.1); g.add(hj);
     g.add(cyl(0.2, 0.3, 0.32, 9, shirt, 0, 0.8, -0.03));
-  } else if (style === 'sari'){                    // 印度婦女：紗麗斜披過肩、髮髻、眉心紅點
-    g.add(box(0.12, 0.62, 0.36, 0xE0A23C, 0.08, 0.72, 0.02).rotateZ(-0.5));
-    const pl = cyl(0.27, 0.3, 0.1, 9, 0xE0A23C, 0, 0.47, 0); g.add(pl);
-    g.add(ball(0.13, hair, 0, 1.08, -0.27));
-    g.add(ball(0.035, 0xC7243A, 0, 1.04, 0.265));
-    g.add(ball(0.05, 0xE6C35C, 0.25, 0.92, 0.05));             // 耳環
+  } else if (style === 'sari'){                    // 印度仕女：及地紗麗、金邊、披肩蓋過後腦、首飾
+    const GOLD = 0xE6B84A;
+    g.add(cyl(0.29, 0.33, 0.08, 10, GOLD, 0, 0.44, 0));             // 裙襬金邊
+    g.add(cyl(0.18, 0.18, 0.05, 9, GOLD, 0, 0.94, 0));              // 頸間金項鍊
+    const pallu = box(0.14, 0.7, 0.4, shirt, 0.06, 0.74, 0.02); pallu.rotation.z = -0.55; g.add(pallu);
+    g.add(box(0.04, 0.7, 0.4, GOLD, 0.12, 0.74, 0.02).rotateZ(-0.55));  // 披肩金邊
+    const veil = ball(0.3, shirt, 0, 1.02, -0.08); veil.scale.set(1.02, 1.0, 0.95); g.add(veil);
+    g.add(box(0.36, 0.42, 0.05, shirt, 0, 0.84, -0.26).rotateX(-0.15)); // 披肩垂到背後
+    g.add(ball(0.035, 0xC7243A, 0, 1.04, 0.268));                       // 眉心紅點
+    [-1, 1].forEach(sd => {
+      g.add(ball(0.05, GOLD, sd * 0.25, 0.92, 0.05));                    // 耳環
+      g.add(new THREE.Mesh(new THREE.TorusGeometry(0.07, 0.025, 4, 10), mat(GOLD))
+        .translateX(sd * 0.24).translateY(0.5).rotateX(Math.PI / 2));    // 手環
+    });
   } else if (style === 'egypt_f'){                 // 埃及婦女：長袍、黑頭巾、頭頂一籃花
     const hj = ball(0.31, 0x2E2A2E, 0, 1.0, -0.03); hj.scale.set(1, 1.02, 1.1); g.add(hj);
     g.add(cyl(0.2, 0.3, 0.32, 9, 0x2E2A2E, 0, 0.8, -0.03));
     g.add(cyl(0.2, 0.16, 0.16, 9, 0xC9A97E, 0, 1.36, 0));
     [[-0.08, 0], [0.08, 0.04], [0, -0.08]].forEach(([x, z]) => g.add(ball(0.07, 0xF4C2CE, x, 1.46, z)));
-  } else if (style === 'rosemaid'){                       // 保加利亞仕女：頭巾＋花籃
-    const sc = ball(0.225, 0xD96A7A, 0, 1.02, -0.01); g.add(sc);
-    sc.scale.set(1, 0.86, 1);
-    g.add(box(0.1, 0.3, 0.04, 0xD96A7A, 0, 0.86, -0.2).rotateX(-0.3));
-    const bk = cyl(0.14, 0.11, 0.18, 8, 0xC9A97E, 0.26, 0.62, 0.1); g.add(bk);
-    g.add(ball(0.06, 0xE9BFC9, 0.26, 0.73, 0.1));
-    g.add(box(0.26, 0.36, 0.04, 0xFBF3E2, 0, 0.6, 0.2));                 // 白圍裙、紅繡邊
-    g.add(box(0.26, 0.05, 0.045, 0xC7243A, 0, 0.44, 0.21));
+  } else if (style === 'rosemaid'){               // 保加利亞少女：玫瑰花冠、兩條長辮、白衫黑裙紅繡圍裙、花籃
+    g.add(ball(0.11, 0xFBF7EE, -0.2, 0.78, 0)); g.add(ball(0.11, 0xFBF7EE, 0.2, 0.78, 0));   // 白色泡泡袖
+    g.add(box(0.27, 0.34, 0.04, 0xC7243A, 0, 0.6, 0.21));                                    // 紅圍裙
+    [0.5, 0.62, 0.74].forEach(y => g.add(box(0.27, 0.03, 0.045, 0xF2C14E, 0, y, 0.215)));   // 繡紋
+    for (let k = 0; k < 10; k++){                                                              // 花冠
+      const a = k / 10 * 6.28;
+      g.add(ball(0.065, k % 3 === 0 ? 0x6E9A5C : (k % 2 ? 0xD9587A : 0xF4C2CE),
+                 Math.cos(a) * 0.25, 1.14, Math.sin(a) * 0.25));
+    }
+    [-1, 1].forEach(sd => {                                                                    // 長辮
+      for (let k = 0; k < 4; k++) g.add(ball(0.06 - k * 0.006, hair, sd * 0.17, 0.86 - k * 0.1, -0.14));
+      g.add(ball(0.035, 0xC7243A, sd * 0.17, 0.48, -0.14));
+    });
+    const bk = cyl(0.14, 0.11, 0.18, 8, 0xC9A97E, 0.28, 0.6, 0.1); g.add(bk);
+    [[0.24, 0.12], [0.32, 0.08], [0.28, 0.16]].forEach(([x, z]) => g.add(ball(0.06, 0xD9587A, x, 0.72, z)));
   } else if (style === 'chopper'){                 // 劈柴的伐木工：只戴帽，斧頭另外裝
     g.add(cyl(0.21, 0.21, 0.14, 8, 0xC75B39, 0, 1.14, 0));
     g.add(ball(0.07, 0xF2E3C8, 0, 1.24, 0));
@@ -1621,7 +1636,7 @@ const SCENE = {
 
     /* 三種民族的採花婦女：保加利亞（玫瑰谷）、印度（茉莉田）、埃及（沙漠玫瑰）。
        各站在自己那片田邊；保加利亞與印度各再一人沿小徑走。 */
-    [['rosemaid', 0xD9587A, ZV, 0.92], ['sari', 0xC7365F, ZJ, 0.5], ['egypt_f', 0x3E5A8A, ZD, 0.5]]
+    [['rosemaid', 0x2E2A2E, ZV, 0.92], ['sari', 0xC7365F, ZJ, 0.5], ['egypt_f', 0x3E5A8A, ZD, 0.5]]
       .forEach(([st, c, Z, ang]) => {
         const d = doll(c, st);
         const a2 = Math.atan2(R * 0.04 - Z.z, R * 0.02 - Z.x) + ang;   // 朝島中央那一側
@@ -1630,7 +1645,7 @@ const SCENE = {
         near.add(d);
       });
     const loop = LOOP.map(([x, z]) => new THREE.Vector3(g.position.x + x, yA, g.position.z + z));
-    [['rosemaid', 0xF2C14E], ['sari', 0x2F8A7A]].forEach(([st, c], i) => {
+    [['rosemaid', 0x2E2A2E], ['sari', 0x2F8A7A]].forEach(([st, c], i) => {
       const d = doll(c, st);
       d.userData = {path:loop, t:i * 16, seg:loop[0].distanceTo(loop[1]), sp:0.85 * (i ? -1 : 1), y:yA};
       world.add(d); folk.push(d);
