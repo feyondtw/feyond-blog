@@ -1305,7 +1305,7 @@ const SCENE = {
 
     /* 獨立的拱門：兩根方柱、上面一道尖拱，站在廣場入口 */
     {
-      const [x, z] = keepOff(-0.06 * R, -0.71 * R, 0.9);
+      const [x, z] = keepOff(-0.06 * R, -0.64 * R, 0.9);
       const ag = new THREE.Group();
       const ST = 0xE8C99A, TRIM = 0xC4714B;
       [-0.85, 0.85].forEach(px => {
@@ -1320,7 +1320,7 @@ const SCENE = {
 
     /* 香料市集：兩個攤位，旁邊一袋袋敞口的香料粉 */
     const SPC = [0xC75B39, 0xE0A23C, 0x8E6B3A, 0xD98A2E, 0x6E4A30];
-    [[-0.6, 0.36, 0.2], [0.32, -0.59, -0.6]].forEach(([fx, fz, ry], si) => {
+    [[-0.54, 0.34, 0.2], [0.32, -0.57, -0.6]].forEach(([fx, fz, ry], si) => {
       const [x, z] = keepOff(fx * R, fz * R, 1.3);
       const st = fieldOf('spicemat');
       st.children.forEach(c => { if (c.position.y > 2) c.material = mat(si ? 0xE0A23C : 0xC75B39); });
@@ -1406,7 +1406,7 @@ const SCENE = {
 
     /* 駱駝：站在圓頂旁，馱著兩袋香料 */
     {
-      const [x, z] = keepOff(-0.74 * R, -0.08 * R, 0.9);
+      const [x, z] = keepOff(-0.66 * R, -0.08 * R, 0.9);
       const cg = new THREE.Group(), C = 0xD2A66A, C2 = 0xB98A50;
       cg.add(box(1.3, 0.55, 0.55, C, 0, 1.2, 0));
       cg.add(ball(0.36, C, -0.15, 1.6, 0));
@@ -1426,8 +1426,8 @@ const SCENE = {
       d.userData = {path:loop, t:i * 16, seg:loop[0].distanceTo(loop[1]), sp:0.85 * (i ? -1 : 1), y:yA};
       world.add(d); folk.push(d);
     });
-    [[0xFBF3E2, 'spicemerchant', -0.3, 0.44], [0xC75B39, 'spicemerchant', 0.3, 0.12],
-     [0xF4EFE4, 'muslim_m', -0.41, -0.1]].forEach(([c, st, fx, fz]) => {
+    [[0xFBF3E2, 'spicemerchant', -0.28, 0.48], [0xC75B39, 'spicemerchant', 0.3, 0.12],
+     [0xF4EFE4, 'muslim_m', -0.38, -0.12]].forEach(([c, st, fx, fz]) => {
       const d = doll(c, st);
       const [sx, sz] = keepOff(fx * R, fz * R, 0.4);
       d.position.set(sx, yA, sz); d.rotation.y = rnd() * 6.28; near.add(d);
@@ -1454,8 +1454,8 @@ const SCENE = {
       tg.add(ball(0.07, 0xE85A6A, 0.05, 1.68, 0));
       return tg;
     };
-    [[0.78, 0.18, 'c', 1.9], [-0.34, -0.8, 'p'], [-0.42, 0.72, 'p'], [0.62, 0.52, 'c', 1.5],
-     [-0.18, 0.78, 'p']].forEach(([fx, fz, k, h]) => {
+    [[0.74, 0.18, 'c', 1.9], [-0.36, 0.6, 'p'], [0.6, 0.5, 'c', 1.5],
+     [-0.14, 0.7, 'p']].forEach(([fx, fz, k, h]) => {
       const [x, z] = keepOff(fx * R, fz * R, 0.45);
       const c = k === 'c' ? column(h) : paddle();
       c.position.set(x, yA, z); c.rotation.y = rnd() * 6.28; near.add(c);
@@ -1472,7 +1472,7 @@ const SCENE = {
     g.add(slab(blobShape(R * 0.88, 13, 0.1, rnd), 0.6, 0xCFD9A2, 0x9E8A66, top.y));
     const {LOOP, OB, keepOff} = makePlanner(R * 0.02, R * 0.04, R * 0.22, R * 0.12);
     const trail = new THREE.Mesh(new THREE.RingGeometry(R * 0.22 - 0.4, R * 0.22 + 0.4, 40),
-      mat(0xEDE0BC));
+      mat(0xE9E4D6));                                         // 英式花園的淺色碎石路
     trail.rotation.x = -Math.PI / 2; trail.scale.set(1, 0.12 / 0.22, 1);
     trail.position.set(R * 0.02, yA + 0.03, R * 0.04); trail.receiveShadow = true;
     near.add(trail);
@@ -1561,6 +1561,63 @@ const SCENE = {
                         z + Math.sin(j * 1.6) * 0.2));
       }
     }
+
+    /* 英式花園：花床四周修剪整齊的矮樹籬、中央噴泉、白色玫瑰拱門、
+       混色花境、修剪成球的灌木 */
+    const HEDGE = 0x4E7A48;
+    [ZD, ZV, ZO, ZJ].forEach(Z => {
+      const n = Math.round(Z.r * 6.28 / 0.55);
+      for (let k = 0; k < n; k++){
+        const a2 = k / n * 6.28;
+        const hb = box(0.5, 0.32, 0.28, HEDGE, Z.x + Math.cos(a2) * Z.r * 0.9, Z.y + 0.16,
+                       Z.z + Math.sin(a2) * Z.r * 0.9);
+        hb.rotation.y = -a2 + Math.PI / 2; near.add(hb);
+      }
+    });
+    { /* 噴泉：在小徑圈正中 */
+      const fx = R * 0.02, fz = R * 0.04;
+      near.add(cyl(0.55, 0.6, 0.28, 14, 0xE6E0D2, fx, yA + 0.14, fz));
+      near.add(cyl(0.45, 0.45, 0.06, 14, 0x8FC4D4, fx, yA + 0.29, fz));
+      near.add(cyl(0.08, 0.1, 0.55, 8, 0xE6E0D2, fx, yA + 0.55, fz));
+      near.add(cyl(0.26, 0.12, 0.12, 12, 0xE6E0D2, fx, yA + 0.86, fz));
+      near.add(ball(0.08, 0xBFE2EC, fx, yA + 1.0, fz));
+      OB.push({x:fx, z:fz, r:0.6});
+    }
+    { /* 白色拱門跨在小徑上，爬滿粉紅玫瑰；人從底下走過 */
+      const [lx, lz] = LOOP[0];
+      const ag = new THREE.Group();
+      [-0.75, 0.75].forEach(dz => ag.add(box(0.12, 1.9, 0.12, 0xFBF7EE, 0, 0.95, dz)));
+      const arc = new THREE.Mesh(new THREE.TorusGeometry(0.75, 0.07, 5, 14, Math.PI), mat(0xFBF7EE));
+      arc.rotation.y = Math.PI / 2; arc.position.y = 1.9; ag.add(arc);
+      for (let k = 0; k < 9; k++){
+        const t = k / 8 * Math.PI;
+        ag.add(ball(0.13, k % 2 ? 0xE897AE : 0x6E9A5C, 0, 1.9 + Math.sin(t) * 0.75, Math.cos(t) * 0.75));
+      }
+      [-0.75, 0.75].forEach(dz => [0.5, 1.0, 1.5].forEach((y, j) =>
+        ag.add(ball(0.11, j % 2 ? 0x6E9A5C : 0xF4C2CE, 0.08, y, dz))));
+      ag.position.set(lx, yA, lz); near.add(ag);
+    }
+    /* 混色花境：一條土壤，種高高低低的穗狀花（藍、粉、紫、白、黃） */
+    const SPIRE = [0x7F9BD9, 0xE897AE, 0xB59BD9, 0xFBF7EE, 0xF2C14E, 0xD9587A];
+    [[-0.02, -0.66, 0], [-0.1, 0.62, 0], [-0.74, 0.06, 1.57], [0.76, 0.06, 1.57]].forEach(([fx, fz, ry], bi) => {
+      const [x, z] = keepOff(fx * R, fz * R, 1.0);
+      const bg = new THREE.Group();
+      bg.add(box(2.2, 0.08, 0.7, 0x8E7254, 0, 0.04, 0));
+      for (let k = 0; k < 8; k++){
+        const px = -0.95 + k * 0.27, pz = (k % 2 ? 0.14 : -0.14);
+        const h = 0.45 + ((k * 7 + bi * 3) % 5) * 0.12, c = SPIRE[(k + bi) % SPIRE.length];
+        bg.add(cyl(0.03, 0.03, h * 0.5, 4, 0x5E8A52, px, h * 0.25, pz));
+        bg.add(cone(0.11, h * 0.6, 6, c, px, h * 0.55 + 0.1, pz));
+      }
+      bg.add(ball(0.18, 0x6E9A5C, -1.0, 0.16, 0.2)); bg.add(ball(0.16, 0x6E9A5C, 1.0, 0.15, -0.2));
+      bg.position.set(x, yA, z); bg.rotation.y = ry; near.add(bg);
+    });
+    /* 修剪成球的灌木，一對一對擺在花境兩端 */
+    [[-0.2, -0.66], [0.17, -0.66], [-0.28, 0.66], [0.12, 0.66]].forEach(([fx, fz]) => {
+      const [x, z] = keepOff(fx * R, fz * R, 0.35);
+      near.add(cyl(0.2, 0.16, 0.3, 8, 0xC4714B, x, yA + 0.15, z));
+      near.add(ball(0.33, HEDGE, x, yA + 0.6, z));
+    });
 
     /* 三種民族的採花婦女：保加利亞（玫瑰谷）、印度（茉莉田）、埃及（沙漠玫瑰）。
        各站在自己那片田邊；保加利亞與印度各再一人沿小徑走。 */
