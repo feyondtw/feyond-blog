@@ -2391,8 +2391,9 @@ function applyCam(){
   camera.far = CAM.dist * 4 + 900;
   /* 手機版字卡從下面蓋上來：整個畫面往上挪半張卡，島才會落在卡片上方
      看得到的那一塊，而不是被壓在卡片底下 */
-  const sh = sheetPx();
-  if (sh) camera.setViewOffset(innerWidth, innerHeight, 0, sh / 2, innerWidth, innerHeight);
+  /* 桌機字卡在右側：畫面往左挪半張卡寬，島落在卡片左邊那塊 */
+  const ci = cardInset();
+  if (ci.x || ci.y) camera.setViewOffset(innerWidth, innerHeight, ci.x / 2, ci.y / 2, innerWidth, innerHeight);
   else camera.clearViewOffset();
   camera.updateProjectionMatrix();
   /* 霧的遠近一定要跟著鏡頭距離走。原本用島群尺寸算死，鏡頭一拉遠
@@ -2699,15 +2700,22 @@ function isleMenu(isle){
       </button>`).join('')).join('');
 }
 /* 手機版：字卡是底部抽屜時，它佔掉的高度（桌機版字卡在側邊，回 0） */
-function sheetPx(){
-  return (innerWidth <= 760 && !card.hidden) ? card.getBoundingClientRect().height : 0;
+function cardInset(){
+  /* 直接查元素，不用下面的 const card：applyCam 第一次跑時那個變數還沒宣告，
+     碰到就會整頁出錯 */
+  const el = document.getElementById('card');
+  if (!el || el.hidden) return {x:0, y:0};
+  const b = el.getBoundingClientRect();
+  return innerWidth <= 760 ? {x:0, y:b.height} : {x:Math.max(0, innerWidth - b.left), y:0};
 }
+const sheetPx = () => cardInset().y;
 /* 島要整座放得進「看得到的那一塊」：高度扣掉字卡，寬度看手機直立的窄視角 */
 function fitDist(R){
-  const visH = Math.max(120, innerHeight - sheetPx());
+  const ci = cardInset();
+  const visH = Math.max(120, innerHeight - ci.y), visW = Math.max(160, innerWidth - ci.x);
   const vt = Math.tan(FOV / 2 * Math.PI / 180);
   const byH = R * 1.25 / (vt * visH / innerHeight);
-  const byW = R * 1.15 / (vt * innerWidth / innerHeight);
+  const byW = R * 1.15 / (vt * visW / innerHeight);
   return Math.max(R * 5.2 + 8, Math.max(byH, byW) * 1.05);
 }
 /* 字卡內容換了、高度跟著變，畫面也要重新對位 */
