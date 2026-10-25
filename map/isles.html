@@ -111,13 +111,13 @@ body.notags .tag,body.notags .stem{opacity:0;pointer-events:none}
 .tag:not(.isle):hover .badge.sm,.tag:not(.isle).on .badge.sm{
   background:#FFFFFF !important;color:var(--ic);box-shadow:none}
 .tag:not(.isle) .nm{font-weight:700;font-size:.92rem}
-/* 第二層打開時，第一層名牌改成深墨色底、白字。第二層的號碼章用的是
-   島色，第一層若也用島色就會混在一起——兩層必須是兩種顏色。 */
-.tag.isle.cur{background:#2F2C27;color:#FFFFFF;z-index:5;
-  box-shadow:0 0 0 3px #FFFFFF,0 6px 22px rgba(42,39,36,.35)}
-.tag.isle.cur .badge{background:#FFFFFF !important;color:#2F2C27}
-.tag.isle.cur .n{color:rgba(255,255,255,.75)}
-.tag.isle.cur::after{border-top-color:#2F2C27}
+/* 第二層打開時，第一層名牌改成微亮的橘棕色、白字。第二層號碼章是
+   偏灰的島色，這裡用更亮、更飽和的橘棕把兩層分開（不用黑色系）。 */
+.tag.isle.cur{background:#DB8A45;color:#FFFFFF;z-index:5;
+  box-shadow:0 0 0 3px #FFFFFF,0 6px 22px rgba(170,95,30,.35)}
+.tag.isle.cur .badge{background:#FFFFFF !important;color:#C4702E}
+.tag.isle.cur .n{color:rgba(255,255,255,.85)}
+.tag.isle.cur::after{border-top-color:#DB8A45}
 @media (hover:none){ .tag .badge{font-size:.82rem;padding:.26rem .56rem} }
 
 /* ── 字卡 ───────────────────────────────── */
