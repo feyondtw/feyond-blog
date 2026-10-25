@@ -2837,6 +2837,55 @@ const crossers = [];
   }
 })();
 
+/* ── 夜晚的燈：島上步道邊的路燈、橋中央的燈籠、每座島一盞暖光 ───────
+   白天燈泡是不亮的乳白玻璃；黃昏漸亮、夜裡全亮，暖光真的照亮地面。 */
+const bulbMat = new THREE.MeshBasicMaterial({color:0xE8E0C8});
+const haloMat = new THREE.MeshBasicMaterial({color:0xFFC870, transparent:true, opacity:0,
+  depthWrite:false, blending:THREE.AdditiveBlending});
+const islandGlows = [];
+(function lamps(){
+  const postM = mat(0x3A3530);
+  const lamp = (parent, x, y, z, h) => {
+    parent.add(cyl(0.05, 0.07, h, 6, 0x3A3530, x, y + h / 2, z));
+    parent.add(cyl(0.12, 0.08, 0.08, 6, 0x3A3530, x, y + h + 0.02, z));
+    const b = new THREE.Mesh(new THREE.SphereGeometry(0.12, 8, 6), bulbMat); b.position.set(x, y + h + 0.14, z); parent.add(b);
+    const hl = new THREE.Mesh(new THREE.SphereGeometry(0.42, 10, 8), haloMat); hl.position.copy(b.position); parent.add(hl);
+    parent.add(cone(0.15, 0.12, 6, 0x3A3530, x, y + h + 0.3, z));
+  };
+  ISLES.forEach(isle => {
+    const g = isle.g, L = g.__loop; if (!L || !isle.near) return;
+    const OB = g.__ob || [], ground = g.children[5]; g.updateMatrixWorld(true);
+    let cx = 0, cz = 0; L.forEach(([x, z]) => { cx += x; cz += z; }); cx /= L.length; cz /= L.length;
+    let made = 0;
+    for (let k = 0; k < L.length && made < 4; k += Math.max(1, Math.floor(L.length / 6))){
+      const [lx, lz] = L[k], dx = lx - cx, dz = lz - cz, dl = Math.hypot(dx, dz) || 1;
+      const x = lx + dx / dl * 0.7, z = lz + dz / dl * 0.7;
+      if (OB.some(o => Math.hypot(x - o.x, z - o.z) < o.r + 0.25)) continue;
+      _rc.set(new THREE.Vector3(isle.x + x, 20, isle.z + z), _DOWN);
+      if (ground && !_rc.intersectObject(ground, true).length) continue;
+      lamp(isle.near, x, 0.6, z, 1.4); OB.push({x, z, r:0.2}); made++;
+    }
+    const pl = new THREE.PointLight(0xFFC27A, 0, isle.R * 1.7, 2);
+    pl.position.set(0, 2.6, 0); g.add(pl); islandGlows.push(pl);
+  });
+  /* 橋中央兩側扶手柱上各一盞燈籠 */
+  BRIDGES.forEach(B => {
+    const t = 0.5, mx = B.x0 + (B.x1 - B.x0) * t, mz = B.z0 + (B.z1 - B.z0) * t;
+    const nx = -Math.sin(B.ax), nz = Math.cos(B.ax), y = B.yAt(t) + 0.66;
+    [-1, 1].forEach(sd => {
+      const x = mx + nx * sd * 0.63, z = mz + nz * sd * 0.63;
+      bridgeGroup.add(box(0.14, 0.18, 0.14, 0x3A3530, x, y + 0.09, z));
+      const b = new THREE.Mesh(new THREE.SphereGeometry(0.09, 8, 6), bulbMat); b.position.set(x, y + 0.24, z); bridgeGroup.add(b);
+      const hl = new THREE.Mesh(new THREE.SphereGeometry(0.32, 10, 8), haloMat); hl.position.copy(b.position); bridgeGroup.add(hl);
+    });
+  });
+})();
+function nightLights(gl){
+  bulbMat.color.setHex(0xE8E0C8).lerp(new THREE.Color(0xFFD27A), gl);
+  haloMat.opacity = gl * 0.5;
+  islandGlows.forEach(l => { l.intensity = gl * 1.6; });
+}
+
 /* ── 海 ─────────────────────────────────────────────── */
 let minX = 1e9, maxX = -1e9, minZ = 1e9, maxZ = -1e9;
 ISLES.forEach(i => {
@@ -3206,13 +3255,13 @@ const FAR = new THREE.Group();
 /* ── 光線的四個時段 ─────────────────────────────────── */
 const MOODS = {
   dawn:  {bg:0xE8D6CE, fog:0xE8D6CE, sky:0xF4DCD2, gnd:0xA08A74, sun:0xFFD9B0,
-          sunI:0.62, hemiI:0.60, amb:0.16, sea:0x8FAFC0, mist:0.22, lit:false, pos:[-44, 26, 30]},
+          sunI:0.62, hemiI:0.60, amb:0.16, sea:0x8FAFC0, mist:0.22, lit:false, glow:0.15, pos:[-44, 26, 30]},
   day:   {bg:0xDCE4CC, fog:0xDCE4CC, sky:0xE6EFE4, gnd:0x9C8E74, sun:0xFFF4E2,
-          sunI:1.05, hemiI:0.50, amb:0.12, sea:0x5FAFC4, mist:0.16, lit:false, pos:[60, 46, 20]},
+          sunI:1.05, hemiI:0.50, amb:0.12, sea:0x5FAFC4, mist:0.16, lit:false, glow:0, pos:[60, 46, 20]},
   dusk:  {bg:0xE3B99A, fog:0xE3B99A, sky:0xF0C9A4, gnd:0x8A6E54, sun:0xFFB877,
-          sunI:0.72, hemiI:0.50, amb:0.15, sea:0xA8906F, mist:0.20, lit:true, pos:[46, 16, -26]},
+          sunI:0.72, hemiI:0.50, amb:0.15, sea:0xA8906F, mist:0.20, lit:true, glow:0.6, pos:[46, 16, -26]},
   night: {bg:0x2E3C50, fog:0x2E3C50, sky:0x3E5270, gnd:0x1E2838, sun:0x9FB4D8,
-          sunI:0.26, hemiI:0.34, amb:0.10, sea:0x33475E, mist:0.07, lit:true, pos:[-26, 38, -34]}
+          sunI:0.26, hemiI:0.34, amb:0.10, sea:0x33475E, mist:0.07, lit:true, glow:1, pos:[-26, 38, -34]}
 };
 let mFrom = MOODS.day, mTo = MOODS.day, mk = 1;
 const mixc = (c, a, b, q) => c.setHex(a).lerp(new THREE.Color(b), q);
@@ -3235,6 +3284,7 @@ function mood(q){
   const lit = (q > 0.5 ? mTo : mFrom).lit;
   slopeLights.material.opacity = lit ? 0.95 : 0;
   WIN.forEach(w => w.material = mat(lit ? 0xFFD79A : 0x3E5260));
+  nightLights(lerpn(mFrom.glow || 0, mTo.glow || 0, q));
 }
 mood(1);
 ['dawn', 'day', 'dusk', 'night'].forEach(k => {
