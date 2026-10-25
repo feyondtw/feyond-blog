@@ -568,32 +568,44 @@ function fieldOf(kind, c1, c2){
 }
 
 /* 樹：照深根大地的比例，三種輪廓隨機 */
-/* 樹也要胖：樹幹短而粗、樹冠大一號。寫實的細高樹不可愛。 */
+/* 樹：參考圖的林子是成叢、高低不一的針葉，不是一棵棵等距的
+   棒棒糖。針葉改成三段窄錐疊起來、梢頭收尖；闊葉用兩三顆大小
+   不一的球偏心疊，不再是正中央一顆。 */
 function bigTree(kind, c1, c2, rnd){
   const g = new THREE.Group();
-  g.add(cyl(0.24, 0.3, 0.75, 7, 0x9A7450, 0, 0.37, 0));
+  const tall = 0.8 + rnd() * 0.9;                 // 每棵高矮都不一樣
   if (kind === 'conifer'){
-    g.add(cone(1.15, 1.5, 8, c1, 0, 1.35, 0));
-    g.add(cone(0.82, 1.15, 8, c2, 0, 2.15, 0));
-    g.add(ball(0.2, c2, 0, 2.8, 0));
-  } else if (kind === 'bare'){
+    g.add(cyl(0.11, 0.16, 0.5 * tall, 6, 0x7A5C3E, 0, 0.25 * tall, 0));
+    const h0 = 1.5 * tall;
+    g.add(cone(0.72, h0, 7, c1, 0, 0.42 * tall + h0 / 2, 0));
+    g.add(cone(0.54, h0 * 0.78, 7, mix(c1, 0x000000, 0.08),
+               0, 0.42 * tall + h0 * 0.92, 0));
+    g.add(cone(0.34, h0 * 0.6, 7, mix(c1, 0xFFFFFF, 0.06),
+               0, 0.42 * tall + h0 * 1.42, 0));
+    g.rotation.y = rnd() * 6.28;
+    return g;
+  }
+  g.add(cyl(0.2, 0.26, 0.7 * tall, 7, 0x9A7450, 0, 0.35 * tall, 0));
+  if (kind === 'bare'){
     g.add(cyl(0.2, 0.26, 1.5, 7, 0xB08A5E, 0, 1.3, 0));
     g.add(ball(0.34, mix(c1, 0xFFFFFF, 0.2), -0.55, 2.0, 0.1));
     g.add(ball(0.34, mix(c1, 0xFFFFFF, 0.2), 0.55, 2.2, -0.1));
     g.add(ball(0.4, c1, 0, 2.5, 0));
-  } else if (kind === 'fruit'){
-    g.add(ball(1.15, c1, 0, 1.5, 0));
-    g.add(ball(0.72, c2, 0.5, 2.0, 0.25));
-    g.add(ball(0.22, 0xE6B45C, -0.72, 1.5, 0.55));
-    g.add(ball(0.22, 0xE6B45C, 0.68, 1.3, -0.5));
-  } else if (kind === 'blossom'){
-    g.add(ball(1.1, c1, 0, 1.45, 0));
-    g.add(ball(0.74, mix(c2, 0xFFFFFF, 0.3), 0.45, 1.95, 0.25));
-    g.add(ball(0.5, c1, -0.55, 1.85, -0.2));
   } else {
-    g.add(ball(1.15, c1, 0, 1.5, 0));
-    g.add(ball(0.75, c2, -0.45, 1.95, 0.2));
-    g.add(ball(0.5, c1, 0.55, 1.75, -0.25));
+    /* 闊葉：三顆大小不一的球偏心疊，每顆都偏一點，看起來才像長的 */
+    const fruit = kind === 'fruit', bloss = kind === 'blossom';
+    const r1 = (0.78 + rnd() * 0.3) * tall;
+    const a1 = rnd() * 6.28, a2 = a1 + 2.1 + rnd();
+    g.add(ball(r1, c1, Math.cos(a1) * 0.16, 0.7 * tall + r1 * 0.7, Math.sin(a1) * 0.16));
+    g.add(ball(r1 * 0.66, bloss ? mix(c2, 0xFFFFFF, 0.3) : c2,
+               Math.cos(a2) * r1 * 0.62, 0.7 * tall + r1 * 1.15, Math.sin(a2) * r1 * 0.62));
+    g.add(ball(r1 * 0.46, mix(c1, 0x000000, 0.08),
+               Math.cos(a1 + 3.3) * r1 * 0.6, 0.7 * tall + r1 * 0.5,
+               Math.sin(a1 + 3.3) * r1 * 0.6));
+    if (fruit)
+      for (let i = 0; i < 3; i++)
+        g.add(ball(0.17, 0xE6B45C, Math.cos(i * 2.1) * r1 * 0.72,
+                   0.7 * tall + r1 * 0.6, Math.sin(i * 2.1) * r1 * 0.72));
   }
   g.rotation.y = rnd() * 6.28;
   return g;
@@ -773,17 +785,24 @@ ISLES.forEach((isle, idx) => {
 
   /* 樹：沿著各階的邊緣長，中間留白，像那張地圖的林帶 */
   const c2a = mix(isle.top, 0x000000, 0.3), c2b = mix(isle.top, 0x000000, 0.14);
-  [[T0, 16, 0.62, 0.95], [T1, 11, 0.6, 0.9], [T2, 6, 0.55, 0.8]]
-    .forEach(([T, cnt, inner, outer], ti) => {
-      for (let i = 0; i < cnt; i++){
-        const a = (i / cnt) * 6.28 + rnd() * 0.45;
-        const rr = T.r * (inner + rnd() * (outer - inner));
-        const m = rnd() < 0.22
-          ? bigBush(c2a, c2b)
-          : bigTree(isle.tree, c2a, c2b, rnd);
-        m.position.set(T.x + Math.cos(a) * rr, T.y, T.z + Math.sin(a) * rr);
-        m.scale.setScalar(0.62 + rnd() * 0.5);
-        (ti === 0 ? g : near).add(m);
+  /* 樹要成叢。等距排一圈就是「版」——一叢三到六棵，叢與叢之間
+     留白，叢裡再各自高矮不一。 */
+  [[T0, 5, 0.6, 0.95], [T1, 4, 0.55, 0.92], [T2, 2, 0.5, 0.85]]
+    .forEach(([T, clumps, inner, outer], ti) => {
+      for (let c3 = 0; c3 < clumps; c3++){
+        const ca = rnd() * 6.28;
+        const cr = T.r * (inner + rnd() * (outer - inner));
+        const cx3 = T.x + Math.cos(ca) * cr, cz3 = T.z + Math.sin(ca) * cr;
+        const n3 = 3 + Math.floor(rnd() * 4);
+        for (let i = 0; i < n3; i++){
+          const a = rnd() * 6.28, rr = rnd() * 1.5;
+          const m = rnd() < 0.18
+            ? bigBush(c2a, c2b)
+            : bigTree(isle.tree, c2a, c2b, rnd);
+          m.position.set(cx3 + Math.cos(a) * rr, T.y, cz3 + Math.sin(a) * rr);
+          m.scale.setScalar(0.62 + rnd() * 0.45);
+          (ti === 0 && i < 3 ? g : near).add(m);
+        }
       }
     });
 
@@ -885,8 +904,7 @@ world.add(sea);
    只有九座島漂在空海上，畫面沒有縱深。外圈放一圈遠山，
    讓霧去吃掉它們的細節；中間再飄幾層薄霧。
    這些都不可點、不投影，純粹是背景。 */
-scene.fog.near = SPAN * 1.15;
-scene.fog.far  = SPAN * 4.3;
+scene.fog.near = SPAN * 1.15;      // 開場值，之後由 applyCam 接手
 
 const FAR = new THREE.Group();
 world.add(FAR);
@@ -989,6 +1007,10 @@ function applyCam(){
   camera.top = hh; camera.bottom = -hh;
   camera.far = CAM.dist * 4 + 400;
   camera.updateProjectionMatrix();
+  /* 霧的遠近一定要跟著鏡頭距離走。原本用島群尺寸算死，鏡頭一拉遠
+     島的視距就超出霧的範圍，整片被吃掉七成，看起來就像島不見了。 */
+  scene.fog.near = CAM.dist * 0.62;
+  scene.fog.far  = CAM.dist * 2.7;
   /* 遠看不必把所有東西都畫出來 */
   const want = CAM.dist < SPAN * 1.9;
   if (want !== nearOn){
