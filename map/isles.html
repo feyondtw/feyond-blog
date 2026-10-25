@@ -254,6 +254,10 @@ body.notags .tag,body.notags .stem{opacity:0;pointer-events:none}
   <button class="tool" id="t-tags" aria-pressed="true">名牌</button>
   <button class="tool" id="t-spin" aria-pressed="true">自轉</button>
   <button class="tool" id="t-bird" aria-pressed="false">鳥瞰</button>
+  <div class="seg" role="group" aria-label="拖曳">
+    <button id="d-rot" aria-pressed="true" style="line-height:1.2">轉動</button>
+    <button id="d-pan" aria-pressed="false" style="line-height:1.2">移動</button>
+  </div>
   <button class="tool" id="t-rl" title="向左轉 45°" aria-label="向左轉">&#8634;</button>
   <button class="tool" id="t-rr" title="向右轉 45°" aria-label="向右轉">&#8635;</button>
   <div class="seg" role="group" aria-label="光線">
@@ -264,7 +268,7 @@ body.notags .tag,body.notags .stem{opacity:0;pointer-events:none}
   </div>
 </div>
 
-<div class="over hint">拖曳轉動　Shift＋拖曳移動　捲動縮放</div>
+<div class="over hint">拖曳轉動　Shift＋拖曳移動　雙擊移到那裡　捲動縮放</div>
 
 <article class="card" id="card" hidden aria-live="polite">
   <div class="card-h">
@@ -2608,6 +2612,18 @@ function glide(to, ms){
 const pts = new Map();
 let dragging = false, moved = false, sx = 0, sy = 0, px = 0, py = 0, cap = -1, pinch0 = 0;
 let rotMode = false, mid0 = null, ang0 = 0;
+/* 拖曳要轉動還是移動：工具列上的「轉動｜移動」切換；按著 Shift 拖曳＝另一種 */
+let dragRot = true;
+function setDrag(rot){
+  dragRot = rot;
+  document.getElementById('d-rot').setAttribute('aria-pressed', String(rot));
+  document.getElementById('d-pan').setAttribute('aria-pressed', String(!rot));
+  const h = document.querySelector('.hint');
+  if (h) h.textContent = rot ? '拖曳轉動　Shift＋拖曳移動　雙擊移到那裡　捲動縮放'
+                             : '拖曳移動　Shift＋拖曳轉動　雙擊移到那裡　捲動縮放';
+}
+document.getElementById('d-rot').onclick = () => setDrag(true);
+document.getElementById('d-pan').onclick = () => setDrag(false);
 const spread = () => {
   const v = [...pts.values()];
   return v.length < 2 ? 0 : Math.hypot(v[0].x - v[1].x, v[0].y - v[1].y);
@@ -2638,6 +2654,23 @@ function panBy(x0, y0, x1, y1){
   applyCam();
 }
 host.addEventListener('contextmenu', e => e.preventDefault());
+/* 雙擊（手機雙點）：鏡頭滑到那一點正上方，距離不變 */
+let lastTap = 0, lastTapX = 0, lastTapY = 0;
+function flyTo(cx, cy){
+  const hit = new THREE.Vector3();
+  if (!groundAt(cx, cy, hit)) return;
+  const ox = hit.x - CX, oz = hit.z - CZ, ol = Math.hypot(ox, oz), lim = MAXR + 4;
+  if (ol > lim){ hit.x = CX + ox / ol * lim; hit.z = CZ + oz / ol * lim; }
+  lastTouch = performance.now();
+  glide({x:hit.x, z:hit.z}, 600);
+}
+host.addEventListener('dblclick', e => flyTo(e.clientX, e.clientY));
+host.addEventListener('pointerup', e => {
+  if (e.pointerType !== 'touch' || moved) return;
+  const now = performance.now();
+  if (now - lastTap < 320 && Math.hypot(e.clientX - lastTapX, e.clientY - lastTapY) < 30) flyTo(e.clientX, e.clientY);
+  lastTap = now; lastTapX = e.clientX; lastTapY = e.clientY;
+});
 host.addEventListener('pointerdown', e => {
   pts.set(e.pointerId, {x:e.clientX, y:e.clientY});
   anim = null; lastTouch = performance.now();
@@ -2645,7 +2678,7 @@ host.addEventListener('pointerdown', e => {
     dragging = true; moved = false; sx = px = e.clientX; sy = py = e.clientY;
     /* 一般拖曳＝轉動與俯仰（繞著目前焦點，可以一直轉一整圈）；
        右鍵、或按著 Shift／Ctrl／Alt 拖曳＝移動地圖。手機兩指移動。 */
-    rotMode = !(e.button === 2 || e.shiftKey || e.ctrlKey || e.altKey);
+    rotMode = dragRot !== (e.button === 2 || e.shiftKey || e.ctrlKey || e.altKey);
   } else if (pts.size === 2){
     dragging = false; moved = true; grab(e);
     pinch0 = spread(); mid0 = midOf(); ang0 = angOf();
