@@ -1814,13 +1814,7 @@ const SCENE = {
     [[0.6, -0.4], [-0.55, -0.45]].forEach(([dx, dz]) => {
       const rk = ball(0.32, 0xB86A48, ZB.x + dx * ZB.r, ZB.y + 0.12, ZB.z + dz * ZB.r); rk.scale.y = 0.6; near.add(rk);
     });
-    [['berber_m', 0xD9C6A0, 0.5], ['berber_f', 0x2E5A8A, -0.5]].forEach(([st, c, ang]) => {
-      const d = doll(c, st);
-      const a2 = Math.atan2(R * 0.06 - ZB.z, R * 0.02 - ZB.x) + ang;
-      const [x, z] = keepOff(ZB.x + Math.cos(a2) * (ZB.r + 0.45), ZB.z + Math.sin(a2) * (ZB.r + 0.45), 0.35);
-      d.position.set(x, yA, z); d.rotation.y = Math.atan2(ZB.x - x, ZB.z - z);
-      near.add(d);
-    });
+    /* 柏柏爾人：沿香桃木叢靠島中央那一側來回走（見下方 arcWalk） */
 
     /* 爪哇香茅田：一壟壟高高的禾草叢，細長葉片往外散開；
        香茅深綠、檸檬香茅偏黃綠，各占一半 */
@@ -1866,6 +1860,32 @@ const SCENE = {
         }
         bg.position.set(x, ZH.y, z); near.add(bg);
       });
+    }
+
+    /* 讓人多走動：沿著某一區靠島中央那一側的弧線來回走（走到底回頭）。
+       弧線在該區外緣 0.55，朝島內，不會走出地面。 */
+    const arcWalk = (Z, span, folkList) => {
+      const a0 = Math.atan2(R * 0.06 - Z.z, R * 0.02 - Z.x), rr = Z.r + 0.55, pts = [];
+      for (let k = 0; k <= 12; k++){
+        const a = a0 - span / 2 + span * k / 12;
+        pts.push(new THREE.Vector3(g.position.x + Z.x + Math.cos(a) * rr, yA, g.position.z + Z.z + Math.sin(a) * rr));
+      }
+      const path = pts.concat(pts.slice(1, -1).reverse());
+      folkList.forEach(([st, c], i) => {
+        const d = doll(c, st);
+        d.userData = {path, t:i * 9, seg:path[0].distanceTo(path[1]), sp:0.7, y:yA};
+        world.add(d); folk.push(d);
+      });
+      return path;
+    };
+    g.__walks = [
+      arcWalk(ZB, 2.2, [['berber_m', 0xD9C6A0], ['berber_f', 0x2E5A8A]]),
+      arcWalk(ZN, 2.0, [['maori', 0x5A3A2A], ['maori', 0x3A2E28]])
+    ];
+    { /* 中央小徑再多一位柏柏爾婦女 */
+      const d = doll(0x8A3A4A, 'berber_f');
+      d.userData = {path:loopN, t:8, seg:loopN[0].distanceTo(loopN[1]), sp:0.75, y:yA};
+      world.add(d); folk.push(d);
     }
 
     g.__zones = {ausgum:ZE, shiso:ZS, madagascar:ZM, nzeastcape:ZN, morocco:ZB, java:ZJ, himalaya:ZH};
