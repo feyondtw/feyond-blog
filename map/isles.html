@@ -2386,7 +2386,7 @@ const TARGET = new THREE.Vector3();
 let nearOn = true;
 function applyCam(){
   CAM.phi = Math.max(BIRD_MIN, Math.min(1.45, CAM.phi));
-  CAM.dist = Math.max(24, Math.min(SPAN * 5.5 + 80, CAM.dist));
+  CAM.dist = Math.max(9, Math.min(SPAN * 5.5 + 80, CAM.dist));
   camera.aspect = innerWidth / Math.max(1, innerHeight);
   camera.far = CAM.dist * 4 + 900;
   /* 手機版字卡從下面蓋上來：整個畫面往上挪半張卡，島才會落在卡片上方
@@ -2463,7 +2463,14 @@ host.addEventListener('pointerdown', e => {
 host.addEventListener('pointermove', e => {
   if (!pts.has(e.pointerId)) return;
   pts.set(e.pointerId, {x:e.clientX, y:e.clientY});
-  if (pts.size === 2){ if (pinch0 > 0){ CAM.dist = d0 * pinch0 / spread(); applyCam(); } return; }
+  if (pts.size === 2){
+    if (pinch0 > 0){
+      const sp = spread(), v = [...pts.values()];
+      if (sp > 0) zoomAt((v[0].x + v[1].x) / 2, (v[0].y + v[1].y) / 2, CAM.dist * pinch0 / sp);
+      pinch0 = sp;                                  // 逐段縮放，中心跟著兩指中點走
+    }
+    return;
+  }
   if (!dragging) return;
   if (!moved){
     if (Math.hypot(e.clientX - sx, e.clientY - sy) < 3) return;
@@ -2481,9 +2488,40 @@ host.addEventListener('pointermove', e => {
 }));
 host.addEventListener('wheel', e => {
   e.preventDefault(); anim = null; lastTouch = performance.now();
-  CAM.dist *= 1 + e.deltaY * 0.0012;
-  applyCam();
+  zoomAt(e.clientX, e.clientY, CAM.dist * (1 + e.deltaY * 0.0012));
 }, {passive:false});
+
+/* 往游標（或兩指中點）那一點縮放，不是往湖心——原本一放大就只剩島與島
+   之間的水面。找出游標底下的地面點，縮放時讓它留在游標底下。 */
+const zoomRay = new THREE.Raycaster(), zoomPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -0.6);
+function zoomAt(cx, cy, want){
+  const old = CAM.dist;
+  const d = Math.max(9, Math.min(SPAN * 5.5 + 80, want));
+  const r = host.getBoundingClientRect();
+  zoomRay.setFromCamera(new THREE.Vector2((cx - r.left) / r.width * 2 - 1,
+                                          -((cy - r.top) / r.height) * 2 + 1), camera);
+  const ndc = new THREE.Vector2((cx - r.left) / r.width * 2 - 1, -((cy - r.top) / r.height) * 2 + 1);
+  const hit = new THREE.Vector3(), hit2 = new THREE.Vector3();
+  const ok = zoomRay.ray.intersectPlane(zoomPlane, hit);
+  if (ok){
+    const k = d / old;
+    CAM.tx = hit.x + (CAM.tx - hit.x) * k;
+    CAM.tz = hit.z + (CAM.tz - hit.z) * k;
+  }
+  CAM.dist = d;
+  applyCam();
+  /* 校正：重新看游標底下落在哪，差多少就把焦點補回去，那一點才真的留在游標下 */
+  for (let i = 0; ok && i < 2; i++){
+    camera.updateMatrixWorld();
+    zoomRay.setFromCamera(ndc, camera);
+    if (!zoomRay.ray.intersectPlane(zoomPlane, hit2)) break;
+    CAM.tx += hit.x - hit2.x; CAM.tz += hit.z - hit2.z;
+    applyCam();
+  }
+  /* 焦點不能跑出湖外 */
+  const ox = CAM.tx - CX, oz = CAM.tz - CZ, ol = Math.hypot(ox, oz), lim = MAXR + 4;
+  if (ol > lim){ CAM.tx = CX + ox / ol * lim; CAM.tz = CZ + oz / ol * lim; applyCam(); }
+}
 
 /* ── 名牌 ───────────────────────────────────────────── */
 const tagLayer = document.getElementById('tags');
