@@ -1694,11 +1694,15 @@ const SCENE = {
     trail.position.set(R * 0.02, yA + 0.03, R * 0.06); trail.receiveShadow = true;
     near.add(trail);
 
+    /* 不架高：各區只是地面上一片薄薄的土色，邊緣不規則、顏色往草地靠，
+       整座島連成一片，不像一塊塊小花台 */
+    const GROUND = 0xC9D49A;
     const zone = (fx, fz, fr, topC, sideC) => {
       const [x, z] = keepOff(fx * R, fz * R, fr * R);
-      const s3 = slab(blobShape(fr * R, 11, 0.1, rnd), 0.45, topC, sideC, yA);
-      s3.position.set(x, 0, z); near.add(s3);
-      return {x, z, r:fr * R, y:yA + 0.45};
+      const c = mix(topC, GROUND, 0.3);
+      const s3 = slab(blobShape(fr * R, 14, 0.2, rnd), 0.04, c, c, yA);
+      s3.position.set(x, 0, z); s3.receiveShadow = true; near.add(s3);
+      return {x, z, r:fr * R, y:yA + 0.04};
     };
     const ZE = zone(-0.4, -0.18, 0.36, 0xD9C38A, 0xB0703E);    // 澳洲尤加利林：乾草地、紅土剖面
     const ZS = zone(0.46, -0.4, 0.22, 0x9C7A56, 0x6E5A44);     // 紫蘇田：翻過的土
