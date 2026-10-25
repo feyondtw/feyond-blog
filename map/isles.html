@@ -1783,12 +1783,12 @@ const SCENE = {
       tg.position.set(ZN.x + dx * ZN.r, ZN.y, ZN.z + dz * ZN.r); tg.scale.setScalar(s);
       tg.rotation.y = rnd() * 6.28; near.add(tg);
     });
-    [[0x3A2E28, 0.6], [0x6E4A30, 1.1]].forEach(([c, ang]) => {
+    /* 毛利人沿小徑走，一前一後、反方向 */
+    const loopN = LOOP.map(([x, z]) => new THREE.Vector3(g.position.x + x, yA, g.position.z + z));
+    [0x3A2E28, 0x6E4A30].forEach((c, i) => {
       const d = doll(c, 'maori');
-      const a2 = Math.atan2(R * 0.06 - ZN.z, R * 0.02 - ZN.x) + ang - 0.85;
-      const [x, z] = keepOff(ZN.x + Math.cos(a2) * (ZN.r + 0.45), ZN.z + Math.sin(a2) * (ZN.r + 0.45), 0.35);
-      d.position.set(x, yA, z); d.rotation.y = Math.atan2(ZN.x - x, ZN.z - z);
-      near.add(d);
+      d.userData = {path:loopN, t:i * 16, seg:loopN[0].distanceTo(loopN[1]), sp:0.8 * (i ? -1 : 1), y:yA};
+      world.add(d); folk.push(d);
     });
 
     /* 摩洛哥・亞特拉斯山：綠香桃木——矮而密的深綠灌木，白花、藍黑漿果；
