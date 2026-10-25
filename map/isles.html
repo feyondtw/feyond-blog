@@ -831,8 +831,9 @@ function doll(shirt, style){
     f2.position.set(0, -0.42, 0.035);
     pv.add(m, f2); return pv;
   };
-  const l1 = leg(); l1.position.set(-0.085, 0.41, 0);
-  const l2 = leg(); l2.position.set(0.085, 0.41, 0);
+  /* 鞋底原本低於人偶原點 4 公分，站在地上腳會陷進去；腿整組抬高 */
+  const l1 = leg(); l1.position.set(-0.085, 0.455, 0);
+  const l2 = leg(); l2.position.set(0.085, 0.455, 0);
   g.add(l1, l2);
   g.__legs = [l1, l2];
   return g;
@@ -2315,6 +2316,32 @@ const SCENE = {
       }
     }
 
+    /* 小河一路流到香草花圃：從小河西端彎過草地，在花圃邊匯成一個小水塘 */
+    {
+      const [sx, sz] = riverAt(0);
+      const dx = ZG.x - sx, dz = ZG.z - sz, dl = Math.hypot(dx, dz);
+      const ex = ZG.x - dx / dl * (ZG.r + 0.35), ez = ZG.z - dz / dl * (ZG.r + 0.35);   // 花圃邊外一點
+      /* 二次貝茲：中間往旁邊彎一點，看起來是自然的河道 */
+      const mx = (sx + ex) / 2 + dz / dl * 1.2, mz = (sz + ez) / 2 - dx / dl * 1.2;
+      const bez = t => [(1 - t) * (1 - t) * sx + 2 * (1 - t) * t * mx + t * t * ex,
+                        (1 - t) * (1 - t) * sz + 2 * (1 - t) * t * mz + t * t * ez];
+      const N = Math.max(8, Math.round(dl / 0.4));
+      for (let k = 0; k < N; k++){
+        const [x0, z0] = bez(k / N), [x1, z1] = bez((k + 1) / N);
+        const seg = box(Math.hypot(x1 - x0, z1 - z0) + 0.08, 0.03, 0.5, 0x7FC4D4, (x0 + x1) / 2, yA + 0.06, (z0 + z1) / 2);
+        seg.rotation.y = -Math.atan2(z1 - z0, x1 - x0); seg.receiveShadow = true; near.add(seg);
+        if (k % 3 === 1){
+          const sd = k % 2 ? 1 : -1, nx = -(z1 - z0), nz = x1 - x0, nl = Math.hypot(nx, nz) || 1;
+          const rk = ball(0.12, 0xBDB6A8, x0 + nx / nl * 0.38 * sd, yA + 0.08, z0 + nz / nl * 0.38 * sd);
+          rk.scale.y = 0.6; near.add(rk);
+        }
+      }
+      const pond = cyl(0.7, 0.7, 0.03, 18, 0x7FC4D4, ex, yA + 0.065, ez); pond.scale.z = 0.75; near.add(pond);
+      const rim = new THREE.Mesh(new THREE.TorusGeometry(0.72, 0.06, 4, 18), mat(0xBDB6A8));
+      rim.rotation.x = Math.PI / 2; rim.scale.y = 0.75; rim.position.set(ex, yA + 0.07, ez); near.add(rim);
+      g.__river = {sx, sz, mx, mz, ex, ez};
+    }
+
     g.__zones = {herbgarden:ZG, brook:ZB};
     g.__ob = OB; g.__loop = LOOP;
   }
@@ -2393,7 +2420,21 @@ ISLES.forEach((isle, idx) => {
 });
 
 /* ── 橋：用最小生成樹連起來，每座島都到得了 ────────── */
+const bridgeGroup = new THREE.Group(), BRIDGES = [];
+/* 沿某方向，地面厚板（第二層場景的地）延伸到多遠；沒有場景的島回 0 */
+const _rc = new THREE.Raycaster(), _DOWN = new THREE.Vector3(0, -1, 0);
+function slabEdgeOf(isle, ang){
+  const ground = SCENE[isle.part] && isle.g.children[5]; if (!ground) return 0;
+  isle.g.updateMatrixWorld(true);
+  let last = 0;
+  for (let r = 0.3; r < isle.R; r += 0.1){
+    _rc.set(new THREE.Vector3(isle.x + Math.cos(ang) * r, 20, isle.z + Math.sin(ang) * r), _DOWN);
+    if (_rc.intersectObject(ground, true).length) last = r; else if (last) break;
+  }
+  return last;
+}
 (function bridges(){
+  world.add(bridgeGroup);
   const n = ISLES.length, inTree = [0], out = ISLES.map((_, i) => i).slice(1);
   /* 老闆給的參考：微微拱起的木橋，深褐木板一片片、板間留縫，兩側深紅褐
      弧形扶手，每側三根柱。兩端落在六角盤邊上。 */
@@ -2412,8 +2453,11 @@ ISLES.forEach((isle, idx) => {
     const j = out.splice(bj, 1)[0];
     const a = ISLES[bi], b = ISLES[j];
     const ax = Math.atan2(b.z - a.z, b.x - a.x);
-    /* 兩端各伸進島邊 0.35，看起來是搭在岸上 */
-    const ra = hexEdge(a.R, ax) - 0.35, rb = hexEdge(b.R, ax + Math.PI) - 0.35;
+    /* 橋頭搭在島的地面上：有場景的島搭在地面厚板邊內 0.3、高 0.6（和人走的地
+       一樣高，不用跨台階）；還沒有場景的島搭在六角盤邊內 0.35、高 0.04 */
+    const ea = slabEdgeOf(a, ax), eb = slabEdgeOf(b, ax + Math.PI);
+    const ra = ea ? ea - 0.3 : hexEdge(a.R, ax) - 0.35, rb = eb ? eb - 0.3 : hexEdge(b.R, ax + Math.PI) - 0.35;
+    const ya = ea ? 0.6 : 0.04, yb = eb ? 0.6 : 0.04;
     const x0 = a.x + Math.cos(ax) * ra, z0 = a.z + Math.sin(ax) * ra;
     const x1 = b.x - Math.cos(ax) * rb, z1 = b.z - Math.sin(ax) * rb;
     const len = Math.hypot(x1 - x0, z1 - z0);
@@ -2421,8 +2465,8 @@ ISLES.forEach((isle, idx) => {
     const bg = new THREE.Group();
     bg.position.set((x0 + x1) / 2, 0, (z0 + z1) / 2); bg.rotation.y = -ax;
     const rise = Math.min(0.75, 0.18 + len * 0.16), W = 1.3;
-    const yAt = t => 0.04 + rise * Math.sin(Math.PI * t);           // t：0→1 沿橋長
-    const slopeAt = t => Math.atan(rise * Math.PI * Math.cos(Math.PI * t) / len);
+    const yAt = t => ya + (yb - ya) * t + rise * Math.sin(Math.PI * t);   // t：0→1 沿橋長
+    const slopeAt = t => Math.atan(((yb - ya) + rise * Math.PI * Math.cos(Math.PI * t)) / len);
     /* 木板：一片片橫跨，順著拱度傾斜 */
     const np = Math.max(5, Math.round(len / 0.34));
     for (let k = 0; k < np; k++){
@@ -2456,9 +2500,142 @@ ISLES.forEach((isle, idx) => {
         rl.castShadow = true; bg.add(rl);
       }
     });
-    world.add(bg);
+    bridgeGroup.add(bg);
+    BRIDGES.push({a, b, ax, x0, z0, x1, z1, len, yAt});
     inTree.push(j);
   }
+})();
+
+/* ── 過橋的人：從一座島走過拱橋到隔壁島，再走回來 ──────────
+   路線：島內 → 走到地面厚板邊（高 0.6）→ 下一階到盤緣 → 沿拱橋 →
+   上到對岸厚板 → 島內。只挑兩端都有場景、路上不撞東西的橋。 */
+const crossers = [];
+(function crossing(){
+  const rc = _rc, DOWN = _DOWN, slabEdge = slabEdgeOf;
+  const clear = (isle, x, z) => !(isle.g.__ob || []).some(o => Math.hypot(x - isle.x - o.x, z - isle.z - o.z) < o.r + 0.35);
+  const WHO = {fruit:['farmer', 0xF2C14E], spice:['spicemerchant', 0xFBF3E2], leaf:['maori', 0x3A2E28],
+               earth:['nepali', 0xF4EFE4], flower:['rosemaid', 0x2E2A2E], herb:['herbalist', 0x7FAE66],
+               wood:['logger', 0xC75B39], resin:['muslim_m', 0xF4EFE4]};
+  let made = 0;
+  BRIDGES.forEach(B => {
+    if (made >= 4 || !SCENE[B.a.part] || !SCENE[B.b.part]) return;
+    const pts = [];
+    /* 一側：從該島自己的步道（本來就淨空）最靠近橋的點，直線走到厚板邊，
+       下一階到盤緣。直線上每 0.3 檢查一次不能撞東西。 */
+    const side = (isle, ang) => {
+      const e = slabEdge(isle, ang); if (!e || !isle.g.__loop) return null;
+      const ex = Math.cos(ang) * (e - 0.3), ez = Math.sin(ang) * (e - 0.3);    // 橋頭
+      /* 橋頭落點本身也不能壓到東西（含橋往內 0.6 的那一段） */
+      for (const back of [0, 0.3]){
+        const bx = Math.cos(ang) * (e - 0.3 - back), bz = Math.sin(ang) * (e - 0.3 - back);
+        if ((isle.g.__ob || []).some(o => Math.hypot(bx - o.x, bz - o.z) < o.r + 0.05)) return null;
+      }
+      let best = null, bd = 1e9;
+      isle.g.__loop.forEach(([lx, lz]) => { const d = Math.hypot(lx - ex, lz - ez); if (d < bd){ bd = d; best = [lx, lz]; } });
+      const out = [], steps = Math.max(2, Math.ceil(bd / 0.3)), OBS = isle.g.__ob || [];
+      const ground = isle.g.children[5];
+      for (let k = 0; k <= steps; k++){
+        let x = best[0] + (ex - best[0]) * k / steps, z = best[1] + (ez - best[1]) * k / steps;
+        /* 路上有東西就繞開：把點推到那樣東西外緣 0.4，反覆幾次 */
+        if (k > 0 && k < steps){
+          for (let it = 0; it < 8; it++){
+            let movedPt = false;
+            OBS.forEach(o => {
+              const dx = x - o.x, dz = z - o.z, dl = Math.hypot(dx, dz) || 0.01, need = o.r + 0.4;
+              if (dl < need){ x = o.x + dx / dl * need; z = o.z + dz / dl * need; movedPt = true; }
+            });
+            if (!movedPt) break;
+          }
+          if (!clear(isle, isle.x + x, isle.z + z)) return null;
+          rc.set(new THREE.Vector3(isle.x + x, 20, isle.z + z), DOWN);
+          if (!rc.intersectObject(ground, true).length) return null;          // 繞到島外就放棄
+        }
+        out.push(new THREE.Vector3(isle.x + x, 0.6, isle.z + z));
+      }
+      /* 繞過之後點距可能拉長或擠在一起，重新等距取樣，走路速度才一致 */
+      const even = [out[0]]; let acc = 0;
+      for (let k = 1; k < out.length; k++){
+        const d = out[k].distanceTo(out[k - 1]);
+        acc += d;
+        if (acc >= 0.3 || k === out.length - 1){ even.push(out[k]); acc = 0; }
+      }
+      out.length = 0; out.push(...even);
+      return out;
+    };
+    const A = side(B.a, B.ax), Bs = side(B.b, B.ax + Math.PI);
+    if (!A || !Bs) return;
+    pts.push(...A);
+    for (let k = 1; k < 12; k++){
+      const t = k / 12;
+      pts.push(new THREE.Vector3(B.x0 + (B.x1 - B.x0) * t, B.yAt(t) + 0.04, B.z0 + (B.z1 - B.z0) * t));
+    }
+    pts.push(...Bs.reverse());
+    /* 整條路重新等距取樣（每 0.3 一點），走的速度才會一致 */
+    const ev = [pts[0]]; let carry = 0;
+    for (let k = 1; k < pts.length; k++){
+      const p0 = pts[k - 1], p1 = pts[k], L = p0.distanceTo(p1);
+      let t = (0.3 - carry) / (L || 1);
+      while (t <= 1){ ev.push(p0.clone().lerp(p1, t)); t += 0.3 / (L || 1); }
+      carry = (carry + L) % 0.3;
+    }
+    ev.push(pts[pts.length - 1]);
+    pts.length = 0; pts.push(...ev);
+    /* 等距取樣會切角，切進東西的點再推出去（只推島上地面的點，不動橋上的） */
+    pts.forEach(p => {
+      if (Math.abs(p.y - 0.6) > 0.01) return;
+      [B.a, B.b].forEach(isle => (isle.g.__ob || []).forEach(o => {
+        const dx = p.x - isle.x - o.x, dz = p.z - isle.z - o.z, dl = Math.hypot(dx, dz) || 0.01;
+        if (dl < o.r + 0.1){ p.x = isle.x + o.x + dx / dl * (o.r + 0.1); p.z = isle.z + o.z + dz / dl * (o.r + 0.1); }
+      }));
+    });
+    /* 走到底回頭：去程＋回程 */
+    const path = pts.concat(pts.slice(1, -1).reverse());
+    [[B.a, 0], [B.b, path.length / 2]].forEach(([home, t0]) => {
+      const [st, c] = WHO[home.part] || ['farmer', 0xF2C14E];
+      const d = doll(c, st);
+      d.userData = {path, t:t0, seg:0.35, sp:0.9, yPath:true};
+      world.add(d); folk.push(d);
+    });
+    crossers.push(path); made++;
+  });
+})();
+
+/* ── 草本島：沿島邊一圈樹，讓開橋頭、小河、花圃 ──────── */
+(function herbTrees(){
+  const isle = ISLES.find(i => i.part === 'herb'); if (!isle || !isle.near) return;
+  const R = isle.R * 0.92, yA = 0.6, OB = isle.g.__ob || [], rv = isle.g.__river;
+  let s2 = 777; const rnd = () => (s2 = (s2 * 9301 + 49297) % 233280) / 233280;
+  const bridgeAngs = BRIDGES.filter(B => B.a === isle || B.b === isle)
+    .map(B => B.a === isle ? B.ax : B.ax + Math.PI);
+  const nearRiver = (x, z) => {
+    if (!rv) return false;
+    for (let k = 0; k <= 16; k++){
+      const t = k / 16, rx = (1 - t) * (1 - t) * rv.sx + 2 * (1 - t) * t * rv.mx + t * t * rv.ex,
+            rz = (1 - t) * (1 - t) * rv.sz + 2 * (1 - t) * t * rv.mz + t * t * rv.ez;
+      if (Math.hypot(x - rx, z - rz) < 1.3) return true;
+    }
+    return Math.hypot(x - rv.ex, z - rv.ez) < 1.6;
+  };
+  const C = [[0x5E9A58, 0x7FB46A, 'round'], [0x4E7E4A, 0x6E9A5C, 'conifer'], [0x8DB46A, 0xA3C47A, 'round'],
+             [0x6E8E5C, 0x86A26E, 'round'], [0x587A4E, 0x6B8E5C, 'conifer']];
+  const placed = [];
+  const ground = isle.g.children[5]; isle.g.updateMatrixWorld(true);
+  const onGround = (x, z) => { _rc.set(new THREE.Vector3(isle.x + x, 20, isle.z + z), _DOWN); return _rc.intersectObject(ground, true).length > 0; };
+  for (let k = 0; k < 44; k++){
+    const a = k / 44 * 6.283 + rnd() * 0.1, r = R * (k % 2 ? 0.62 : 0.72);
+    const x = Math.cos(a) * r, z = Math.sin(a) * r;
+    if (bridgeAngs.some(b => Math.abs(Math.atan2(Math.sin(a - b), Math.cos(a - b))) < 0.42)) continue;
+    if (OB.some(o => Math.hypot(x - o.x, z - o.z) < o.r + 0.75)) continue;
+    if (nearRiver(x, z) || placed.some(([px, pz]) => Math.hypot(x - px, z - pz) < 1.4)) continue;
+    /* 樹冠一圈都要在地面上，不能懸在厚板外 */
+    if (![0, 1, 2, 3].every(q => onGround(x + Math.cos(q * 1.57) * 0.7, z + Math.sin(q * 1.57) * 0.7))) continue;
+    const [c1, c2, kind] = C[k % C.length];
+    const t = bigTree(kind, c1, c2, rnd);
+    t.position.set(x, yA, z); t.scale.setScalar(0.7 + rnd() * 0.25);
+    t.traverse(o => { if (o.isMesh) o.castShadow = true; });
+    isle.near.add(t); placed.push([x, z]); OB.push({x, z, r:0.8});
+  }
+  isle.g.__treesN = placed.length;
 })();
 
 /* ── 海 ─────────────────────────────────────────────── */
@@ -3157,7 +3334,8 @@ pins.forEach(p => {
   p.tag = b;
 });
 let shownIsle = null;
-let spinOn = true, bobAmp = 0;
+let spinOn = true, bobAmp = 0, bobY = 0;
+const WALK = 2.2;             // 走路速度倍率（老闆：原本太慢）
 let hlItem = null;            // 字卡上滑過的那一支           // 只有打開的那座島會露出品項號碼
 const v3 = new THREE.Vector3();
 function placeTags(){
@@ -3409,11 +3587,11 @@ function loop(now){
   if (spinOn && atTop && now - lastTouch > 4000){ CAM.theta += 0.035 * dt; applyCam(); }
   bobAmp += ((shownIsle ? 0 : 0.22) - bobAmp) * Math.min(1, dt * 2);
   const ts = now / 1000;
-  ISLES.forEach((isl, k) => {
-    isl.g.position.y = Math.sin(ts * 0.7 + k * 1.3) * bobAmp;
-    isl.g.rotation.z = Math.sin(ts * 0.5 + k * 0.9) * bobAmp * 0.03;
-    isl.g.rotation.x = Math.cos(ts * 0.45 + k * 1.7) * bobAmp * 0.03;
-  });
+  /* 島用橋連起來了，所以整群一起浮、不各自晃——否則橋頭會插進島裡或懸空，
+     走在上面的人也會跟著穿幫 */
+  bobY = Math.sin(ts * 0.7) * bobAmp;
+  ISLES.forEach(isl => { isl.g.position.y = bobY; });
+  bridgeGroup.position.y = bobY;
 
   /* 劈柴：舉起慢、劈下快 */
   choppers.forEach(c => {
@@ -3426,18 +3604,21 @@ function loop(now){
 
   folk.forEach(d => {
     const u = d.userData, n = u.path.length;
-    u.t = (u.t + u.sp * dt + n) % n;
+    u.t = (u.t + u.sp * WALK * dt + n) % n;
     const i = Math.floor(u.t), f = u.t - i;
     const a = u.path[i], b = u.path[(i + 1) % n];
-    d.position.set(a.x + (b.x - a.x) * f, u.y || 0, a.z + (b.z - a.z) * f);
+    const py = u.yPath ? a.y + (b.y - a.y) * f : (u.y || 0);
+    d.position.set(a.x + (b.x - a.x) * f, py, a.z + (b.z - a.z) * f);
     d.rotation.y = Math.atan2(b.x - a.x, b.z - a.z) + (u.sp < 0 ? Math.PI : 0);
-    /* 步頻跟著實際走的距離，不是跟著時間 */
-    /* STEP 原本是六角格的間距，格子砍掉後改用這條路自己的段長 */
-    u.ph = (u.ph || 0) + Math.abs(u.sp) * (u.seg || 1.6) * dt * 2.4;
+    /* 步頻照「這一幀實際走了多遠」算：腳長 0.41、擺 ±0.6 弧度，一步約 0.48。
+       原本步頻慢了四倍，跨一步滑好遠，看起來像在溜冰。 */
+    const moved = Math.abs(u.sp) * WALK * dt * Math.hypot(b.x - a.x, b.z - a.z, (b.y - a.y) || 0);
+    u.ph = (u.ph || 0) + moved / 0.48 * Math.PI;
     const sw = Math.sin(u.ph);
-    d.position.y = (u.y || 0) + Math.abs(sw) * 0.032;
-    d.__legs[0].rotation.x = sw * 0.62;
-    d.__legs[1].rotation.x = -sw * 0.62;
+    d.position.y = py + 0.04 + bobY + Math.abs(sw) * 0.045;   // +0.04：踩在步道色塊上面，不陷進去            // 跟著島一起浮；每一步身體上下
+    d.rotation.z = sw * 0.06;                                    // 重心左右換腳
+    d.__legs[0].rotation.x = sw * 0.6;
+    d.__legs[1].rotation.x = -sw * 0.6;
   });
   /* 洋流慢慢繞、浪花一亮一暗、雲往東飄 */
   currents.forEach(c => { c.rotation.y += c.userData.sp * dt; });
