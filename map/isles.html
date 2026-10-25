@@ -41,7 +41,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   text-decoration:none;transition:.2s}
 .views a:hover{color:var(--gold)}
 .views span{background:var(--ink);color:var(--cream)}
-.tools{top:0;right:0;padding:1.4rem 1.6rem;display:flex;gap:.4rem;align-items:center}
+.tools{top:3.9rem;right:0;padding:0 1.6rem;display:flex;flex-wrap:wrap;justify-content:flex-end;
+  gap:.4rem;align-items:center;max-width:calc(100vw - 14rem)}   /* 放在頁籤列下面一排，不再疊在頁籤上 */
 .tool,.seg button{font-family:var(--sans);font-size:.72rem;letter-spacing:.06em;
   background:color-mix(in srgb,var(--cream) 90%,transparent);border-radius:999px;
   padding:.35rem .8rem;color:var(--ink);transition:.2s}
@@ -217,7 +218,7 @@ body.notags .tag,body.notags .stem{opacity:0;pointer-events:none}
 
 @media (max-width:760px){
   .brand{padding:1rem 1.1rem} .brand h1{font-size:1.25rem}
-  .tools{padding:1rem 1.1rem}
+  .tools{top:0;padding:1rem 1.1rem;max-width:calc(100vw - 9rem)}
   .views{top:auto;bottom:3.1rem;font-size:.7rem}
   .card{right:0;left:0;bottom:0;top:auto;transform:none;width:100%;
     max-height:46dvh;border-radius:14px 14px 0 0}
