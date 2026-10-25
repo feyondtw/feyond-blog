@@ -47,6 +47,10 @@ svg{display:block;width:100%;height:100%}
   text-anchor:middle;dominant-baseline:central;letter-spacing:.02em}
 
 .spot{cursor:pointer}
+.spot.off{opacity:.3}
+.land.off{opacity:.38}
+.tool[aria-pressed="true"]{background:var(--deep);color:var(--paper)}
+.allc{margin-left:auto;font-family:var(--sans);font-size:.68rem;color:var(--gold);background:none;border:0;cursor:pointer;letter-spacing:.06em}
 .spot .cap{font-family:var(--sans);font-size:13px;font-weight:500;fill:var(--ink);
   text-anchor:middle;letter-spacing:.06em;
   paint-order:stroke;stroke:var(--paper);stroke-width:4px;stroke-linejoin:round}
@@ -323,7 +327,7 @@ G2.palm = G.palm; G2.tea = () => P('M7 36q0-14 13-14t13 14z', 'url(#gLeaf)');
 G2.ginger = G.ginger; G2.vetiver = G2.herb; G2.vanilla = G.vanilla; G2.ylang = G.ylang;
 G2.pepper = G.pepper; G2.agar = G2.cypress;
 /* 地中海一帶先用新畫風（原型），其他地方維持原樣，方便比較 */
-const inProto = o => o.lng > -12 && o.lng < 45 && o.lat > 28 && o.lat < 50;
+const inProto = o => contOf(o) === 'eu';
 function drawGlyph2(name, seed){
   const f = G2[name] || G2.leafbig, t = TINT[name];
   return f(t ? t[seed % t.length] : undefined);
@@ -390,9 +394,7 @@ svg.append(gSea, gGrat, gLand, gRelief, gFill, gSpot);
     ['gSage', '#B9CDB0', '#7E9A86'], ['gGold', '#F2D86A', '#D4A23C'], ['gGrass', '#D6E2A0', '#B6CC7E']
   ].map(([id, a, b]) => `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`).join('') +
   /* 原型範圍：地中海一帶 */
-  /* 原型範圍：地中海一帶，四邊淡出，不再是一個硬方塊 */
-  `<filter id="protoBlur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3"/></filter>` +
-  `<mask id="protoMask" maskUnits="userSpaceOnUse" x="-40" y="-80" width="120" height="80"><rect x="-8" y="${-48 * 0.92}" width="50" height="${18 * 0.92}" fill="#fff" filter="url(#protoBlur)"/></mask>`;
+  '';
   svg.appendChild(defs);                    // <defs> 放哪裡都可以，不會畫出來
 }
 
@@ -411,7 +413,19 @@ for (let lng = -150; lng <= 150; lng += 30)
   gGrat.appendChild(mk('path', {class:'grat', d:`M${lng} -84V84`}));
 
 /* 陸地：用真實國界，深淺交替 */
-const RELIEF_D = [];
+const RELIEF_D = [], LANDS = [];
+/* 每個國家用面積最大那一圈的中心判斷屬於哪一洲 */
+function countryCont(c){
+  let best = null, ba = -1;
+  c.r.forEach(ring => {
+    if (ring.length < 3) return;
+    let a = 0; for (let k = 0; k < ring.length; k++){ const p = ring[k], q = ring[(k + 1) % ring.length]; a += p[0] * q[1] - q[0] * p[1]; }
+    if (Math.abs(a) > ba){ ba = Math.abs(a); best = ring; }
+  });
+  if (!best) return 'as';
+  let x = 0, y = 0; best.forEach(([lng, lat]) => { x += lng; y += lat; });
+  return contOf({lng:x / best.length, lat:y / best.length});
+}
 C50.forEach((c, i) => {
   let d = '';
   c.r.forEach(ring => {
@@ -423,15 +437,18 @@ C50.forEach((c, i) => {
     }).join('L') + 'Z';
   });
   if (d){
-    gLand.appendChild(mk('path', {class:'land' + (i % 3 === 0 ? ' b' : ''), d, 'fill-rule':'evenodd'}));
-    RELIEF_D.push(d);
+    const ct = countryCont(c);
+    const el = mk('path', {class:'land' + (i % 3 === 0 ? ' b' : ''), d, 'fill-rule':'evenodd'});
+    gLand.appendChild(el); LANDS.push({el, ct});
+    if (ct === 'eu') RELIEF_D.push(d);
   }
 });
 
-/* 原型（參考圖一）：地中海一帶的陸地像一塊墊高的草地台地——底下一層土色崖壁
-   往下錯開露出來，上面是草地漸層，邊緣一圈亮草線 */
+/* 原型（參考圖一）：歐洲的陸地像一塊墊高的草地台地——底下一層土色崖壁
+   往下錯開露出來，上面是草地漸層，邊緣一圈亮草線。範圍照真實國界取（歐洲各國），
+   邊緣就是海岸線與國界，不再用方框裁切 */
 {
-  const clip = mk('g', {mask:'url(#protoMask)'});
+  const clip = mk('g', {});
   const all = RELIEF_D.join('');
   clip.appendChild(mk('path', {d:all, 'fill-rule':'evenodd', fill:'#9E7A52', transform:'translate(0 0.55)'}));
   clip.appendChild(mk('path', {d:all, 'fill-rule':'evenodd', fill:'#B98A5E', transform:'translate(0 0.3)'}));
@@ -499,6 +516,10 @@ function layout(){
     const on = sx > -40 && sy > -40 && sx < W + 40 && sy < H + 40;
     g.style.display = on ? '' : 'none';
     if (!on) return;
+    const off = !!focus && contOf(g.__o) !== focus;
+    g.classList.toggle('off', off);
+    if (off){ const q0 = g.__parts; ['cap', 'sub', 'lead', 'ic'].forEach(k => q0[k].style.display = 'none');
+      g.setAttribute('transform', `translate(${g.__x} ${g.__y}) scale(${u})`); return; }
     const q = g.__parts;
     if (!g.__tw){ try { g.__tw = q.cap.getComputedTextLength(); } catch (e) {} if (!g.__tw) g.__tw = txt(g.__o.name).length * 14; }
     /* 標註區塊（圖示＋地名＋種數）預設放在圓點正上方，不再壓在圓點上 */
@@ -560,6 +581,7 @@ function layout(){
 
 /* ── 平移與縮放 ────────────────────────────────────── */
 let VB = {x:-180, y:-84, w:360, h:168};
+let focus = null;                      // 目前聚焦的洲（null＝全部）；layout 很早就會用到，宣告放這裡
 const ASP = () => (host.clientHeight || 1) / (host.clientWidth || 1);
 function apply(){
   VB.w = Math.max(26, Math.min(360, VB.w));
@@ -619,7 +641,15 @@ addEventListener('resize', apply);          // 框的長寬比變了，重算可
 const CONT = {eu:['歐洲', -12, 32, 33, 72], as:['亞洲', 28, 148, -10, 48], af:['非洲', -18, 52, -36, 37],
               am:['美洲', -135, -34, -40, 62], oc:['大洋洲', 112, 180, -48, 0]};
 /* 整洲要同時塞得進畫面的寬與高（直長的非洲只照寬度縮放會切掉南北兩端） */
+function setFocus(k){
+  focus = k;
+  LANDS.forEach(({el, ct}) => el.classList.toggle('off', !!k && ct !== k));
+  gRelief.style.opacity = k && k !== 'eu' ? .35 : 1;
+  document.querySelectorAll('[data-ct]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.ct === k)));
+  rows(); layout();
+}
 function goCont(k){
+  setFocus(k);
   const [, w0, e0, s0, n0] = CONT[k];
   const w = Math.min(360, Math.max(26, Math.max(e0 - w0, (n0 - s0) * 0.92 / ASP()) * 1.08));
   goTo((w0 + e0) / 2, (s0 + n0) / 2, w);
@@ -633,7 +663,7 @@ function contOf(o){
   return 'as';
 }
 document.querySelectorAll('[data-ct]').forEach(b => b.onclick = () => goCont(b.dataset.ct));
-document.getElementById('t-all').onclick = () => goTo(0, 6, 360);
+document.getElementById('t-all').onclick = () => { setFocus(null); goTo(0, 6, 360); };
 document.getElementById('t-in').onclick = () => { VB.w *= 0.65; apply(); };
 document.getElementById('t-out').onclick = () => { VB.w /= 0.65; apply(); };
 
@@ -655,13 +685,15 @@ function rows(){
       <span class="n">${String(o.number || 0).padStart(2, '0')}</span>
     </button>`;
   /* 依五大洲分組，每組前一個洲名小標，點小標地圖飛過去 */
-  listEl.innerHTML = hit.length ? ['as', 'eu', 'af', 'am', 'oc'].map(k => {
+  listEl.innerHTML = hit.length ? ['as', 'eu', 'af', 'am', 'oc'].filter(k => !focus || k === focus).map(k => {
     const g = hit.filter(o => contOf(o) === k); if (!g.length) return '';
-    return `<h3 class="cont" data-ct="${k}">${CONT[k][0]}<span>${g.length} 處</span></h3>` + g.map(row).join('');
+    return `<h3 class="cont" data-ct="${k}">${CONT[k][0]}<span>${g.length} 處</span>` +
+      (focus ? `<button class="allc" data-all>顯示全部五洲</button>` : '') + `</h3>` + g.map(row).join('');
   }).join('') : '<p class="empty">沒有符合的。</p>';
 }
 listEl.addEventListener('click', e => {
   const r = e.target.closest('.row'); if (r){ open(r.dataset.id); return; }
+  if (e.target.closest('[data-all]')){ setFocus(null); goTo(0, 6, 360); return; }
   const h = e.target.closest('.cont'); if (h) goCont(h.dataset.ct);
 });
 document.getElementById('search').addEventListener('input', e => { q = e.target.value; rows(); });
