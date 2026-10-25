@@ -3862,11 +3862,13 @@ function openItem(id){
   const o = originOf(it);
   const isle = ISLES.find(i => i.part === isleOf(it));
   head(String(it.__no).padStart(2, '0') + ' ・ ' + (isle ? isle.zh : ''),
-       txt(it.name), it.latin || '', o ? txt(o.where) : '尚無產地');
+       txt(it.name), it.latin || '',
+       (it.originIds || []).map(id => byOrigin[id]).filter(Boolean).map(x => txt(x.name)).join('、') || '尚無產地');
   const kv = [];
   /* 產地：多處產地全部列出（原本只顯示第一個） */
   { const all = (it.originIds || []).map(id => byOrigin[id]).filter(Boolean);
-    if (all.length) kv.push(['產地', all.map(x => txt(x.name)).join('、')]); }
+    /* 完整產區：每個產地一行，名稱＋所在地 */
+    if (all.length) kv.push(['產地', all.map(x => `${txt(x.name)}　<span style="color:var(--faint)">${txt(x.where)}</span>`).join('<br>')]); }
   if (DATA.parts[it.part]) kv.push(['萃取', txt(DATA.parts[it.part])]);
   /* 型態：有 forms（多種萃取型態）就照列，否則用 type */
   if (it.forms || it.type) kv.push(['型態', it.forms ? it.forms.join(' · ') : {hydrosol:'純露', essential_oil:'精油', both:'純露 · 精油'}[it.type]]);

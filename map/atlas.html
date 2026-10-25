@@ -810,12 +810,12 @@ dBody.addEventListener('click', e => {
   document.getElementById('d-title').textContent = txt(it.name);
   document.getElementById('d-lat').textContent = it.latin || '';
   const o2 = (it.originIds || []).map(i => byOrigin[i]).filter(Boolean)[0];
-  document.getElementById('d-where').textContent = o2 ? txt(o2.where) : '';
+  document.getElementById('d-where').textContent = (it.originIds || []).map(i => byOrigin[i]).filter(Boolean).map(x => txt(x.name)).join('、');
   dBody.innerHTML =
     (it.confidence !== 'high' ? `<span class="flag">${low(it) ? '產地待確認' : '細節待確認'}</span>` : '') +
     (NOTES && it.verify ? `<p class="verify">${it.verify}</p>` : '') +
     `<dl class="kv">
-      ${o2 ? `<dt>產地</dt><dd>${(it.originIds || []).map(i => byOrigin[i]).filter(Boolean).map(x => txt(x.name)).join('、')}</dd>` : ''}
+      ${o2 ? `<dt>產地</dt><dd>${(it.originIds || []).map(i => byOrigin[i]).filter(Boolean).map(x => `${txt(x.name)}　<span style="color:var(--faint)">${txt(x.where)}</span>`).join('<br>')}</dd>` : ''}
       ${DATA.parts[it.part] ? `<dt>萃取</dt><dd>${txt(DATA.parts[it.part])}</dd>` : ''}
       ${it.forms || it.type ? `<dt>型態</dt><dd>${it.forms ? it.forms.join(' · ') : ({hydrosol:'純露', essential_oil:'精油', both:'純露 · 精油'})[it.type]}</dd>` : ''}
     </dl>` +

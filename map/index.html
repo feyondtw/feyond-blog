@@ -1196,7 +1196,7 @@ function kinRows(list, it){
     return `<button class="row" data-k="item" data-id="${x.id}">
       <span><span class="zh">${txt(x.name)}</span>
       <span class="lat">${x.latin || ''}</span>
-      <span class="sub">${o2 ? txt(o2.name) : '尚無產地'}</span></span>
+      <span class="sub">${(x.originIds || []).map(i => byOrigin[i]).filter(Boolean).map(y => txt(y.name)).join('、') || '尚無產地'}</span></span>
       <span class="n">${DATA.parts[x.part] ? txt(DATA.parts[x.part]) : ''}</span>
     </button>`;
   }).join('');
@@ -1206,8 +1206,8 @@ function itemBlock(it){
   const o = originOf(it);
   const kv = [];
   { const all = (it.originIds || []).map(i => byOrigin[i]).filter(Boolean);
-    if (all.length === 1) kv.push(['產地', `${txt(all[0].name)}　<span style="color:var(--faint)">${txt(all[0].where)}</span>`]);
-    else if (all.length) kv.push(['產地', all.map(x => txt(x.name)).join('、')]); }
+    /* 完整產區：每個產地一行，名稱＋所在地 */
+    if (all.length) kv.push(['產地', all.map(x => `${txt(x.name)}　<span style="color:var(--faint)">${txt(x.where)}</span>`).join('<br>')]); }
   if (DATA.parts[it.part]) kv.push(['萃取', txt(DATA.parts[it.part])]);
   if (it.season) kv.push(['時節', txt(it.season)]);
   if (it.forms || it.type) kv.push(['型態', it.forms ? it.forms.join(' · ') : {hydrosol:'純露', essential_oil:'精油', both:'純露 · 精油'}[it.type] || it.type]);
