@@ -307,7 +307,9 @@ host.appendChild(renderer.domElement);
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x9FCBD8);
 scene.fog = new THREE.Fog(0x9FCBD8, 90, 260);
-const camera = new THREE.PerspectiveCamera(17, innerWidth / innerHeight, 1, 600);
+/* 等角投影，不是透視。那張分層岩盤地圖的立體感有一半來自這個：
+   遠近不縮、邊緣互相平行，才會像一塊切出來的地景模型。 */
+const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 900);
 const world = new THREE.Group();
 scene.add(world);
 
@@ -973,14 +975,20 @@ mood(1);
 let curMood = MOODS.day;
 
 /* ── 相機 ───────────────────────────────────────────── */
-const CAM = {theta:-0.5, phi:0.52, dist:SPAN * 2.0 + 40, tx:CX, tz:CZ};
+/* 標準等角：水平 45 度、仰角 35.26 度 */
+const CAM = {theta:-Math.PI / 4, phi:0.6155, dist:SPAN * 1.6 + 16, tx:CX, tz:CZ};
 const HOME = Object.assign({}, CAM);
 let BIRD_MIN = 0.30;
 const TARGET = new THREE.Vector3();
 let nearOn = true;
 function applyCam(){
   CAM.phi = Math.max(BIRD_MIN, Math.min(1.45, CAM.phi));
-  CAM.dist = Math.max(18, Math.min(SPAN * 4 + 80, CAM.dist));
+  CAM.dist = Math.max(14, Math.min(SPAN * 3 + 40, CAM.dist));
+  const a2 = innerWidth / Math.max(1, innerHeight), hh = CAM.dist * 0.30;
+  camera.left = -hh * a2; camera.right = hh * a2;
+  camera.top = hh; camera.bottom = -hh;
+  camera.far = CAM.dist * 4 + 400;
+  camera.updateProjectionMatrix();
   /* 遠看不必把所有東西都畫出來 */
   const want = CAM.dist < SPAN * 1.9;
   if (want !== nearOn){
@@ -1203,8 +1211,6 @@ document.getElementById('t-bird').onclick = e => {
 /* ── 動畫 ───────────────────────────────────────────── */
 function resize(){
   renderer.setSize(innerWidth, innerHeight);
-  camera.aspect = innerWidth / innerHeight;
-  camera.updateProjectionMatrix();
   applyCam();
 }
 addEventListener('resize', resize);
