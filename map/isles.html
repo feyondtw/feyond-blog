@@ -99,18 +99,38 @@ body.notags .tag,body.notags .stem{opacity:0;pointer-events:none}
 .stem{position:absolute;width:2px;margin-left:-1px;background:var(--ic);
   opacity:.9;pointer-events:none;z-index:1}
 .stem.off{display:none}
-.tag:not(.isle){background:transparent;box-shadow:none;padding:0;gap:0;z-index:2}
-.tag:not(.isle)::after{display:none}
-.tag:not(.isle) .badge.sm{width:32px;height:32px;border-radius:50%;padding:0;
+.tag.it{background:transparent;box-shadow:none;padding:0;gap:0;z-index:2}
+.tag.it::after{display:none}
+.tag.it .badge.sm{width:32px;height:32px;border-radius:50%;padding:0;
   display:grid;place-items:center;background:var(--ic) !important;color:#FFFFFF;
   font-size:.84rem;letter-spacing:0;
   box-shadow:0 0 0 3px #FFFFFF,0 4px 12px rgba(42,39,36,.28)}
-.tag:not(.isle):hover,.tag:not(.isle).on{z-index:4;background:var(--ic);color:#FFFFFF;
+.tag.it:hover,.tag.it.on,.tag.it.hl{z-index:4;background:var(--ic);color:#FFFFFF;
   padding:.26rem 1rem .26rem .26rem;gap:.55rem;
   box-shadow:0 0 0 3px #FFFFFF,0 6px 18px rgba(42,39,36,.3)}
-.tag:not(.isle):hover .badge.sm,.tag:not(.isle).on .badge.sm{
+.tag.it:hover .badge.sm,.tag.it.on .badge.sm,.tag.it.hl .badge.sm{
   background:#FFFFFF !important;color:var(--ic);box-shadow:none}
-.tag:not(.isle) .nm{font-weight:700;font-size:.92rem}
+.tag.it .nm{font-weight:700;font-size:.92rem}
+
+/* 品項多的島：每一區只放一個區名牌，個別號碼平常收起來 */
+.tag.zone{background:var(--cream);padding:.26rem .85rem .26rem .26rem;gap:.45rem;z-index:3;
+  font-size:.86rem;font-weight:600;box-shadow:0 0 0 2px #FFFFFF,0 4px 14px rgba(42,39,36,.22)}
+.tag.zone .nm{max-width:12rem;opacity:1}
+.tag.zone .zb{min-width:28px;height:28px;border-radius:999px;padding:0 .4rem;
+  display:grid;place-items:center;background:var(--ic);color:#FFFFFF;
+  font-family:Arial,"Helvetica Neue",Helvetica,sans-serif;font-weight:700;font-size:.8rem}
+.tag.zone::after{opacity:1}
+
+/* 字卡就是第二層選單：依區分組，每列前面是和地圖同一個號碼章 */
+.zone-h{display:flex;align-items:baseline;gap:.5rem;margin:1.2rem 0 .55rem;
+  font-size:.82rem;font-weight:600;letter-spacing:.06em;color:var(--ink)}
+.zone-h .c{font-family:Arial,sans-serif;font-weight:400;font-size:.78rem;color:var(--faint)}
+.item.menu{grid-template-columns:auto 1fr auto auto;align-items:center}
+.item.menu::before{display:none}
+.item.menu .mb{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  background:var(--ic);color:#FFFFFF;font-family:Arial,"Helvetica Neue",Helvetica,sans-serif;
+  font-weight:700;font-size:.72rem}
+.item.menu:hover{border-color:var(--ic)}
 /* 第二層打開時，第一層名牌改成微亮的橘棕色、白字。第二層號碼章是
    偏灰的島色，這裡用更亮、更飽和的橘棕把兩層分開（不用黑色系）。 */
 .tag.isle.cur{background:#DB8A45;color:#FFFFFF;z-index:5;
@@ -342,9 +362,11 @@ host.appendChild(renderer.domElement);
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xDCE4CC);
 scene.fog = new THREE.Fog(0xDCE4CC, 90, 260);
-/* 等角投影，不是透視。那張分層岩盤地圖的立體感有一半來自這個：
-   遠近不縮、邊緣互相平行，才會像一塊切出來的地景模型。 */
-const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 900);
+/* 窄角透視（28°）。等角投影從上往下看，地景怎麼做都是平的，看不到
+   遠山、天空與地平線。PUMA 是透視、低角度看過去，才有火山口湖的縱深。
+   視角夠窄，拉近到單一座島時仍接近等角的模型感。 */
+const FOV = 28;
+const camera = new THREE.PerspectiveCamera(FOV, innerWidth / innerHeight, 0.5, 1600);
 const world = new THREE.Group();
 scene.add(world);
 
@@ -758,6 +780,10 @@ for (let pass = 0; pass < 300; pass++)
         b.x += dx * pp; b.z += dz * pp;
       }
     }
+
+/* 區的中文名（字卡選單與區名牌共用；蓋島時就會用到，所以放在這裡） */
+var ZONE_ZH = {rainforest:'雨林一角', conifer:'北山針葉林', andes:'南美高地', amazon:'亞馬遜雨林'};
+function restZh(isle){ return isle.part === 'resin' ? '乾燥山地' : '其他'; }
 
 /* ── 蓋島 ───────────────────────────────────────────────
    第一層：九個大六角盤，側面疊三層顏色像地質剖面。
@@ -1208,6 +1234,28 @@ ISLES.forEach((isle, idx) => {
       gnd:new THREE.Vector3(isle.x + px, gy, isle.z + pz),
       at:new THREE.Vector3(isle.x + px, gy + 1.4 + rnd() * 2.6, isle.z + pz)});
   });
+  /* 品項多的島，每一區只放一個區名牌 */
+  if (isle.items.length > 14){
+    isle.crowded = true;
+    const gp = {};
+    isle.items.forEach(it => {
+      const k = (it.zone && Z[it.zone]) ? it.zone : '_';
+      (gp[k] = gp[k] || []).push(it);
+    });
+    Object.keys(gp).forEach(k => {
+      let x, z, y;
+      if (k !== '_'){ x = Z[k].x; z = Z[k].z; y = Z[k].y; }
+      else {
+        const ps = pins.filter(q => q.kind === 'item' && q.isle === isle && gp[k].includes(q.it));
+        x = ps.reduce((s, q) => s + q.gnd.x - isle.x, 0) / ps.length;
+        z = ps.reduce((s, q) => s + q.gnd.z - isle.z, 0) / ps.length;
+        y = ps.reduce((s, q) => s + q.gnd.y, 0) / ps.length;
+      }
+      pins.push({kind:'zone', isle, key:k, n:gp[k].length,
+        zh:k === '_' ? restZh(isle) : (ZONE_ZH[k] || k),
+        at:new THREE.Vector3(isle.x + x, y + 2.8, isle.z + z)});
+    });
+  }
   pins.push({kind:'isle', isle, at:new THREE.Vector3(isle.x, 4.6, isle.z)});
 });
 
@@ -1271,6 +1319,8 @@ scene.fog.near = SPAN * 1.15;      // 開場值，之後由 applyCam 接手
 
 /* 會動的背景：洋流、島邊浪花、天上的雲 */
 const currents = [], skyClouds = [];
+const slopeLights = new THREE.Mesh(new THREE.BufferGeometry(),
+  new THREE.MeshBasicMaterial({color:0xFFE3A0, transparent:true, opacity:0}));
 const foamMat = new THREE.MeshBasicMaterial({color:0xFFFFFF, transparent:true, opacity:0.28,
   depthWrite:false, side:THREE.DoubleSide});
 let MAXR = 0;
@@ -1280,17 +1330,25 @@ const nz = (x, z) =>
   Math.sin(x * 0.045 + 1.3) * Math.cos(z * 0.052 + 0.7) * 0.5 +
   Math.sin(x * 0.11 + z * 0.09) * 0.25 +
   Math.sin(x * 0.023 - z * 0.031 + 2.1) * 0.55;
+/* 火山口：海岸先一小段緩坡，接著陡升成一整圈山牆，再往外是起伏的
+   群山一路到地平線。山脊用另一組雜訊切出高低，才不會像一道整齊的牆。 */
+const ridge = (x, z) => 0.5 + 0.5 * Math.sin(Math.atan2(z - CZ, x - CX) * 7 + nz(x, z) * 2.2);
 const landH = (x, z) => {
   const d = Math.hypot(x - CX, z - CZ);
   const e = d - (BAY + nz(x * 1.6, z * 1.6) * 6);
   if (e < 0) return -4 + e * 0.02;
-  const t2 = Math.min(1, e / 45);
-  return -2.15 + e * 0.05 + t2 * t2 * 15 * (0.55 + 0.45 * nz(x, z));
+  if (e < 5) return -2.15 + e * 0.12;                         // 岸邊緩坡
+  const wall = Math.min(1, (e - 5) / 38);                       // 山牆陡升
+  const peak = 30 * Math.pow(wall, 1.15) * (0.62 + 0.38 * ridge(x, z));
+  const far = Math.max(0, e - 43);                              // 外圈群山起伏
+  const roll = far > 0 ? 7 * (0.5 + 0.5 * nz(x * 0.6, z * 0.6)) * Math.min(1, far / 30) : 0;
+  return -1.55 + peak + roll + nz(x * 2.1, z * 2.1) * 1.2;
 };
 (function land(){
-  const CELL = 4.2, HALF = SPAN * 3.6;
+  const CELL = 4.6, HALF = SPAN * 5.2;
   const pos = [], col = [];
-  const cols = [[-1.75, 0xEDE3C5], [1.2, 0xD9E4BC], [4.5, 0xCBDAAE], [8.5, 0xBCCE9E], [99, 0xAFC293]]
+  const cols = [[-1.75, 0xEDE3C5], [2, 0xC9D8AE], [9, 0xA9BE92], [18, 0x93A98A],
+                [26, 0x8E9C8E], [99, 0x9A9AA4]]
     .map(([h, c]) => [h, new THREE.Color(c)]);
   const colOf = h => cols.find(([lim]) => h < lim)[1];
   const P = (x, z) => [x, landH(x, z), z];
@@ -1321,8 +1379,8 @@ const landH = (x, z) => {
   const rr = () => (s3 = (s3 * 9301 + 49297) % 233280) / 233280;
   const ni = gg => gg.index ? gg.toNonIndexed() : gg;
   const gA = [], gB = [], gT = [];
-  for (let c3 = 0; c3 < 150; c3++){
-    const a0 = rr() * 6.283, r0 = BAY + 6 + rr() * SPAN * 1.5;
+  for (let c3 = 0; c3 < 260; c3++){
+    const a0 = rr() * 6.283, r0 = BAY + 4 + rr() * SPAN * 1.9;
     const x0 = CX + Math.cos(a0) * r0, z0 = CZ + Math.sin(a0) * r0;
     const n3 = 3 + Math.floor(rr() * 6);
     for (let i = 0; i < n3; i++){
@@ -1508,7 +1566,7 @@ const landH = (x, z) => {
   /* 天上的雲：低多邊形白雲團，飄在外圍陸地上空，不擋島 */
   const cloudM = new THREE.MeshPhongMaterial({color:0xFFFFFF, flatShading:true, shininess:0,
     transparent:true, opacity:0.93});
-  for (let k = 0; k < 9; k++){
+  for (let k = 0; k < 16; k++){
     const cg = new THREE.Group();
     const n = 3 + Math.floor(rr() * 3);
     for (let i = 0; i < n; i++){
@@ -1516,11 +1574,25 @@ const landH = (x, z) => {
       b.position.set(i * 1.7 - n * 0.85, rr() * 0.8, (rr() - 0.5) * 1.6);
       b.scale.y = 0.7; cg.add(b);
     }
-    const a = rr() * 6.283, r = BAY + 6 + rr() * SPAN * 1.2;
-    cg.position.set(CX + Math.cos(a) * r, 16 + rr() * 8, CZ + Math.sin(a) * r);
+    /* 雲停在山脊上 */
+    const a = rr() * 6.283, r = BAY + 34 + rr() * 26;
+    const rx = CX + Math.cos(a) * r, rz = CZ + Math.sin(a) * r;
+    cg.position.set(rx, Math.max(8, landH(rx, rz)) + 4 + rr() * 5, rz);
+    cg.scale.setScalar(1.4 + rr() * 1.2);
     cg.userData.sp = 0.35 + rr() * 0.5;
     world.add(cg); skyClouds.push(cg);
   }
+
+  /* 山坡上一點一點的燈光（黃昏與夜晚才亮） */
+  const lp = [];
+  for (let k = 0; k < 220; k++){
+    const a = rr() * 6.283, r = BAY + 3 + rr() * 60;
+    const x = CX + Math.cos(a) * r, z = CZ + Math.sin(a) * r, h = landH(x, z);
+    if (h < -1.5) continue;
+    lp.push(new THREE.SphereGeometry(0.16, 4, 3).translate(x, h + 0.5, z));
+  }
+  slopeLights.geometry = mergeGeos(lp.map(g2 => g2.index ? g2.toNonIndexed() : g2));
+  world.add(slopeLights);
 
   /* 海面一點點亮點 */
   const sp = [];
@@ -1568,6 +1640,7 @@ function mood(q){
                    lerpn(mFrom.pos[1], mTo.pos[1], q),
                    lerpn(mFrom.pos[2], mTo.pos[2], q));
   const lit = (q > 0.5 ? mTo : mFrom).lit;
+  slopeLights.material.opacity = lit ? 0.95 : 0;
   WIN.forEach(w => w.material = mat(lit ? 0xFFD79A : 0x3E5260));
 }
 mood(1);
@@ -1583,26 +1656,24 @@ mood(1);
 let curMood = MOODS.day;
 
 /* ── 相機 ───────────────────────────────────────────── */
-/* 標準等角：水平 45 度、仰角 35.26 度 */
-const CAM = {theta:-Math.PI / 4, phi:0.6155, dist:SPAN * 1.2 + 8, tx:CX, tz:CZ};
+/* 開場：從低角度（約 24°）看進火山口湖，遠山與天空都在畫面裡 */
+const CAM = {theta:-Math.PI / 4 - 0.25, phi:0.42, dist:SPAN * 3.6 + 20, tx:CX, tz:CZ};
 const HOME = Object.assign({}, CAM);
 let BIRD_MIN = 0.30;
 const TARGET = new THREE.Vector3();
 let nearOn = true;
 function applyCam(){
   CAM.phi = Math.max(BIRD_MIN, Math.min(1.45, CAM.phi));
-  CAM.dist = Math.max(14, Math.min(SPAN * 3 + 40, CAM.dist));
-  const a2 = innerWidth / Math.max(1, innerHeight), hh = CAM.dist * 0.30;
-  camera.left = -hh * a2; camera.right = hh * a2;
-  camera.top = hh; camera.bottom = -hh;
-  camera.far = CAM.dist * 4 + 400;
+  CAM.dist = Math.max(24, Math.min(SPAN * 5.5 + 80, CAM.dist));
+  camera.aspect = innerWidth / Math.max(1, innerHeight);
+  camera.far = CAM.dist * 4 + 900;
   camera.updateProjectionMatrix();
   /* 霧的遠近一定要跟著鏡頭距離走。原本用島群尺寸算死，鏡頭一拉遠
      島的視距就超出霧的範圍，整片被吃掉七成，看起來就像島不見了。 */
-  scene.fog.near = CAM.dist * 0.62;
-  scene.fog.far  = CAM.dist * 2.7;
+  scene.fog.near = CAM.dist * 0.9;
+  scene.fog.far  = CAM.dist * 3.4;
   /* 遠看不必把所有東西都畫出來 */
-  const want = CAM.dist < SPAN * 1.9;
+  const want = CAM.dist < SPAN * 3.2;
   if (want !== nearOn){
     nearOn = want;
     ISLES.forEach(i => { if (i.near) i.near.visible = want; });
@@ -1677,6 +1748,21 @@ host.addEventListener('wheel', e => {
 const tagLayer = document.getElementById('tags');
 pins.forEach(p => {
   const b = document.createElement('button');
+  if (p.kind === 'zone'){
+    b.className = 'tag zone';
+    const col = '#' + p.isle.side.toString(16).padStart(6, '0');
+    b.style.setProperty('--ic', col);
+    b.innerHTML = `<span class="zb">${p.n}</span><span class="nm">${p.zh}</span>`;
+    /* 點區名牌：字卡捲到那一區 */
+    b.addEventListener('click', e => {
+      e.stopPropagation();
+      if (shownIsle !== p.isle || cameFrom) openIsle(p.isle);
+      const h = cBody.querySelector(`[data-zone="${p.key}"]`);
+      if (h) h.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+    tagLayer.appendChild(b); p.tag = b;
+    return;
+  }
   if (p.kind === 'isle'){
     b.className = 'tag isle';
     const col = '#' + p.isle.side.toString(16).padStart(6, '0');
@@ -1691,7 +1777,7 @@ pins.forEach(p => {
       if (shownIsle === p.isle) closeCard(); else openIsle(p.isle);
     });
   } else {
-    b.className = 'tag';
+    b.className = 'tag it';
     const c2 = '#' + p.isle.side.toString(16).padStart(6, '0');
     b.style.setProperty('--ic', c2);
     /* 細桿：從號碼章拉到地上的實際位置，高高低低才看得出前後 */
@@ -1706,7 +1792,8 @@ pins.forEach(p => {
   tagLayer.appendChild(b);
   p.tag = b;
 });
-let shownIsle = null;           // 只有打開的那座島會露出品項號碼
+let shownIsle = null;
+let hlItem = null;            // 字卡上滑過的那一支           // 只有打開的那座島會露出品項號碼
 const v3 = new THREE.Vector3();
 function placeTags(){
   const W = innerWidth, H = innerHeight, vis = [];
@@ -1721,7 +1808,15 @@ function placeTags(){
   }
   pins.forEach(p => {
     v3.copy(p.at).project(camera);
-    const ok = v3.z < 1 && (p.kind === 'isle' || (p.isle === shownIsle && itemsOn));
+    /* 品項多的島：個別號碼平常收起來，只有字卡滑過、或選到的那一支才出現；
+       改由區名牌代表整區 */
+    const inLayer2 = p.isle === shownIsle && itemsOn;
+    const ok = v3.z < 1 && (
+      p.kind === 'isle' ||
+      (p.kind === 'zone' && inLayer2) ||
+      (p.kind === 'item' && inLayer2 && (!p.isle.crowded || p.it.id === hlItem ||
+                                         p.tag.classList.contains('on'))));
+    if (p.kind === 'item') p.tag.classList.toggle('hl', p.it.id === hlItem);
     /* 進到第二層時，那座島的第一層名牌換成整塊島色，當這一層的標題 */
     if (p.kind === 'isle') p.tag.classList.toggle('cur', p.isle === shownIsle);
     p.tag.classList.toggle('off', !ok);
@@ -1748,7 +1843,7 @@ function placeTags(){
       }
   pins.forEach(p => { if (p.stem) p.stem.classList.add('off'); });
   /* 第一層島名牌跟著鏡頭遠近縮放：拉遠時島小，名牌也跟著小 */
-  const sIsle = Math.max(0.58, Math.min(1, 38 / CAM.dist));
+  const sIsle = Math.max(0.62, Math.min(1, 70 / CAM.dist));
   vis.forEach(({p, x, y}) => {
     p.tag.style.left = x + 'px'; p.tag.style.top = y + 'px';
     if (p.kind === 'isle')
@@ -1797,6 +1892,29 @@ function head(eyebrow, title, lat, where){
   document.getElementById('c-lat').textContent = lat || '';
   document.getElementById('c-where').textContent = where || '';
 }
+/* 依區把品項分組；沒有區的歸到最後一組 */
+function groupsOf(isle){
+  const Z = (isle.g && isle.g.__zones) || {}, out = [];
+  Object.keys(Z).forEach(k => {
+    const list = isle.items.filter(it => it.zone === k);
+    if (list.length) out.push({key:k, zh:ZONE_ZH[k] || k, list});
+  });
+  const rest = isle.items.filter(it => !(it.zone && Z[it.zone]));
+  if (rest.length) out.push({key:'_', zh:restZh(isle), list:rest});
+  return out;
+}
+function isleMenu(isle){
+  const col = '#' + isle.side.toString(16).padStart(6, '0');
+  return groupsOf(isle).map(gp => `
+    <h3 class="zone-h" data-zone="${gp.key}">${gp.zh}<span class="c">${gp.list.length}</span></h3>` +
+    gp.list.map(x => `
+      <button class="item menu" data-item="${x.id}" style="--ic:${col}">
+        <span class="mb">${String(x.__no).padStart(2, '0')}</span>
+        <span><span class="zh">${txt(x.name)}</span>
+        <span class="lat">${x.latin || ''}</span></span>
+        <span class="n">${(originOf(x) && txt(originOf(x).name)) || ''}</span>
+      </button>`).join('')).join('');
+}
 function openIsle(isle){
   cameFrom = null;
   head(isle.en.toUpperCase(), isle.zh, '',
@@ -1804,12 +1922,12 @@ function openIsle(isle){
   cBody.innerHTML = `<p class="note">${isle.lead || ''}</p>` +
     (isle.scene ? `<p class="scene">島上的景：${isle.scene}</p>` : '') +
     (isle.quote ? `<p class="quote">「${isle.quote}」</p>` : '') + `
-    <div class="sec"><h3>這座島上的 ${isle.items.length} 種</h3>${itemRows(isle.items)}</div>`;
+    <div class="sec"><h3>這座島上的 ${isle.items.length} 種 ・ 點一列看解說</h3>${isleMenu(isle)}</div>`;
   cBody.scrollTop = 0;
   card.hidden = false;
   shownIsle = isle;
   pins.forEach(p => p.tag.classList.toggle('on', p.kind === 'isle' && p.isle === isle));
-  glide({x:isle.x, z:isle.z, d:isle.R * 3.0 + 6, ph:0.6155}, 900);
+  glide({x:isle.x, z:isle.z, d:isle.R * 5.2 + 8, ph:0.6155}, 1000);
 }
 function openItem(id){
   const it = ITEMS.find(x => x.id === id); if (!it) return;
@@ -1842,6 +1960,11 @@ function openItem(id){
   cameFrom = isle ? isle.zh : null;
   pins.forEach(p => p.tag.classList.toggle('on', p.kind === 'item' && p.it.id === id));
 }
+cBody.addEventListener('mouseover', e => {
+  const r = e.target.closest('[data-item]');
+  hlItem = r ? r.dataset.item : null;
+});
+cBody.addEventListener('mouseleave', () => { hlItem = null; });
 cBody.addEventListener('click', e => {
   const b = e.target.closest('[data-item]');
   if (b){ openItem(b.dataset.item); return; }
@@ -1875,6 +1998,8 @@ document.getElementById('t-bird').onclick = e => {
 /* ── 動畫 ───────────────────────────────────────────── */
 function resize(){
   renderer.setSize(innerWidth, innerHeight);
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
   applyCam();
 }
 addEventListener('resize', resize);
@@ -1904,7 +2029,7 @@ function loop(now){
   foamMat.opacity = 0.22 + 0.12 * Math.sin(now / 1000 * 1.3);
   skyClouds.forEach(c => {
     c.position.x += c.userData.sp * dt;
-    if (c.position.x > CX + SPAN * 2.6) c.position.x = CX - SPAN * 2.6;
+    if (c.position.x > CX + SPAN * 3.2) c.position.x = CX - SPAN * 3.2;
   });
   mists.forEach(m => {
     const u = m.userData;
