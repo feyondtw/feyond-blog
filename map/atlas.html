@@ -37,7 +37,12 @@ svg{display:block;width:100%;height:100%}
 .land.b{fill:var(--paper2)}
 .grat{fill:none;stroke:#B6C9C3;stroke-width:.5;stroke-dasharray:3 4;
   vector-effect:non-scaling-stroke;opacity:.7}
-.swell{fill:none;stroke:#B2C8C2;stroke-width:.8;vector-effect:non-scaling-stroke;opacity:.55}
+.swell{fill:none;stroke:#B2C8C2;stroke-width:.8;vector-effect:non-scaling-stroke;opacity:.55;
+  animation:swell 11s linear infinite}
+.swell.r{animation-name:swellR}
+@keyframes swell{from{transform:translateX(0)}to{transform:translateX(15px)}}
+@keyframes swellR{from{transform:translateX(0)}to{transform:translateX(-15px)}}
+@media (prefers-reduced-motion:reduce){.swell{animation:none}}
 
 .lead{stroke:var(--faint);stroke-width:1;fill:none;vector-effect:non-scaling-stroke}
 .pindot{fill:var(--deep)}
@@ -412,10 +417,12 @@ svg.append(gSea, gGrat, gLand, gRelief, gFill, gSpot);
 /* 海的細紋：幾圈等距的弧，像老地圖的刻線 */
 const sea = mk('rect', {x:-400, y:-400, width:800, height:800, fill:'var(--sea)'});   // 畫面比地圖高時也鋪滿
 gSea.appendChild(sea);
-for (let i = 0; i < 26; i++){
-  const y = -82 + i * 6.4;
-  gSea.appendChild(mk('path', {class:'swell',
-    d:`M-180 ${y}` + Array.from({length:24}, (_, k) =>
+/* 浪紋：鋪滿整片海（原本只畫到一半寬），每條緩緩往左或往右流，相鄰反向 */
+for (let i = 0; i < 70; i++){
+  const y = -220 + i * 6.4;
+  gSea.appendChild(mk('path', {class:'swell' + (i % 2 ? ' r' : ''),
+    style:`animation-duration:${9 + (i % 5) * 1.7}s`,
+    d:`M-420 ${y}` + Array.from({length:112}, (_, k) =>
       `q 3.75 ${k % 2 ? 1.6 : -1.6} 7.5 0`).join('')}));
 }
 for (let lat = -60; lat <= 75; lat += 15)
@@ -498,10 +505,24 @@ const FSEED = [[-96, 48], [-110, 36], [-62, -12], [-48, -24], [-70, 8], [14, 54]
                [-4, 16], [22, 6], [44, 26], [70, 40], [96, 54], [104, 20], [124, 36],
                [134, -24], [148, -34], [-150, 62], [-158, 20], [62, -22], [84, -6],
                [-30, 40], [-16, -8], [52, 58], [116, -8], [-120, 60], [36, -28]];
+/* 裝飾植物只擺在陸地上（原本固定座標，有幾棵落在大西洋），樹種照地形：
+   寒帶針葉、地中海柏木、草原草叢、莽原傘狀樹、雨林與溫帶闊葉、沙漠與極地不放 */
+const inRing = (lng, lat, ring) => {
+  let c = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++){
+    const [xi, yi] = ring[i], [xj, yj] = ring[j];
+    if ((yi > lat) !== (yj > lat) && lng < (xj - xi) * (lat - yi) / (yj - yi) + xi) c = !c;
+  }
+  return c;
+};
+const onLand = (lng, lat) => C50.some(c => c.r.some(r => r.length > 2 && inRing(lng, lat, r)));
+const BYBIOME = {boreal:'conifer', temp:'leafbig', med:'cypress', steppe:'herb', savanna:'resin', rain:'leafbig'};
 FSEED.forEach(([lng, lat], i) => {
+  const kind = BYBIOME[biomeOf(lng, lat)];
+  if (!kind || !onLand(lng, lat)) return;
   const [x, y] = prj(lng, lat);
   const g = mk('g', {transform:`translate(${x - 4} ${y - 4}) scale(0.2)`});
-  g.innerHTML = drawGlyph2(FILL[i % FILL.length], i);
+  g.innerHTML = drawGlyph2(kind, i);
   gFill.appendChild(g);
 });
 
