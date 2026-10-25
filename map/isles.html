@@ -827,11 +827,13 @@ ISLES.forEach((isle, idx) => {
     });
     if (best <= 0) return 2;
     if (best === 1) return 1;
-    return hexDist(q, r) >= isle.N ? 1 : 0;   // 外圈做成矮崖
+    return 0;                                 // 其餘一律齊平，島緣才不會變城垛
   };
 
   const TOPH = 0.46, STEPH = 0.5;
-  const GRASS = [isle.top, mix(isle.top, 0xFFFFFF, 0.16), mix(isle.top, 0x000000, 0.1)];
+  /* 原本三個色階都偏淡又太接近，整座島糊成一片。加深、把差距拉開 */
+  const base0 = mix(isle.top, 0x000000, 0.12);
+  const GRASS = [base0, mix(base0, 0x000000, 0.14), mix(base0, 0xFFFFFF, 0.13)];
   const bins = {};
   const put = (k2, geo) => { (bins[k2] = bins[k2] || {m:null, g:[]}).g.push(geo); };
   const free = [];
@@ -896,17 +898,27 @@ ISLES.forEach((isle, idx) => {
     near.add(f2); block(s2);
   });
 
+  /* 原本每個品項插一根白色細立牌——160 根棍子把整座島變成針山，
+     房子與樹全被淹沒。參考的那幾張圖，數字都是浮在空中的標籤，
+     地上沒有實體棍子。現在地面只留一顆齊平的小圓標。 */
+  const open2 = free.filter(s2 => !s2.used);
+  for (let i = open2.length - 1; i > 0; i--){          // 打散，不要照環排
+    const j = Math.floor(rnd() * (i + 1));
+    const tmp = open2[i]; open2[i] = open2[j]; open2[j] = tmp;
+  }
+  const jig = () => (rnd() - 0.5) * TR * 0.7;
+  const marks = [];
   isle.items.forEach((it, i) => {
-    const slot = free.filter(s2 => !s2.used)[0] || free[i % free.length];
-    const base = cyl(0.26, 0.32, 0.12, 10, 0xECDCBB, slot.x, slot.y + 0.06, slot.z);
-    const pole = cyl(0.045, 0.045, 1.5, 6, 0xFFF8F0, slot.x, slot.y + 0.75, slot.z);
-    const head = ball(0.24, low(it) ? 0xA8A29A : isle.side,
-                      slot.x, slot.y + 1.62, slot.z);
-    g.add(base, pole, head);
-    pins.push({kind:'item', it, isle, head,
-      at:new THREE.Vector3(isle.x + slot.x, slot.y + 2.1, isle.z + slot.z)});
+    const slot = open2.length ? open2[i % open2.length] : free[i % free.length];
+    const px = slot.x + jig(), pz = slot.z + jig();
+    marks.push(new THREE.CylinderGeometry(0.34, 0.4, 0.1, 10).toNonIndexed()
+      .translate(px, slot.y + 0.05, pz));
+    pins.push({kind:'item', it, isle,
+      at:new THREE.Vector3(isle.x + px, slot.y + 0.7, isle.z + pz)});
     slot.used = true;
   });
+  if (marks.length)
+    g.add(new THREE.Mesh(mergeGeos(marks), mat(mix(isle.side, 0xFFFFFF, 0.45))));
 
   /* 剩下的地種樹。位置、轉向、大小都抖開，才像長出來的 */
   const jit = () => (rnd() - 0.5) * TR * 0.8;
@@ -914,10 +926,17 @@ ISLES.forEach((isle, idx) => {
   free.forEach(slot => {
     if (slot.used) return;
     const pick = rnd();
-    const m = pick < 0.26 ? bigBush(c2a, c2b) : bigTree(isle.tree, c2a, c2b, rnd);
+    const m = pick < 0.22 ? bigBush(c2a, c2b) : bigTree(isle.tree, c2a, c2b, rnd);
     m.position.set(slot.x + jit(), slot.y, slot.z + jit());
-    m.scale.setScalar(0.7 + rnd() * 0.5);
-    (pick < 0.26 ? near : g).add(m);
+    m.scale.setScalar(0.72 + rnd() * 0.5);
+    (pick < 0.22 ? near : g).add(m);
+    /* 同一格再補一棵小的，疏密才有變化 */
+    if (rnd() < 0.5){
+      const m2 = rnd() < 0.5 ? bigBush(c2b, c2a) : bigTree(isle.tree, c2b, c2a, rnd);
+      m2.position.set(slot.x + jit(), slot.y, slot.z + jit());
+      m2.scale.setScalar(0.4 + rnd() * 0.3);
+      near.add(m2);
+    }
   });
 
   /* 地面的小碎花：全部合成一個網格，遠看就整組關掉 */
