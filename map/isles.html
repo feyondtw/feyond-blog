@@ -204,9 +204,11 @@ body.notags .tag,body.notags .stem{opacity:0;pointer-events:none}
 .go{display:inline-flex;align-items:center;gap:.4rem;font-size:.76rem;letter-spacing:.06em;
   color:var(--gold);text-decoration:none;border-bottom:1px solid transparent;margin-right:1rem}
 .go:hover{border-bottom-color:var(--gold)}
-.back{font-size:.72rem;letter-spacing:.08em;color:var(--muted);margin-bottom:.8rem;
-  display:inline-flex;gap:.4rem;align-items:center}
-.back:hover{color:var(--gold)}
+/* 回上一層：明顯的圓角按鈕，一進字卡就看得到 */
+.back{font-family:var(--sans);font-size:.8rem;letter-spacing:.06em;color:var(--ink);
+  background:color-mix(in srgb,var(--gold) 14%,var(--cream));border:1px solid color-mix(in srgb,var(--gold) 45%,transparent);
+  border-radius:999px;padding:.38rem .9rem;margin:0 0 1rem;display:inline-flex;gap:.4rem;align-items:center;cursor:pointer}
+.back:hover{background:var(--gold);color:var(--cream)}
 
 .sorry{position:fixed;inset:0;z-index:9;display:none;place-items:center;
   background:var(--cream);padding:2rem}
@@ -3821,7 +3823,8 @@ function openIsle(isle){
   cameFrom = null;
   head(isle.en.toUpperCase(), isle.zh, '',
        `${isle.sub || ''} ・ ${isle.items.length} 種`);
-  cBody.innerHTML = `<p class="note">${isle.lead || ''}</p>` +
+  cBody.innerHTML = `<button class="back" data-home>&#8592; 回到全部島嶼</button>` +
+    `<p class="note">${isle.lead || ''}</p>` +
     (isle.scene ? `<p class="scene">島上的景：${isle.scene}</p>` : '') +
     (isle.quote ? `<p class="quote">「${isle.quote}」</p>` : '') + `
     <div class="sec"><h3>這座島上的 ${isle.items.length} 種 ・ 點一列看解說</h3>${isleMenu(isle)}</div>`;
@@ -3848,7 +3851,8 @@ function openItem(id){
   if (it.articleUrl) links.push(`<a class="go" href="${it.articleUrl}" target="_blank" rel="noopener">讀這一篇 &#8594;</a>`);
   if (it.videoId) links.push(`<a class="go" href="https://www.youtube.com/watch?v=${it.videoId}" target="_blank" rel="noopener">${it.series || '影片'} &#8594;</a>`);
   cBody.innerHTML =
-    (cameFrom ? `<button class="back" data-back>&#8592; 回到${cameFrom}</button>` : '') +
+    /* 一律顯示回到這支精油所在的島（原本要先記得上一頁，第一次點進來永遠沒有這顆鈕） */
+    (isle ? `<button class="back" data-back="${isle.part}">&#8592; 回到 ${isle.zh}</button>` : '') +
     flag(it) +
     (it.verify ? `<p class="verify">${it.verify}</p>` : '') +
     `<dl class="kv">${kv.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join('')}</dl>` +
@@ -3870,10 +3874,9 @@ cBody.addEventListener('mouseleave', () => { hlItem = null; });
 cBody.addEventListener('click', e => {
   const b = e.target.closest('[data-item]');
   if (b){ openItem(b.dataset.item); return; }
-  if (e.target.closest('[data-back]')){
-    const isle = ISLES.find(i => i.zh === cameFrom);
-    if (isle) openIsle(isle);
-  }
+  const bk = e.target.closest('[data-back]');
+  if (bk){ const isle = ISLES.find(i => i.part === bk.dataset.back); if (isle) openIsle(isle); return; }
+  if (e.target.closest('[data-home]')) closeCard();
 });
 function closeCard(){
   card.hidden = true; cameFrom = null; shownIsle = null;
