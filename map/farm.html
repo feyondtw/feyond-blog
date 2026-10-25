@@ -56,8 +56,9 @@ body.notags .tag{opacity:0;pointer-events:none}
 .brand p{margin:0;font-family:var(--sans);font-size:.76rem;letter-spacing:.07em;color:#5E6B63}
 
 /* ── 工具列 ───────────────────────────── */
-.tools{position:fixed;top:0;right:0;z-index:3;padding:1.6rem 1.8rem;
-  display:flex;gap:.4rem;flex-wrap:wrap;justify-content:flex-end}
+.tools{position:fixed;top:4.7rem;right:0;z-index:3;padding:0 1.8rem;
+  display:flex;gap:.4rem;flex-wrap:wrap;justify-content:flex-end;max-width:calc(100vw - 2rem)}
+/* 工具列放在頁籤下一排，不再和頁籤擠同一列而疊在一起 */
 .tool{background:var(--cream);border-radius:999px;padding:.42rem .9rem;
   box-shadow:var(--shadow);font-family:var(--sans);font-size:.76rem;
   letter-spacing:.06em;display:inline-flex;align-items:center;gap:.4rem;
@@ -149,7 +150,7 @@ body.notags .tag{opacity:0;pointer-events:none}
 @media (max-width:760px){
   .brand{padding:1rem 1.1rem}
   .brand h1{font-size:1.4rem}
-  .tools{padding:1rem 1.1rem}
+  .tools{top:0;padding:1rem 1.1rem}
   .views{top:auto;bottom:3.2rem;margin-top:0;font-size:.72rem}
   .card{right:0;left:0;bottom:0;top:auto;transform:none;width:100%;
     max-height:62vh;border-radius:14px 14px 0 0}
