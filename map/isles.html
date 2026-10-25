@@ -80,7 +80,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   border:5px solid transparent;border-top-color:var(--cream);opacity:0;transition:opacity .16s}
 .tag:hover::after,.tag.on::after{opacity:1}
 .tag.off{opacity:0;pointer-events:none}
-body.notags .tag{opacity:0;pointer-events:none}
+body.notags .tag,body.notags .stem{opacity:0;pointer-events:none}
 /* 島名：比品項大一階，永遠展開 */
 /* 第一層的島名牌：比第二層大一號。數字用 Arial、Book 字重（正常粗細，
    不加粗），和第二層粗體的小編號分得出主從。 */
@@ -93,6 +93,25 @@ body.notags .tag{opacity:0;pointer-events:none}
 .tag.isle .n{font-family:Arial,"Helvetica Neue",Helvetica,sans-serif;font-weight:400;
   font-size:.86rem;color:var(--muted)}
 .tag.isle::after{opacity:1}
+
+/* ── 第二層：照 PUMA 的號碼章 ───────────────────────────
+   正圓、實心島色、粗白邊、白字；底下一根細桿拉到地上。
+   滑過或選到的那一個展開成整條島色色帶。 */
+.stem{position:absolute;width:2px;margin-left:-1px;background:var(--ic);
+  opacity:.9;pointer-events:none;z-index:1}
+.stem.off{display:none}
+.tag:not(.isle){background:transparent;box-shadow:none;padding:0;gap:0;z-index:2}
+.tag:not(.isle)::after{display:none}
+.tag:not(.isle) .badge.sm{width:32px;height:32px;border-radius:50%;padding:0;
+  display:grid;place-items:center;background:var(--ic) !important;color:#FFFFFF;
+  font-size:.84rem;letter-spacing:0;
+  box-shadow:0 0 0 3px #FFFFFF,0 4px 12px rgba(42,39,36,.28)}
+.tag:not(.isle):hover,.tag:not(.isle).on{z-index:4;background:var(--ic);color:#FFFFFF;
+  padding:.26rem 1rem .26rem .26rem;gap:.55rem;
+  box-shadow:0 0 0 3px #FFFFFF,0 6px 18px rgba(42,39,36,.3)}
+.tag:not(.isle):hover .badge.sm,.tag:not(.isle).on .badge.sm{
+  background:#FFFFFF !important;color:var(--ic);box-shadow:none}
+.tag:not(.isle) .nm{font-weight:700;font-size:.92rem}
 /* 第二層打開時，第一層名牌改成整塊島色、白字，和奶油色的品項小編號分開 */
 .tag.isle.cur{background:var(--ic);color:#FFFFFF;z-index:3;
   box-shadow:0 6px 22px rgba(42,39,36,.3)}
@@ -976,8 +995,10 @@ ISLES.forEach((isle, idx) => {
     const a = i * 2.399 + rnd() * 0.5;
     const rr = R0 * (0.15 + rnd() * 0.6);
     const px = Math.cos(a) * rr, pz = Math.sin(a) * rr;
+    const gy = SCENE[isle.part] ? 0.72 : 0.02;
     pins.push({kind:'item', it, isle,
-      at:new THREE.Vector3(isle.x + px, 1.4 + rnd() * 2.6, isle.z + pz)});
+      gnd:new THREE.Vector3(isle.x + px, gy, isle.z + pz),
+      at:new THREE.Vector3(isle.x + px, gy + 1.4 + rnd() * 2.6, isle.z + pz)});
   });
   pins.push({kind:'isle', isle, at:new THREE.Vector3(isle.x, 4.6, isle.z)});
 });
@@ -1230,6 +1251,11 @@ pins.forEach(p => {
   } else {
     b.className = 'tag';
     const c2 = '#' + p.isle.side.toString(16).padStart(6, '0');
+    b.style.setProperty('--ic', c2);
+    /* 細桿：從號碼章拉到地上的實際位置，高高低低才看得出前後 */
+    const st = document.createElement('i');
+    st.className = 'stem'; st.style.setProperty('--ic', c2);
+    tagLayer.appendChild(st); p.stem = st;
     b.innerHTML = `<span class="badge sm" style="background:${c2}">` +
                   `${String(p.it.__no).padStart(2, '0')}</span>` +
                   `<span class="nm">${txt(p.it.name)}</span>`;
@@ -1255,7 +1281,20 @@ function placeTags(){
     for (let j = 0; j < i; j++)
       if (Math.abs(vis[i].x - vis[j].x) < 24 && Math.abs(vis[i].y - vis[j].y) < 20)
         vis[i].y = vis[j].y + 20;
-  vis.forEach(({p, x, y}) => { p.tag.style.left = x + 'px'; p.tag.style.top = y + 'px'; });
+  pins.forEach(p => { if (p.stem) p.stem.classList.add('off'); });
+  vis.forEach(({p, x, y}) => {
+    p.tag.style.left = x + 'px'; p.tag.style.top = y + 'px';
+    if (p.stem){
+      v3.copy(p.gnd).project(camera);
+      const gyS = (-v3.y * 0.5 + 0.5) * H;
+      const h = gyS - y;
+      if (h > 2){
+        p.stem.classList.remove('off');
+        p.stem.style.left = x + 'px'; p.stem.style.top = y + 'px';
+        p.stem.style.height = h.toFixed(1) + 'px';
+      }
+    }
+  });
 }
 
 /* ── 字卡 ───────────────────────────────────────────── */
