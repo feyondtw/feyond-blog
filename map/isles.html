@@ -626,7 +626,8 @@ const SHIRTS = [0xD9663F, 0xF2C14E, 0x5C8FB8, 0xFBF3E2, 0x7FAE66, 0xB8965A];
 function doll(shirt, style){
   const g = new THREE.Group();
   const skin = 0xE8B98E, hair = 0x3A2E28;
-  const robe = style === 'spicemerchant' || style === 'tapper';
+  const robe = style === 'spicemerchant' || style === 'tapper' ||
+               style === 'muslim_m' || style === 'muslim_f';
   const skirt = style === 'rosemaid';
   const body = robe
     ? cyl(0.17, 0.26, 0.56, 8, shirt, 0, 0.69, 0)
@@ -636,7 +637,15 @@ function doll(shirt, style){
   g.add(ball(0.27, skin, 0, 0.97, 0));
   const hd = ball(0.285, hair, 0, 1.01, -0.03); g.add(hd);
 
-  if (style === 'rosemaid'){                       // 保加利亞仕女：頭巾＋花籃
+  if (style === 'muslim_m'){                       // 回教族男子：白頭巾＋黑頭箍
+    const kf = ball(0.3, 0xF4EFE4, 0, 1.03, -0.02); kf.scale.set(1, 0.92, 1.1); g.add(kf);
+    g.add(box(0.36, 0.42, 0.06, 0xF4EFE4, 0, 0.82, -0.24).rotateX(-0.18));
+    g.add(new THREE.Mesh(new THREE.TorusGeometry(0.24, 0.04, 5, 14), mat(0x2E2A26))
+      .rotateX(Math.PI / 2).translateZ(-1.17));
+  } else if (style === 'muslim_f'){                // 回教族女子：深色頭巾包到肩
+    const hj = ball(0.31, shirt, 0, 1.0, -0.03); hj.scale.set(1, 1.02, 1.1); g.add(hj);
+    g.add(cyl(0.2, 0.3, 0.32, 9, shirt, 0, 0.8, -0.03));
+  } else if (style === 'rosemaid'){                       // 保加利亞仕女：頭巾＋花籃
     const sc = ball(0.225, 0xD96A7A, 0, 1.02, -0.01); g.add(sc);
     sc.scale.set(1, 0.86, 1);
     g.add(box(0.1, 0.3, 0.04, 0xD96A7A, 0, 0.86, -0.2).rotateX(-0.3));
@@ -714,8 +723,127 @@ for (let pass = 0; pass < 300; pass++)
       }
     }
 
-/* ── 蓋島 ───────────────────────────────────────────── */
+/* ── 蓋島 ───────────────────────────────────────────────
+   第一層：九個大六角盤，側面疊三層顏色像地質剖面。
+   第二層：瑞典分層岩盤的作法——盤上再疊幾片不規則厚板，每片
+   看得到自己的剖面色層，上面只擺老闆清單上的元素，不自己加。
+   還沒拿到清單的島，就只留岩盤。                              */
 const pins = [], folk = [];
+
+/* 各島的場景，只照老闆給的清單。沒有的就是還沒給。 */
+const SCENE = {
+  /* 凝脂島：沙漠、回教族人民、乳香樹、陶罐、椰棗（老闆的清單，不多加） */
+  resin(g, near, top, rnd){
+    const SAND = 0xE2BA72, SAND2 = 0xD6A85E, DUNE = 0xEACB8A;
+    const SIDE = [0xC98A4E, 0xA86A3E, 0x7E4E32];
+    /* 沙漠：兩片不規則厚板疊上去，剖面分色，再撒幾座沙丘 */
+    g.add(slab(blobShape(top.r * 0.86, 12, 0.14, rnd), 0.7, SAND, SIDE[0], top.y));
+    const s2 = slab(blobShape(top.r * 0.46, 10, 0.18, rnd), 0.6, SAND2, SIDE[1], top.y + 0.7);
+    s2.position.set(-top.r * 0.22, 0, -top.r * 0.18);
+    near.add(s2);
+    const yA = top.y + 0.7, yB = top.y + 1.3;
+    [[0.45, 0.35, 1.7], [0.2, -0.55, 1.2], [-0.6, 0.42, 1.3]].forEach(([fx, fz, r]) => {
+      const d = new THREE.Mesh(new THREE.SphereGeometry(r, 12, 6, 0, Math.PI * 2, 0, Math.PI / 2),
+        mat(DUNE));
+      d.scale.set(1, 0.3, 0.68); d.rotation.y = rnd() * 6.28;
+      d.position.set(fx * top.r, yA, fz * top.r);
+      d.castShadow = true; d.receiveShadow = true;
+      near.add(d);
+    });
+
+    /* 乳香樹：矮、樹幹粗而扭，分成幾支歪斜的枝，葉子稀疏成小團 */
+    const frank = () => {
+      const tg = new THREE.Group();
+      tg.add(cyl(0.2, 0.32, 0.9, 7, 0xA8835C, 0, 0.45, 0));
+      [[-0.55, 0.5], [0.5, -0.45], [0.1, 0.6], [-0.2, -0.6]].forEach(([dx, rz], i) => {
+        const br = cyl(0.07, 0.12, 1.0, 6, 0xA8835C, dx * 0.4, 1.25, 0);
+        br.rotation.z = rz; br.rotation.y = i * 1.4;
+        tg.add(br);
+        const lf = ball(0.34, i % 2 ? 0x7F9A5A : 0x8FA868,
+          dx * 0.95, 1.75 + (i % 2) * 0.12, Math.sin(i * 1.4) * 0.45);
+        lf.scale.set(1.3, 0.5, 1.3);
+        tg.add(lf);
+      });
+      return tg;
+    };
+    [[0.55, -0.15, yA, 1.15], [-0.05, 0.62, yA, 0.95], [-0.3, -0.22, yB, 1.0]]
+      .forEach(([fx, fz, y, s]) => {
+        const f = frank();
+        f.position.set(fx * top.r, y, fz * top.r);
+        f.rotation.y = rnd() * 6.28; f.scale.setScalar(s);
+        near.add(f);
+      });
+
+    /* 椰棗：細高的分節樹幹、垂下來的長葉、一串串橘色果實 */
+    const datePalm = () => {
+      const pg = new THREE.Group();
+      for (let i = 0; i < 6; i++)
+        pg.add(cyl(0.15 - i * 0.008, 0.17 - i * 0.008, 0.52, 7,
+                   i % 2 ? 0x9C7A52 : 0x8A6A46, 0, 0.26 + i * 0.5, 0));
+      for (let i = 0; i < 9; i++){
+        const fr = box(0.22, 0.05, 1.7, i % 2 ? 0x5E8A54 : 0x6E9B60, 0, 0, 0.85);
+        const pv = new THREE.Group();
+        pv.add(fr); pv.position.y = 3.05;
+        pv.rotation.y = i / 9 * 6.28; pv.rotation.x = 0.55;
+        pg.add(pv);
+      }
+      for (let i = 0; i < 4; i++){
+        const cl = ball(0.17, 0xD9832F, Math.cos(i * 1.57) * 0.28, 2.8,
+                        Math.sin(i * 1.57) * 0.28);
+        cl.scale.set(1, 1.5, 1);
+        pg.add(cl);
+      }
+      return pg;
+    };
+    [[0.62, 0.42, yA, 1.0], [0.72, 0.1, yA, 0.85], [-0.62, -0.02, yA, 0.95], [-0.48, 0.6, yA, 0.8]]
+      .forEach(([fx, fz, y, s]) => {
+        const d = datePalm();
+        d.position.set(fx * top.r, y, fz * top.r);
+        d.rotation.y = rnd() * 6.28; d.scale.setScalar(s);
+        near.add(d);
+      });
+
+    /* 陶罐：一群一群擺，大小高矮不一 */
+    const POT = [0xB9774A, 0xC98A5A, 0xA0623E, 0xD49B6A];
+    [[-0.12, -0.5, yA], [0.28, 0.12, yA], [-0.42, -0.25, yB]].forEach(([fx, fz, y], gi) => {
+      const n = 3 + Math.floor(rnd() * 3);
+      for (let i = 0; i < n; i++){
+        const a = rnd() * 6.28, rr = rnd() * 0.7;
+        const h = 0.55 + rnd() * 0.6, w = 0.26 + rnd() * 0.16;
+        const pg = new THREE.Group();
+        pg.add(cyl(w * 0.7, w * 0.55, h * 0.18, 9, POT[(gi + i) % 4], 0, h * 0.09, 0));
+        const body = ball(w, POT[(gi + i) % 4], 0, h * 0.42, 0);
+        body.scale.set(1, h / (w * 2) * 1.1, 1); pg.add(body);
+        pg.add(cyl(w * 0.42, w * 0.5, h * 0.22, 9, POT[(gi + i + 1) % 4], 0, h * 0.86, 0));
+        pg.position.set(fx * top.r + Math.cos(a) * rr, y, fz * top.r + Math.sin(a) * rr);
+        near.add(pg);
+      }
+    });
+
+    /* 回教族人民：男子白長袍白頭巾、女子深色長袍頭巾。
+       兩個人沿沙地走一圈，其餘站著。 */
+    const loop = [];
+    for (let i = 0; i < 16; i++){
+      const a = i / 16 * 6.28;
+      loop.push(new THREE.Vector3(g.position.x + Math.cos(a) * top.r * 0.32 + top.r * 0.12,
+        yA, g.position.z + Math.sin(a) * top.r * 0.22 + top.r * 0.18));
+    }
+    [['muslim_m', 0xF4EFE4], ['muslim_f', 0x3E3A44]].forEach(([st, c], i) => {
+      const d = doll(c, st);
+      d.userData = {path:loop, t:i * 8, seg:loop[0].distanceTo(loop[1]),
+                    sp:0.9 * (i ? -1 : 1), y:yA};
+      world.add(d); folk.push(d);
+    });
+    [['muslim_m', 0xEFE6D2, 0.18, -0.05], ['muslim_f', 0x5A3E48, -0.05, -0.32],
+     ['muslim_m', 0xF4EFE4, 0.4, 0.55]].forEach(([st, c, fx, fz]) => {
+      const d = doll(c, st);
+      d.position.set(fx * top.r, yA, fz * top.r);
+      d.rotation.y = rnd() * 6.28;
+      near.add(d);
+    });
+  }
+};
+
 ISLES.forEach((isle, idx) => {
   const g = new THREE.Group();
   g.position.set(isle.x, 0, isle.z);
@@ -725,7 +853,6 @@ ISLES.forEach((isle, idx) => {
     return () => (s2 = (s2 * 9301 + 49297) % 233280) / 233280; })();
 
   const R0 = isle.R;
-  /* 第一層：一個大六角盤。側面疊三層不同顏色，像地質剖面的厚板 */
   const BANDS = [
     [mix(isle.side, 0x000000, 0.06), 1.0],
     [mix(isle.side, 0xC97F4A, 0.3), 0.9],
@@ -733,122 +860,26 @@ ISLES.forEach((isle, idx) => {
   ];
   let yy = 0;
   BANDS.forEach(([c, h], bi) => {
-    const r2 = R0 * (1 - bi * 0.035);
-    const s2 = slab(hexShape(r2), h, c, c, yy - h);
-    g.add(s2); yy -= h;
+    g.add(slab(hexShape(R0 * (1 - bi * 0.035)), h, c, c, yy - h));
+    yy -= h;
   });
-  const lawn = slab(hexShape(R0), 0.55, isle.top, mix(isle.top, 0x000000, 0.22), -0.55);
-  g.add(lawn);
+  g.add(slab(hexShape(R0), 0.55, isle.top, mix(isle.top, 0x000000, 0.22), -0.55));
 
-  /* 第二層：盤子上再疊兩三片不規則的岩盤，顏色各不相同。
-     收在 near 裡，遠看整組關掉。 */
   const near = new THREE.Group();
   g.add(near);
   isle.near = near;
+  const top = {y:0, r:R0 * 0.92};
+  if (SCENE[isle.part]) SCENE[isle.part](g, near, top, rnd);
 
-  const TIERS = [
-    {r:R0 * 0.78, h:0.55, top:mix(isle.top, 0xE8C86E, 0.3), side:mix(isle.side, 0xC97F4A, 0.42)},
-    {r:R0 * 0.52, h:0.6,  top:mix(isle.top, 0x000000, 0.1), side:mix(isle.side, 0x3E5A47, 0.3)},
-    {r:R0 * 0.28, h:0.65, top:mix(isle.top, 0xFFFFFF, 0.18), side:mix(isle.side, 0x000000, 0.18)}
-  ];
-  const tierY = [];
-  let ty = 0;
-  TIERS.forEach((tr, i) => {
-    const sh = blobShape(tr.r, 11, 0.16, rnd);
-    const s2 = slab(sh, tr.h, tr.top, tr.side, ty);
-    const off = [(rnd() - 0.5) * R0 * 0.16, (rnd() - 0.5) * R0 * 0.16];
-    s2.position.x = off[0]; s2.position.z = off[1];
-    (i === 0 ? g : near).add(s2);
-    ty += tr.h;
-    tierY.push({y:ty, r:tr.r, x:off[0], z:off[1]});
-  });
-  /* 哪一層最高，之後擺東西都靠它 */
-  const T0 = tierY[0], T1 = tierY[1], T2 = tierY[2];
-
-  /* 地上的東西：主建築在第二階、田在第一階、樹散在兩階 */
-  const ROOFS = {cottage:0xD9663F, shed:0x4E8FA0, cabin:0x8A5A3C, stone:0xC2906A,
-                 tent:0xC87F55, dome:0x3E7F92, barn:0xC4714B};
-  const b = building(isle.arch, ROOFS[isle.arch] || 0xD9663F);
-  b.position.set(T1.x + T1.r * 0.1, T1.y, T1.z - T1.r * 0.25);
-  b.rotation.y = -0.5 + rnd() * 1.0;
-  g.add(b);
-
-  const f1 = fieldOf(isle.field, isle.top, mix(isle.top, 0xFFFFFF, 0.3));
-  f1.position.set(T0.x - T0.r * 0.45, T0.y, T0.z + T0.r * 0.4);
-  f1.rotation.y = rnd() * 6.28;
-  near.add(f1);
-  const f2 = fieldOf(isle.field, isle.top, mix(isle.top, 0xFFFFFF, 0.3));
-  f2.position.set(T0.x + T0.r * 0.5, T0.y, T0.z + T0.r * 0.3);
-  f2.rotation.y = rnd() * 6.28;
-  f2.scale.setScalar(0.8);
-  near.add(f2);
-
-  /* 樹：沿著各階的邊緣長，中間留白，像那張地圖的林帶 */
-  const c2a = mix(isle.top, 0x000000, 0.3), c2b = mix(isle.top, 0x000000, 0.14);
-  /* 樹要成叢。等距排一圈就是「版」——一叢三到六棵，叢與叢之間
-     留白，叢裡再各自高矮不一。 */
-  [[T0, 5, 0.6, 0.95], [T1, 4, 0.55, 0.92], [T2, 2, 0.5, 0.85]]
-    .forEach(([T, clumps, inner, outer], ti) => {
-      for (let c3 = 0; c3 < clumps; c3++){
-        const ca = rnd() * 6.28;
-        const cr = T.r * (inner + rnd() * (outer - inner));
-        const cx3 = T.x + Math.cos(ca) * cr, cz3 = T.z + Math.sin(ca) * cr;
-        const n3 = 3 + Math.floor(rnd() * 4);
-        for (let i = 0; i < n3; i++){
-          const a = rnd() * 6.28, rr = rnd() * 1.5;
-          const m = rnd() < 0.18
-            ? bigBush(c2a, c2b)
-            : bigTree(isle.tree, c2a, c2b, rnd);
-          m.position.set(cx3 + Math.cos(a) * rr, T.y, cz3 + Math.sin(a) * rr);
-          m.scale.setScalar(0.62 + rnd() * 0.45);
-          (ti === 0 && i < 3 ? g : near).add(m);
-        }
-      }
-    });
-
-  /* 品項的標記：紅白相間的細桿，高低不一，像那張圖的測量桿 */
-  const poleW = [], poleR = [];
+  /* 品項編號：浮在空中的標籤，高低錯落、散著擺，地上不插棍子 */
   isle.items.forEach((it, i) => {
-    const T = [T0, T1, T2][i % 3];
-    const a = (i * 2.399) % 6.28;
-    const rr = T.r * (0.18 + rnd() * 0.46);
-    const px = T.x + Math.cos(a) * rr, pz = T.z + Math.sin(a) * rr;
-    const h2 = 1.1 + rnd() * 1.1;
-    const seg = Math.max(3, Math.round(h2 / 0.28));
-    for (let s3 = 0; s3 < seg; s3++){
-      const gg = new THREE.CylinderGeometry(0.055, 0.055, h2 / seg, 7).toNonIndexed()
-        .translate(px, T.y + (s3 + 0.5) * h2 / seg, pz);
-      (s3 % 2 ? poleR : poleW).push(gg);
-    }
-    const cap = ball(0.17, mix(isle.side, 0x000000, 0.1), px, T.y + h2 + 0.1, pz);
-    near.add(cap);
+    const a = i * 2.399 + rnd() * 0.5;
+    const rr = R0 * (0.15 + rnd() * 0.6);
+    const px = Math.cos(a) * rr, pz = Math.sin(a) * rr;
     pins.push({kind:'item', it, isle,
-      at:new THREE.Vector3(isle.x + px, T.y + h2 + 0.45, isle.z + pz)});
+      at:new THREE.Vector3(isle.x + px, 1.4 + rnd() * 2.6, isle.z + pz)});
   });
-  if (poleW.length){
-    near.add(new THREE.Mesh(mergeGeos(poleW), mat(0xFBF5E8)));
-    near.add(new THREE.Mesh(mergeGeos(poleR), mat(0xC4714B)));
-  }
-
-  /* 島名的掛點 */
-  pins.push({kind:'isle', isle, at:new THREE.Vector3(isle.x, 4.2, isle.z)});
-
-  /* 人走一條封閉折線，貼著第一階的邊走，沒有格子也不會走到海裡 */
-  const path = [];
-  const PN = 20;
-  for (let i = 0; i < PN; i++){
-    const a = i / PN * 6.28;
-    const rr = T0.r * 0.84;
-    path.push(new THREE.Vector3(isle.x + T0.x + Math.cos(a) * rr, T0.y,
-                                isle.z + T0.z + Math.sin(a) * rr));
-  }
-  const nFolk = Math.min(5, 2 + Math.floor(isle.items.length / 9));
-  for (let i = 0; i < nFolk; i++){
-    const d = doll(SHIRTS[(idx + i) % SHIRTS.length], isle.folk);
-    d.userData = {path, t:rnd() * PN, seg:path[0].distanceTo(path[1]),
-      sp:(0.9 + rnd() * 0.5) * (i % 2 ? 1 : -1), y:T0.y};
-    world.add(d); folk.push(d);
-  }
+  pins.push({kind:'isle', isle, at:new THREE.Vector3(isle.x, 4.6, isle.z)});
 });
 
 /* ── 橋：用最小生成樹連起來，每座島都到得了 ────────── */
