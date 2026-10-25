@@ -1910,11 +1910,15 @@ const SCENE = {
       tg.add(cyl(0.14, 0.2, 0.9, 7, 0x7A5C3E, 0, 0.45, 0));
       const c1 = ball(0.95, 0x4E8A44, 0, 1.6, 0); c1.scale.set(1.1, 0.95, 1.1);
       tg.add(c1, ball(0.6, 0x5E9A4E, 0.45, 2.0, 0.2), ball(0.5, 0x447E3E, -0.45, 1.9, -0.2));
-      for (let k = 0; k < 11; k++){
-        const a = k * 2.39, el = -0.2 + (k % 4) * 0.25;
-        tg.add(ball(0.13, fc, Math.cos(a) * Math.cos(el) * 1.02, 1.6 + Math.sin(el) * 0.9,
-                    Math.sin(a) * Math.cos(el) * 1.02));
+      /* 果子要多：掛滿整個樹冠，外圈加兩顆小樹冠上也有 */
+      for (let k = 0; k < 22; k++){
+        const a = k * 2.39, el = -0.35 + (k % 6) * 0.17;
+        tg.add(ball(0.15, fc, Math.cos(a) * Math.cos(el) * 1.04, 1.6 + Math.sin(el) * 0.92,
+                    Math.sin(a) * Math.cos(el) * 1.04));
       }
+      [[0.45, 2.0, 0.2, 0.6], [-0.45, 1.9, -0.2, 0.5]].forEach(([x, y, z, r]) => {
+        for (let k = 0; k < 2; k++) tg.add(ball(0.13, fc, x + Math.cos(k * 3 + 1) * r, y + 0.1, z + Math.sin(k * 3 + 1) * r));
+      });
       return tg;
     };
     /* 果樹圍著小徑排一圈，檸檬與柑橘交錯；北側留給桌子 */
@@ -1956,7 +1960,8 @@ const SCENE = {
 
     /* 桌子與果汁：白桌、一壺柳橙汁、幾杯檸檬汁與柳橙汁，兩張長凳 */
     {
-      const [x, z] = keepOff(0, -0.6 * R, 1.2);
+      const ta = -110 * Math.PI / 180;
+      const [x, z] = keepOff(Math.cos(ta) * R * 0.6, LCZ + Math.sin(ta) * R * 0.62, 1.2);
       const tg = new THREE.Group();
       tg.add(box(1.8, 0.08, 0.9, 0xFBF7EE, 0, 0.72, 0));
       [[-0.78, -0.36], [0.78, -0.36], [-0.78, 0.36], [0.78, 0.36]].forEach(([lx, lz]) =>
@@ -1970,6 +1975,33 @@ const SCENE = {
       });
       tg.add(ball(0.13, LEMON, 0.75, 0.84, -0.2));
       tg.position.set(x, yA, z); near.add(tg);
+    }
+
+    /* 載水果的小貨車：奶油色車頭、車斗裡疊滿檸檬與柳橙果箱 */
+    {
+      const va = -68 * Math.PI / 180;
+      const [x, z] = keepOff(Math.cos(va) * R * 0.57, LCZ + Math.sin(va) * R * 0.6, 1.4);
+      const vg = new THREE.Group(), BODY = 0x6FA8A0, CREAM = 0xFBF3E2;
+      vg.add(box(2.6, 0.3, 1.2, BODY, 0, 0.45, 0));                       // 底盤
+      vg.add(box(0.95, 0.75, 1.12, CREAM, 0.85, 0.95, 0));                // 車頭
+      vg.add(box(0.5, 0.42, 1.0, 0x9CC4D4, 1.12, 1.1, 0));                // 擋風玻璃
+      vg.add(box(0.4, 0.22, 1.16, BODY, 1.3, 0.72, 0));                   // 引擎蓋
+      [[-1.28, 0], [0.32, 0]].forEach(([bx]) => vg.add(box(0.06, 0.4, 1.2, BODY, bx, 0.8, 0)));   // 車斗前後板
+      [-0.58, 0.58].forEach(bz => vg.add(box(1.6, 0.4, 0.06, BODY, -0.48, 0.8, bz)));             // 車斗側板
+      [[-0.9, -0.28, LEMON], [-0.9, 0.28, ORANGE], [-0.1, -0.28, ORANGE], [-0.1, 0.28, LEMON], [-0.5, 0, LEMON]]
+        .forEach(([bx, bz, c], k) => {
+          const y = k === 4 ? 1.2 : 0.8;
+          vg.add(box(0.7, 0.38, 0.5, 0xB98A5A, bx, y, bz));
+          for (let j = 0; j < 4; j++) vg.add(ball(0.11, c, bx - 0.24 + (j % 2) * 0.48, y + 0.24, bz - 0.12 + Math.floor(j / 2) * 0.24));
+        });
+      [[-0.85, -0.6], [-0.85, 0.6], [0.85, -0.6], [0.85, 0.6]].forEach(([wx, wz]) => {
+        const w = cyl(0.3, 0.3, 0.2, 12, 0x3A3530, wx, 0.3, wz); w.rotation.x = Math.PI / 2; vg.add(w);
+        const hub = cyl(0.12, 0.12, 0.22, 8, 0xE6E0D2, wx, 0.3, wz); hub.rotation.x = Math.PI / 2; vg.add(hub);
+      });
+      vg.add(ball(0.08, 0xFFF4C8, 1.52, 0.7, -0.4)); vg.add(ball(0.08, 0xFFF4C8, 1.52, 0.7, 0.4));   // 車燈
+      vg.position.set(x, yA, z); vg.rotation.y = -(va + Math.PI / 2);   // 沿切線停
+      vg.traverse(o => { if (o.isMesh) o.castShadow = true; });
+      near.add(vg);
     }
 
     /* 採果工人：草帽、提果籃，三人沿小徑走；一人站在梯子上摘果 */
