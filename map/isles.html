@@ -2419,7 +2419,13 @@ const landH = meshH;
   let s3 = 4242;
   const rr = () => (s3 = (s3 * 9301 + 49297) % 233280) / 233280;
   const ni = gg => gg.index ? gg.toNonIndexed() : gg;
-  const gA = [], gB = [], gT = [], gR = [];
+  /* 每棵樹各挑一個綠：深松綠、灰綠、橄欖、草綠、黃綠，零星幾棵金黃——
+     同一區不再是一整片單一色，密林的視覺壓迫感才會鬆開 */
+  const CONI = [[0x5A7E5E, 0x6A8F68], [0x4A6E52, 0x5A8060], [0x6E8E5C, 0x7FA06A],
+                [0x7A9670, 0x8CA87E], [0x587A4E, 0x6B8E5C], [0x8AA05E, 0x9DB46E]];
+  const ROUND = [0x8DB46A, 0xA3C47A, 0x7FA65E, 0xB9C97A, 0x9DBF6E, 0x6E9A58, 0xC9C072, 0xD9B45E];
+  const gT = [], bucket = {};
+  const put = (c, geo) => (bucket[c] = bucket[c] || []).push(geo);
   for (let c3 = 0; c3 < 480; c3++){
     const round = c3 % 3 === 0;                     // 三叢裡一叢是圓頭闊葉樹
     const a0 = rr() * 6.283, r0 = BAY + 4 + rr() * SPAN * 1.9;
@@ -2431,14 +2437,17 @@ const landH = meshH;
       const s = 0.7 + rr() * 0.7;
       gT.push(ni(new THREE.CylinderGeometry(0.14 * s, 0.2 * s, 0.6 * s, 5)).translate(x, y + 0.3 * s, z));
       if (round){
-        gR.push(ni(new THREE.IcosahedronGeometry(0.95 * s, 0)).translate(x, y + 1.25 * s, z));
+        /* 金黃那兩色少一點，只是點綴 */
+        const k = rr() < 0.12 ? 6 + Math.floor(rr() * 2) : Math.floor(rr() * 6);
+        put(ROUND[k], ni(new THREE.IcosahedronGeometry(0.95 * s, 0)).translate(x, y + 1.25 * s, z));
         continue;
       }
-      gA.push(ni(new THREE.ConeGeometry(0.85 * s, 2.0 * s, 6)).translate(x, y + 1.45 * s, z));
-      gB.push(ni(new THREE.ConeGeometry(0.58 * s, 1.4 * s, 6)).translate(x, y + 2.3 * s, z));
+      const [ca, cb] = CONI[Math.floor(rr() * CONI.length)];
+      put(ca, ni(new THREE.ConeGeometry(0.85 * s, 2.0 * s, 6)).translate(x, y + 1.45 * s, z));
+      put(cb, ni(new THREE.ConeGeometry(0.58 * s, 1.4 * s, 6)).translate(x, y + 2.3 * s, z));
     }
   }
-  [[gA, 0x5A7E5E], [gB, 0x6A8F68], [gT, 0x8A6A4A], [gR, 0x8DB46A]].forEach(([list, c]) => {
+  [[gT, 0x8A6A4A]].concat(Object.keys(bucket).map(c => [bucket[c], +c])).forEach(([list, c]) => {
     if (!list.length) return;
     const tm = new THREE.Mesh(mergeGeos(list), mat(c));
     tm.castShadow = true; world.add(tm);
