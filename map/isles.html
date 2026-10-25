@@ -2395,7 +2395,14 @@ ISLES.forEach((isle, idx) => {
 /* ── 橋：用最小生成樹連起來，每座島都到得了 ────────── */
 (function bridges(){
   const n = ISLES.length, inTree = [0], out = ISLES.map((_, i) => i).slice(1);
-  const BM = mat(0xC9B08A), RM = mat(0xE8DCC6);
+  /* 老闆給的參考：微微拱起的木橋，深褐木板一片片、板間留縫，兩側深紅褐
+     弧形扶手，每側三根柱。兩端落在六角盤邊上。 */
+  const PLANK = [mat(0x6E4A34), mat(0x5E3E2C)], RAIL = mat(0x5A2A22);
+  /* 六角盤在某方向上的邊緣距離（頂點在 30°、90°…，邊的法線在 0°、60°…） */
+  const hexEdge = (R, phi) => {
+    const step = Math.PI / 3, d = phi - Math.round(phi / step) * step;
+    return R * Math.cos(Math.PI / 6) / Math.cos(d);
+  };
   while (out.length){
     let bi = 0, bj = 0, bd = 1e9;
     inTree.forEach(i => out.forEach((j, oj) => {
@@ -2405,23 +2412,51 @@ ISLES.forEach((isle, idx) => {
     const j = out.splice(bj, 1)[0];
     const a = ISLES[bi], b = ISLES[j];
     const ax = Math.atan2(b.z - a.z, b.x - a.x);
-    const x0 = a.x + Math.cos(ax) * a.R, z0 = a.z + Math.sin(ax) * a.R;
-    const x1 = b.x - Math.cos(ax) * b.R, z1 = b.z - Math.sin(ax) * b.R;
+    /* 兩端各伸進島邊 0.35，看起來是搭在岸上 */
+    const ra = hexEdge(a.R, ax) - 0.35, rb = hexEdge(b.R, ax + Math.PI) - 0.35;
+    const x0 = a.x + Math.cos(ax) * ra, z0 = a.z + Math.sin(ax) * ra;
+    const x1 = b.x - Math.cos(ax) * rb, z1 = b.z - Math.sin(ax) * rb;
     const len = Math.hypot(x1 - x0, z1 - z0);
-    if (len > 0.5){
-      const deck = new THREE.Mesh(new THREE.BoxGeometry(len, 0.16, 1.2), BM);
-      deck.position.set((x0 + x1) / 2, -0.5, (z0 + z1) / 2);
-      deck.rotation.y = -ax;
-      deck.receiveShadow = true;
-      world.add(deck);
-      [-0.55, 0.55].forEach(off => {
-        const rail = new THREE.Mesh(new THREE.BoxGeometry(len, 0.14, 0.08), RM);
-        rail.position.set((x0 + x1) / 2 - Math.sin(-ax) * off,
-                          -0.34, (z0 + z1) / 2 - Math.cos(-ax) * off);
-        rail.rotation.y = -ax;
-        world.add(rail);
-      });
+    if (len < 0.5){ inTree.push(j); continue; }
+    const bg = new THREE.Group();
+    bg.position.set((x0 + x1) / 2, 0, (z0 + z1) / 2); bg.rotation.y = -ax;
+    const rise = Math.min(0.75, 0.18 + len * 0.16), W = 1.3;
+    const yAt = t => 0.04 + rise * Math.sin(Math.PI * t);           // t：0→1 沿橋長
+    const slopeAt = t => Math.atan(rise * Math.PI * Math.cos(Math.PI * t) / len);
+    /* 木板：一片片橫跨，順著拱度傾斜 */
+    const np = Math.max(5, Math.round(len / 0.34));
+    for (let k = 0; k < np; k++){
+      const t = (k + 0.5) / np, pw = len / np - 0.05;
+      const pl = new THREE.Mesh(new THREE.BoxGeometry(pw, 0.1, W), PLANK[k % 2]);
+      pl.position.set(-len / 2 + t * len, yAt(t), 0); pl.rotation.z = slopeAt(t);
+      pl.castShadow = true; pl.receiveShadow = true; bg.add(pl);
     }
+    /* 兩側底樑 */
+    [-1, 1].forEach(sd => {
+      for (let k = 0; k < 8; k++){
+        const t = (k + 0.5) / 8;
+        const bm = new THREE.Mesh(new THREE.BoxGeometry(len / 8 + 0.02, 0.12, 0.08), PLANK[1]);
+        bm.position.set(-len / 2 + t * len, yAt(t) - 0.1, sd * (W / 2 - 0.04)); bm.rotation.z = slopeAt(t);
+        bg.add(bm);
+      }
+    });
+    /* 扶手：每側三根柱（兩端、中間），上面一條順著拱的弧形扶手 */
+    [-1, 1].forEach(sd => {
+      const z = sd * (W / 2 - 0.02);
+      [0.04, 0.5, 0.96].forEach(t => {
+        const p2 = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.6, 0.11), RAIL);
+        p2.position.set(-len / 2 + t * len, yAt(t) + 0.3, z); p2.castShadow = true; bg.add(p2);
+      });
+      const segs = 10;
+      for (let k = 0; k < segs; k++){
+        const t0 = 0.02 + 0.96 * k / segs, t1 = 0.02 + 0.96 * (k + 1) / segs, tm = (t0 + t1) / 2;
+        const sl = (t1 - t0) * len;
+        const rl = new THREE.Mesh(new THREE.BoxGeometry(sl + 0.03, 0.08, 0.12), RAIL);
+        rl.position.set(-len / 2 + tm * len, yAt(tm) + 0.62, z); rl.rotation.z = slopeAt(tm);
+        rl.castShadow = true; bg.add(rl);
+      }
+    });
+    world.add(bg);
     inTree.push(j);
   }
 })();
