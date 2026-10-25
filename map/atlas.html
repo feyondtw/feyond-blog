@@ -39,20 +39,20 @@ svg{display:block;width:100%;height:100%}
   vector-effect:non-scaling-stroke;opacity:.7}
 .swell{fill:none;stroke:#B2C8C2;stroke-width:.8;vector-effect:non-scaling-stroke;opacity:.55}
 
-.lead{stroke:var(--faint);stroke-width:.9;fill:none;vector-effect:non-scaling-stroke}
+.lead{stroke:var(--faint);stroke-width:1;fill:none;vector-effect:non-scaling-stroke}
 .pindot{fill:var(--deep)}
 .pindot.low{fill:var(--faint)}
 .pinring{fill:none;stroke:var(--paper);stroke-width:1.6;vector-effect:non-scaling-stroke}
-.pinno{font-family:var(--latin);font-size:7px;fill:var(--paper);
+.pinno{font-family:var(--latin);font-size:9px;fill:var(--paper);
   text-anchor:middle;dominant-baseline:central;letter-spacing:.02em}
 
 .spot{cursor:pointer}
-.spot .cap{font-family:var(--sans);font-size:5.4px;font-weight:500;fill:var(--ink);
-  text-anchor:middle;letter-spacing:.08em;
-  paint-order:stroke;stroke:var(--paper);stroke-width:1.8px;stroke-linejoin:round}
-.spot .sub{font-family:var(--latin);font-size:4.6px;fill:var(--faint);
+.spot .cap{font-family:var(--sans);font-size:13px;font-weight:500;fill:var(--ink);
+  text-anchor:middle;letter-spacing:.06em;
+  paint-order:stroke;stroke:var(--paper);stroke-width:4px;stroke-linejoin:round}
+.spot .sub{font-family:var(--latin);font-size:11px;fill:var(--faint);
   text-anchor:middle;letter-spacing:.1em;font-style:italic;
-  paint-order:stroke;stroke:var(--paper);stroke-width:1.6px;stroke-linejoin:round}
+  paint-order:stroke;stroke:var(--paper);stroke-width:3.5px;stroke-linejoin:round}
 .spot:hover .cap{fill:var(--brick)}
 .spot .glyph{transition:transform .18s}
 .spot:hover .glyph{transform:scale(1.12)}
@@ -382,45 +382,69 @@ const spots = ORIGINS.map((o, i) => {
   gSpot.appendChild(g);
   return g;
 });
-/* 圖示要讓開彼此，但引線會拉回真實座標，不會騙人 */
-const place = spots.map(g => ({g, x:g.__x, y:g.__y - 9}));
-for (let pass = 0; pass < 220; pass++)
-  for (let i = 0; i < place.length; i++)
-    for (let j = i + 1; j < place.length; j++){
-      const a = place[i], b = place[j];
-      const dx = b.x - a.x, dy = b.y - a.y;
-      const d = Math.hypot(dx, dy) || 0.01;
-      if (d < 13){
-        const p = (13 - d) / 2 / d;
-        a.x -= dx * p; a.y -= dy * p;
-        b.x += dx * p; b.y += dy * p;
-      }
-    }
-place.forEach(({g, x, y}, i) => {
-  const o = g.__o, gx = g.__x, gy = g.__y;
-  g.appendChild(mk('path', {class:'lead', d:`M${gx} ${gy}L${x} ${y + 6}`}));
-  const ic = mk('g', {class:'glyph',
-    transform:`translate(${x - 6} ${y - 7}) scale(0.3)`, 'transform-origin':'center'});
+/* 字與圖示全部畫在「像素座標」裡，再用群組縮回使用者單位。
+   原本直接用使用者單位畫，放大之後字會跟著放大到一百多 px，
+   整張地圖被字蓋住——標註本來就該維持固定的螢幕大小。 */
+spots.forEach((g, i) => {
+  const o = g.__o;
+  g.appendChild(mk('path', {class:'lead', d:'M0 0'}));
+  const ic = mk('g', {class:'glyph'});
   ic.innerHTML = drawGlyph(glyphFor(o), i);
   g.appendChild(ic);
-  const cap = mk('text', {class:'cap', x, y:y + 11});
+  const cap = mk('text', {class:'cap'});
   cap.textContent = txt(o.name);
   g.appendChild(cap);
-  const n = o.items.length;
-  if (n){
-    const sub = mk('text', {class:'sub', x, y:y + 16});
-    sub.textContent = n + (n > 1 ? ' kinds' : ' kind');
-    g.appendChild(sub);
-  }
-  g.appendChild(mk('circle', {class:'pinring', cx:gx, cy:gy, r:2.6}));
-  g.appendChild(mk('circle', {class:'pindot' + (low(o) ? ' low' : ''), cx:gx, cy:gy, r:2.6}));
-  const no = mk('text', {class:'pinno', x:gx, y:gy});
+  const sub = mk('text', {class:'sub'});
+  sub.textContent = o.items.length + (o.items.length > 1 ? ' kinds' : ' kind');
+  g.appendChild(sub);
+  g.appendChild(mk('circle', {class:'pinring', cx:0, cy:0, r:7}));
+  g.appendChild(mk('circle', {class:'pindot' + (low(o) ? ' low' : ''), cx:0, cy:0, r:7}));
+  const no = mk('text', {class:'pinno', x:0, y:0});
   no.textContent = o.number || '';
   g.appendChild(no);
+  g.__parts = {lead:g.children[0], ic, cap, sub};
   g.addEventListener('click', () => open(o.id));
   g.addEventListener('keydown', e => {
     if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); open(o.id); } });
 });
+
+/* 每次縮放都重排一次：在螢幕座標裡把標註推開，
+   引線仍然拉回真實座標，位置不會騙人。 */
+function layout(){
+  const W = host.clientWidth || 1, u = VB.w / W;          // 一個像素 = u 個使用者單位
+  const far = VB.w > 150;                                 // 太遠就只留圖示與圓點
+  const vis = [];
+  spots.forEach(g => {
+    const sx = (g.__x - VB.x) / u, sy = (g.__y - VB.y) / u;
+    const on = sx > -80 && sy > -80 && sx < W + 80 && sy < host.clientHeight + 80;
+    g.style.display = on ? '' : 'none';
+    if (on) vis.push({g, sx, sy, ox:0, oy:-26});
+  });
+  for (let pass = 0; pass < 50; pass++)
+    for (let i = 0; i < vis.length; i++)
+      for (let j = i + 1; j < vis.length; j++){
+        const a = vis[i], b = vis[j];
+        const dx = (b.sx + b.ox) - (a.sx + a.ox), dy = (b.sy + b.oy) - (a.sy + a.oy);
+        const d = Math.hypot(dx, dy) || 0.01;
+        const need = far ? 30 : 74;
+        if (d < need){
+          const p = (need - d) / 2 / d;
+          a.ox -= dx * p; a.oy -= dy * p;
+          b.ox += dx * p; b.oy += dy * p;
+        }
+      }
+  vis.forEach(({g, ox, oy}) => {
+    const q = g.__parts;
+    g.setAttribute('transform', `translate(${g.__x} ${g.__y}) scale(${u})`);
+    q.lead.setAttribute('d', `M0 0L${ox.toFixed(1)} ${(oy + 14).toFixed(1)}`);
+    q.ic.setAttribute('transform',
+      `translate(${(ox - 15).toFixed(1)} ${(oy - 16).toFixed(1)}) scale(0.78)`);
+    q.cap.setAttribute('x', ox.toFixed(1)); q.cap.setAttribute('y', (oy + 26).toFixed(1));
+    q.sub.setAttribute('x', ox.toFixed(1)); q.sub.setAttribute('y', (oy + 38).toFixed(1));
+    q.cap.style.display = far ? 'none' : '';
+    q.sub.style.display = far ? 'none' : '';
+  });
+}
 
 /* ── 平移與縮放 ────────────────────────────────────── */
 let VB = {x:-180, y:-84, w:360, h:168};
@@ -430,6 +454,7 @@ function apply(){
   VB.x = Math.max(-180, Math.min(180 - VB.w, VB.x));
   VB.y = Math.max(-84, Math.min(84 - VB.h, VB.y));
   svg.setAttribute('viewBox', `${VB.x} ${VB.y} ${VB.w} ${VB.h}`);
+  if (typeof layout === 'function') layout();
 }
 function goTo(lng, lat, w, ms){
   const a = {x:VB.x, y:VB.y, w:VB.w};
