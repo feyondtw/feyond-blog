@@ -262,7 +262,7 @@ body.notags .tag,body.notags .stem{opacity:0;pointer-events:none}
   </div>
 </div>
 
-<div class="over hint">拖曳轉動　捲動縮放　點光點看它是什麼</div>
+<div class="over hint">拖曳移動　右鍵拖曳轉動　捲動縮放</div>
 
 <article class="card" id="card" hidden aria-live="polite">
   <div class="card-h">
@@ -2448,27 +2448,61 @@ function glide(to, ms){
 }
 
 const pts = new Map();
-let dragging = false, moved = false, sx = 0, sy = 0, px = 0, py = 0, cap = -1, pinch0 = 0, d0 = 0;
+let dragging = false, moved = false, sx = 0, sy = 0, px = 0, py = 0, cap = -1, pinch0 = 0;
+let rotMode = false, mid0 = null, ang0 = 0;
 const spread = () => {
   const v = [...pts.values()];
   return v.length < 2 ? 0 : Math.hypot(v[0].x - v[1].x, v[0].y - v[1].y);
 };
+const midOf = () => { const v = [...pts.values()]; return {x:(v[0].x + v[1].x) / 2, y:(v[0].y + v[1].y) / 2}; };
+const angOf = () => { const v = [...pts.values()]; return Math.atan2(v[1].y - v[0].y, v[1].x - v[0].x); };
 function grab(e){ if (cap !== e.pointerId){ cap = e.pointerId; host.setPointerCapture(e.pointerId); } }
 let lastTouch = 0;            // 最後一次操作的時間；放手 4 秒後才恢復自轉
+/* 螢幕上一點對到的地面位置 */
+const panRay = new THREE.Raycaster();
+function groundAt(cx, cy, out){
+  const r = host.getBoundingClientRect();
+  camera.updateMatrixWorld();
+  panRay.setFromCamera(new THREE.Vector2((cx - r.left) / r.width * 2 - 1, -((cy - r.top) / r.height) * 2 + 1), camera);
+  return panRay.ray.intersectPlane(zoomPlane, out);
+}
+/* 平移：讓手指（游標）按住的那塊地跟著手走 */
+const pa = new THREE.Vector3(), pb = new THREE.Vector3();
+function panBy(x0, y0, x1, y1){
+  if (!groundAt(x0, y0, pa) || !groundAt(x1, y1, pb)) return;
+  /* 拖到地平線附近時射線幾乎平行地面，一點點位移會變成很大一段；每步設上限 */
+  let dx = pa.x - pb.x, dz = pa.z - pb.z;
+  const dl = Math.hypot(dx, dz), cap2 = CAM.dist * 0.25;
+  if (dl > cap2){ dx *= cap2 / dl; dz *= cap2 / dl; }
+  CAM.tx += dx; CAM.tz += dz;
+  const ox = CAM.tx - CX, oz = CAM.tz - CZ, ol = Math.hypot(ox, oz), lim = MAXR + 4;
+  if (ol > lim){ CAM.tx = CX + ox / ol * lim; CAM.tz = CZ + oz / ol * lim; }
+  applyCam();
+}
+host.addEventListener('contextmenu', e => e.preventDefault());
 host.addEventListener('pointerdown', e => {
   pts.set(e.pointerId, {x:e.clientX, y:e.clientY});
   anim = null; lastTouch = performance.now();
-  if (pts.size === 1){ dragging = true; moved = false; sx = px = e.clientX; sy = py = e.clientY; }
-  else if (pts.size === 2){ dragging = false; moved = true; grab(e); pinch0 = spread(); d0 = CAM.dist; }
+  if (pts.size === 1){
+    dragging = true; moved = false; sx = px = e.clientX; sy = py = e.clientY;
+    /* 右鍵、或按著 Shift／Ctrl／Alt 拖曳＝轉動與俯仰；一般拖曳＝移動地圖 */
+    rotMode = e.button === 2 || e.shiftKey || e.ctrlKey || e.altKey;
+  } else if (pts.size === 2){
+    dragging = false; moved = true; grab(e);
+    pinch0 = spread(); mid0 = midOf(); ang0 = angOf();
+  }
 });
 host.addEventListener('pointermove', e => {
   if (!pts.has(e.pointerId)) return;
   pts.set(e.pointerId, {x:e.clientX, y:e.clientY});
   if (pts.size === 2){
+    /* 兩指：捏合縮放、一起拖＝移動、轉動＝旋轉 */
     if (pinch0 > 0){
-      const sp = spread(), v = [...pts.values()];
-      if (sp > 0) zoomAt((v[0].x + v[1].x) / 2, (v[0].y + v[1].y) / 2, CAM.dist * pinch0 / sp);
-      pinch0 = sp;                                  // 逐段縮放，中心跟著兩指中點走
+      const sp = spread(), m = midOf(), an = angOf();
+      if (mid0) panBy(mid0.x, mid0.y, m.x, m.y);
+      CAM.theta += an - ang0;
+      if (sp > 0) zoomAt(m.x, m.y, CAM.dist * pinch0 / sp);
+      pinch0 = sp; mid0 = m; ang0 = an;
     }
     return;
   }
@@ -2477,14 +2511,16 @@ host.addEventListener('pointermove', e => {
     if (Math.hypot(e.clientX - sx, e.clientY - sy) < 3) return;
     moved = true; host.classList.add('grabbing'); grab(e);
   }
-  CAM.theta -= (e.clientX - px) * 0.005;
-  CAM.phi += (e.clientY - py) * 0.004;
+  if (rotMode){
+    CAM.theta -= (e.clientX - px) * 0.005;
+    CAM.phi += (e.clientY - py) * 0.004;
+    applyCam();
+  } else panBy(px, py, e.clientX, e.clientY);
   px = e.clientX; py = e.clientY;
-  applyCam();
 });
 ['pointerup', 'pointercancel'].forEach(t => host.addEventListener(t, e => {
   pts.delete(e.pointerId);
-  if (pts.size < 2) pinch0 = 0;
+  if (pts.size < 2){ pinch0 = 0; mid0 = null; }
   if (pts.size === 0){ dragging = false; moved = false; cap = -1; host.classList.remove('grabbing'); }
 }));
 host.addEventListener('wheel', e => {
