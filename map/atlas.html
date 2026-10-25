@@ -27,7 +27,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 
 .app{height:100%;height:100dvh;display:grid;grid-template-columns:1fr minmax(320px,380px)}
 .stage{position:relative;overflow:hidden;background:var(--sea)}
-#map{position:absolute;inset:0;cursor:grab;touch-action:none}
+#map{position:absolute;inset:0;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
 #map.grabbing{cursor:grabbing}
 svg{display:block;width:100%;height:100%}
 
@@ -94,6 +94,9 @@ svg{display:block;width:100%;height:100%}
   background:var(--paper2);color:var(--ink)}
 .search::placeholder{color:var(--faint)}
 .list{flex:1 1 auto;overflow-y:auto;padding:.6rem 1.5rem 2rem;min-height:0}
+.cont{font-family:var(--sans);font-size:.78rem;font-weight:500;letter-spacing:.14em;color:var(--moss);
+  margin:1.4rem 0 .3rem;padding-bottom:.35rem;border-bottom:1px solid var(--line);cursor:pointer;display:flex;gap:.6rem;align-items:baseline}
+.cont span{font-weight:400;font-size:.7rem;color:var(--faint);letter-spacing:.06em}
 .row{display:grid;grid-template-columns:auto 1fr auto;gap:0 .8rem;align-items:center;
   width:100%;text-align:left;padding:.7rem 0;border-bottom:1px solid var(--line)}
 .row .ic{width:26px;height:26px;flex:none}
@@ -157,8 +160,11 @@ svg{display:block;width:100%;height:100%}
       <span class="sub" id="sub"></span>
     </div>
     <div class="over tools">
-      <button class="tool" id="t-med">地中海</button>
-      <button class="tool" id="t-asia">亞洲</button>
+      <button class="tool" data-ct="eu">歐洲</button>
+      <button class="tool" data-ct="as">亞洲</button>
+      <button class="tool" data-ct="af">非洲</button>
+      <button class="tool" data-ct="am">美洲</button>
+      <button class="tool" data-ct="oc">大洋洲</button>
       <button class="tool" id="t-all">全圖</button>
       <button class="tool ico" id="t-out" aria-label="縮小">&#8722;</button>
       <button class="tool ico" id="t-in" aria-label="放大">&#43;</button>
@@ -384,12 +390,14 @@ svg.append(gSea, gGrat, gLand, gRelief, gFill, gSpot);
     ['gSage', '#B9CDB0', '#7E9A86'], ['gGold', '#F2D86A', '#D4A23C'], ['gGrass', '#D6E2A0', '#B6CC7E']
   ].map(([id, a, b]) => `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`).join('') +
   /* 原型範圍：地中海一帶 */
-  `<clipPath id="protoClip"><rect x="-12" y="${-50 * 0.92}" width="57" height="${22 * 0.92}"/></clipPath>`;
+  /* 原型範圍：地中海一帶，四邊淡出，不再是一個硬方塊 */
+  `<filter id="protoBlur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3"/></filter>` +
+  `<mask id="protoMask" maskUnits="userSpaceOnUse" x="-40" y="-80" width="120" height="80"><rect x="-8" y="${-48 * 0.92}" width="50" height="${18 * 0.92}" fill="#fff" filter="url(#protoBlur)"/></mask>`;
   svg.appendChild(defs);                    // <defs> 放哪裡都可以，不會畫出來
 }
 
 /* 海的細紋：幾圈等距的弧，像老地圖的刻線 */
-const sea = mk('rect', {x:-180, y:-84, width:360, height:168, fill:'var(--sea)'});
+const sea = mk('rect', {x:-400, y:-400, width:800, height:800, fill:'var(--sea)'});   // 畫面比地圖高時也鋪滿
 gSea.appendChild(sea);
 for (let i = 0; i < 26; i++){
   const y = -82 + i * 6.4;
@@ -423,7 +431,7 @@ C50.forEach((c, i) => {
 /* 原型（參考圖一）：地中海一帶的陸地像一塊墊高的草地台地——底下一層土色崖壁
    往下錯開露出來，上面是草地漸層，邊緣一圈亮草線 */
 {
-  const clip = mk('g', {'clip-path':'url(#protoClip)'});
+  const clip = mk('g', {mask:'url(#protoMask)'});
   const all = RELIEF_D.join('');
   clip.appendChild(mk('path', {d:all, 'fill-rule':'evenodd', fill:'#9E7A52', transform:'translate(0 0.55)'}));
   clip.appendChild(mk('path', {d:all, 'fill-rule':'evenodd', fill:'#B98A5E', transform:'translate(0 0.3)'}));
@@ -484,7 +492,7 @@ spots.forEach((g, i) => {
    引線仍然拉回真實座標，位置不會騙人。 */
 function layout(){
   const W = host.clientWidth || 1, H = host.clientHeight || 1, u = VB.w / W;   // 一個像素 = u 個使用者單位
-  const far = VB.w > 150;                                 // 太遠就只留圖示與圓點
+  const far = VB.w > 200;                                 // 太遠就只留圖示與圓點（看整個美洲約 183，要能標字）
   const vis = [];
   spots.forEach(g => {
     const sx = (g.__x - VB.x) / u, sy = (g.__y - VB.y) / u;
@@ -530,7 +538,7 @@ function layout(){
     const r = rectOf(v);
     const ok = !far && !shown.some(s2 => hit(r, rectOf(s2))) &&
       !vis.some(P => hit(r, [P.sx - 10, P.sy - 10, P.sx + 10, P.sy + 10])) &&
-      Math.hypot(v.cx, v.cy) < 170;
+      Math.hypot(v.cx, v.cy) < 110;                  // 被推太遠就不標，免得地名離產地太遠
     v.show = ok; if (ok) shown.push(v);
   });
   layout.last = vis;                              // 給驗證用
@@ -606,8 +614,25 @@ host.addEventListener('wheel', e => {
 apply();
 addEventListener('resize', apply);          // 框的長寬比變了，重算可視範圍與標註
 
-document.getElementById('t-med').onclick = () => goTo(12, 40, 72);
-document.getElementById('t-asia').onclick = () => goTo(112, 10, 90);
+/* 五大洲：按鈕飛過去，側欄也照洲分組 */
+/* 各洲範圍：西經、東經、南緯、北緯 */
+const CONT = {eu:['歐洲', -12, 32, 33, 72], as:['亞洲', 28, 148, -10, 48], af:['非洲', -18, 52, -36, 37],
+              am:['美洲', -135, -34, -40, 62], oc:['大洋洲', 112, 180, -48, 0]};
+/* 整洲要同時塞得進畫面的寬與高（直長的非洲只照寬度縮放會切掉南北兩端） */
+function goCont(k){
+  const [, w0, e0, s0, n0] = CONT[k];
+  const w = Math.min(360, Math.max(26, Math.max(e0 - w0, (n0 - s0) * 0.92 / ASP()) * 1.08));
+  goTo((w0 + e0) / 2, (s0 + n0) / 2, w);
+}
+function contOf(o){
+  const {lng, lat} = o;
+  if (lng < -30) return 'am';
+  if ((lng > 110 && lat < -10) || (lng >= 130 && lat < 0)) return 'oc';   // 含新幾內亞島
+  if (lat >= 34.5 && lng > -25 && (lng < 26 || (lat > 41 && lng < 45))) return 'eu';
+  if (lat < 37 && lng > -20 && lng < 52 && !(lng > 34 && lat > 12)) return 'af';
+  return 'as';
+}
+document.querySelectorAll('[data-ct]').forEach(b => b.onclick = () => goCont(b.dataset.ct));
 document.getElementById('t-all').onclick = () => goTo(0, 6, 360);
 document.getElementById('t-in').onclick = () => { VB.w *= 0.65; apply(); };
 document.getElementById('t-out').onclick = () => { VB.w /= 0.65; apply(); };
@@ -622,16 +647,22 @@ function rows(){
   const hit = ORIGINS.filter(o => !key ||
     [txt(o.name), txt(o.where), ...o.items.map(i => txt(i.name) + ' ' + (i.latin || ''))]
       .join(' ').toLowerCase().includes(key));
-  listEl.innerHTML = hit.length ? hit.map((o, i) => `
+  const row = (o, i) => `
     <button class="row" data-id="${o.id}">
       <svg class="ic" viewBox="0 0 40 40">${drawGlyph(glyphFor(o), i)}</svg>
       <span><span class="zh">${txt(o.name)}</span>
       <span class="lat">${txt(o.where)}</span></span>
       <span class="n">${String(o.number || 0).padStart(2, '0')}</span>
-    </button>`).join('') : '<p class="empty">沒有符合的。</p>';
+    </button>`;
+  /* 依五大洲分組，每組前一個洲名小標，點小標地圖飛過去 */
+  listEl.innerHTML = hit.length ? ['as', 'eu', 'af', 'am', 'oc'].map(k => {
+    const g = hit.filter(o => contOf(o) === k); if (!g.length) return '';
+    return `<h3 class="cont" data-ct="${k}">${CONT[k][0]}<span>${g.length} 處</span></h3>` + g.map(row).join('');
+  }).join('') : '<p class="empty">沒有符合的。</p>';
 }
 listEl.addEventListener('click', e => {
-  const r = e.target.closest('.row'); if (r) open(r.dataset.id);
+  const r = e.target.closest('.row'); if (r){ open(r.dataset.id); return; }
+  const h = e.target.closest('.cont'); if (h) goCont(h.dataset.ct);
 });
 document.getElementById('search').addEventListener('input', e => { q = e.target.value; rows(); });
 
