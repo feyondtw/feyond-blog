@@ -2417,8 +2417,9 @@ let birdOn = false;
 document.getElementById('t-bird').onclick = e => {
   birdOn = !birdOn;
   e.currentTarget.setAttribute('aria-pressed', String(birdOn));
-  BIRD_MIN = birdOn ? 0.06 : 0.30;
-  glide({ph:birdOn ? 0.075 : HOME.phi, d:birdOn ? CAM.dist * 0.95 : HOME.dist}, 850);
+  /* 鳥瞰＝從高處往下看整座湖。原本反過來把鏡頭壓到貼近水面（平視），
+     山牆一擋就只看得到湖的一條邊。 */
+  glide({ph:birdOn ? 1.2 : HOME.phi, d:HOME.dist * (birdOn ? 1.15 : 1), x:CX, z:CZ}, 850);
 };
 
 /* ── 動畫 ───────────────────────────────────────────── */
