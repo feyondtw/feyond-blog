@@ -403,6 +403,8 @@ scene.add(hemi, sun, amb);
 /* r134 的 UMD 版沒有 mergeBufferGeometries，自己接一個。
    細桿一座島好幾十根，不合併光 draw call 就撐不住。 */
 function mergeGeos(list){
+  /* 只接位置與法線、不接索引，所以有索引的一律先攤平，否則三角形會亂接成長直線 */
+  list = list.map(g => g.index ? g.toNonIndexed() : g);
   let n = 0;
   list.forEach(g => n += g.attributes.position.count);
   const pos = new Float32Array(n * 3), nor = new Float32Array(n * 3);
@@ -2776,7 +2778,9 @@ const landH = meshH;
   const sp = [];
   for (let k = 0; k < 140; k++){
     const a = rr() * 6.283, r = rr() * BAY;
-    sp.push(new THREE.CircleGeometry(0.22 + rr() * 0.25, 6).rotateX(-Math.PI / 2)
+    /* CircleGeometry 有索引，合併前一定要 toNonIndexed——否則 mergeGeos 把不同圓的
+       頂點接成三角形，湖面就出現一條條橫跨整片的直線 */
+    sp.push(new THREE.CircleGeometry(0.22 + rr() * 0.25, 6).toNonIndexed().rotateX(-Math.PI / 2)
       .translate(CX + Math.cos(a) * r, -2.27, CZ + Math.sin(a) * r));
   }
   world.add(new THREE.Mesh(mergeGeos(sp), new THREE.MeshBasicMaterial({color:0xFFFFFF,
