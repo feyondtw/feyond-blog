@@ -277,6 +277,52 @@ G.flower = c => stem(20, 37, 18, '#6E8560') +
 G.eucalypt = () => P('M20 38q-2-16 0-24', '#fff0', ' stroke="#9AA890" stroke-width="1.8" fill="none"') +
   [0, 1, 2, 3].map(i => C(14, 10 + i * 6, 4, '#9CB49A') + C(26, 13 + i * 6, 4, '#AEC4AC')).join('');
 
+/* ── 原型：插畫樹（老闆給的參考圖二）──────────────────────
+   平塗＋柔和漸層、輪廓各不相同：火焰形柏木、層塔針葉、團狀闊葉配彎曲深色枝幹、
+   平頂傘松配紅褐扭幹、垂柳團、細草叢。漸層定義在主地圖 <defs>，全頁共用。 */
+const G2 = {};
+const trunk = (d, w) => P(d, '#fff0', ` stroke="#3A2A2E" stroke-width="${w || 1.6}" fill="none" stroke-linecap="round"`);
+G2.cypress = () => trunk('M20 39v-6') + P('M20 2q7 12 6 24t-6 9q-7-3-6-9t6-24z', 'url(#gTeal)');
+G2.conifer = () => trunk('M20 39V8', 1.4) +
+  P('M20 4l5 9h-3l6 9h-4l7 10H9l7-10h-4l6-9h-3z', 'url(#gPine)');
+G2.leafbig = () => trunk('M20 39q-1-8-4-12M20 39q1-9 5-13M20 30q0-6 0-10') +
+  P('M8 20q-3-12 9-14 3-4 9-1 9 1 7 11 4 7-3 10-6 5-13 1-8 2-9-7z', 'url(#gLeaf)') +
+  P('M17 18q3-3 6 0-3 3-6 0z', '#3A2A2E', ' opacity=".55"');
+G2.citrus = () => trunk('M20 39q0-7-1-12') +
+  P('M7 18q0-12 13-12t13 12-13 12T7 18z', 'url(#gLeaf)') +
+  [[13, 14], [24, 11], [27, 20], [16, 22], [21, 17]].map(([x, y]) => C(x, y, 1.8, '#E8892E')).join('');
+G2.resin = () => P('M20 39q-1-8 3-14t-8-8', '#fff0', ' stroke="#8A3A2E" stroke-width="2.4" fill="none" stroke-linecap="round"') +
+  P('M20 25q4-4 9-5', '#fff0', ' stroke="#8A3A2E" stroke-width="1.8" fill="none" stroke-linecap="round"') +
+  P('M5 15q2-6 10-5 4-4 9 0 6-2 7 4-6 3-13 2-8 2-13-1z', 'url(#gPine)') +
+  P('M22 22q3-4 9-3 4 1 4 4-6 2-13-1z', 'url(#gPine)');
+G2.eucalypt = () => P('M19 39q-1-14 1-26', '#fff0', ' stroke="#E8E2D4" stroke-width="2.2" fill="none"') +
+  [12, 20, 28].map(y => P(`M18 ${y}h3`, '#fff0', ' stroke="#3A2A2E" stroke-width="1"')).join('') +
+  P('M11 4q-4 8 0 16 2 6 4 2 1 6 4 0 3 6 5 0 3 5 4-1 4-9 1-17-7-4-10-3-17-1z', 'url(#gSage)');
+G2.birch = G2.eucalypt;
+G2.herb = () => [-10, -6, -3, 0, 3, 6, 10].map((dx, i) =>
+  P(`M20 39q${dx * 0.4} -9 ${dx} ${-14 - (i % 3) * 3}`, '#fff0',
+    ` stroke="${i % 2 ? '#7E9B8E' : '#9DB4A8'}" stroke-width="1.6" fill="none" stroke-linecap="round"`)).join('') +
+  [[-6, -16], [5, -18], [0, -21]].map(([dx, dy]) => C(20 + dx, 39 + dy, 1.8, '#B9A8E0')).join('');
+G2.lavender = () => [-8, -3, 2, 7].map((dx, i) =>
+  P(`M${20 + dx} 39v-14`, '#fff0', ' stroke="#7E9B6E" stroke-width="1.2"') +
+  E(20 + dx, 22 - (i % 2) * 2, 2.2, 6, i % 2 ? '#8878B4' : '#9B8EC4')).join('') +
+  E(20, 37, 12, 3.5, '#8EA27A');
+G2.rose = c => trunk('M20 39v-8', 1.2) + P('M8 30q-2-9 6-11 3-5 8-2 8-2 9 5 4 6-3 9-10 3-20-1z', 'url(#gLeaf)') +
+  [[13, 22], [21, 18], [27, 24], [18, 27]].map(([x, y]) => C(x, y, 3, c || '#D4A0AE') + C(x, y, 1.3, '#B86A84')).join('');
+G2.flower = c => [-7, 0, 7].map((dx, i) => P(`M${20 + dx} 39q0-8 ${-dx * 0.2} -${16 + i * 3}`, '#fff0',
+  ' stroke="#7E9B6E" stroke-width="1.2" fill="none"') +
+  E(20 + dx - dx * 0.2, 23 - i * 3, 4.5, 2.4, c || '#F4EEE0')).join('');
+G2.seed = () => trunk('M20 39v-5', 1.2) + P('M6 34q0-16 14-16t14 16z', 'url(#gGold)');
+G2.palm = G.palm; G2.tea = () => P('M7 36q0-14 13-14t13 14z', 'url(#gLeaf)');
+G2.ginger = G.ginger; G2.vetiver = G2.herb; G2.vanilla = G.vanilla; G2.ylang = G.ylang;
+G2.pepper = G.pepper; G2.agar = G2.cypress;
+/* 地中海一帶先用新畫風（原型），其他地方維持原樣，方便比較 */
+const inProto = o => o.lng > -12 && o.lng < 45 && o.lat > 28 && o.lat < 50;
+function drawGlyph2(name, seed){
+  const f = G2[name] || G2.leafbig, t = TINT[name];
+  return f(t ? t[seed % t.length] : undefined);
+}
+
 /* 哪一株配哪一個圖示：先看學名，再看萃取部位 */
 const BYLAT = [
   [/^Rosa/, 'rose'], [/^Lavandula/, 'lavender'],
@@ -329,7 +375,18 @@ host.appendChild(svg);
 
 const gSea = mk('g', {}), gLand = mk('g', {}), gGrat = mk('g', {}),
       gFill = mk('g', {class:'filler'}), gSpot = mk('g', {});
-svg.append(gSea, gGrat, gLand, gFill, gSpot);
+const gRelief = mk('g', {});
+svg.append(gSea, gGrat, gLand, gRelief, gFill, gSpot);
+{
+  const defs = mk('defs', {});
+  defs.innerHTML = [
+    ['gLeaf', '#D9DE6A', '#7E9A3E'], ['gPine', '#6E9A5C', '#2E5A3E'], ['gTeal', '#5E8A7A', '#24484A'],
+    ['gSage', '#B9CDB0', '#7E9A86'], ['gGold', '#F2D86A', '#D4A23C'], ['gGrass', '#D6E2A0', '#B6CC7E']
+  ].map(([id, a, b]) => `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`).join('') +
+  /* 原型範圍：地中海一帶 */
+  `<clipPath id="protoClip"><rect x="-12" y="${-50 * 0.92}" width="57" height="${22 * 0.92}"/></clipPath>`;
+  svg.appendChild(defs);                    // <defs> 放哪裡都可以，不會畫出來
+}
 
 /* 海的細紋：幾圈等距的弧，像老地圖的刻線 */
 const sea = mk('rect', {x:-180, y:-84, width:360, height:168, fill:'var(--sea)'});
@@ -346,6 +403,7 @@ for (let lng = -150; lng <= 150; lng += 30)
   gGrat.appendChild(mk('path', {class:'grat', d:`M${lng} -84V84`}));
 
 /* 陸地：用真實國界，深淺交替 */
+const RELIEF_D = [];
 C50.forEach((c, i) => {
   let d = '';
   c.r.forEach(ring => {
@@ -356,9 +414,23 @@ C50.forEach((c, i) => {
       return x.toFixed(1) + ' ' + y.toFixed(1);
     }).join('L') + 'Z';
   });
-  if (d) gLand.appendChild(mk('path', {class:'land' + (i % 3 === 0 ? ' b' : ''),
-    d, 'fill-rule':'evenodd'}));
+  if (d){
+    gLand.appendChild(mk('path', {class:'land' + (i % 3 === 0 ? ' b' : ''), d, 'fill-rule':'evenodd'}));
+    RELIEF_D.push(d);
+  }
 });
+
+/* 原型（參考圖一）：地中海一帶的陸地像一塊墊高的草地台地——底下一層土色崖壁
+   往下錯開露出來，上面是草地漸層，邊緣一圈亮草線 */
+{
+  const clip = mk('g', {'clip-path':'url(#protoClip)'});
+  const all = RELIEF_D.join('');
+  clip.appendChild(mk('path', {d:all, 'fill-rule':'evenodd', fill:'#9E7A52', transform:'translate(0 0.55)'}));
+  clip.appendChild(mk('path', {d:all, 'fill-rule':'evenodd', fill:'#B98A5E', transform:'translate(0 0.3)'}));
+  clip.appendChild(mk('path', {d:all, 'fill-rule':'evenodd', fill:'url(#gGrass)', stroke:'#E4EDB4',
+    'stroke-width':'1.4', 'vector-effect':'non-scaling-stroke'}));
+  gRelief.appendChild(clip);
+}
 
 /* ── 散在圖上的自然元素 ───────────────────────────── */
 const FILL = ['conifer', 'leafbig', 'herb', 'seed', 'flower', 'eucalypt', 'palm'];
@@ -389,7 +461,7 @@ spots.forEach((g, i) => {
   const o = g.__o;
   g.appendChild(mk('path', {class:'lead', d:'M0 0'}));
   const ic = mk('g', {class:'glyph'});
-  ic.innerHTML = drawGlyph(glyphFor(o), i);
+  ic.innerHTML = (inProto(o) ? drawGlyph2 : drawGlyph)(glyphFor(o), i);
   g.appendChild(ic);
   const cap = mk('text', {class:'cap'});
   cap.textContent = txt(o.name);
