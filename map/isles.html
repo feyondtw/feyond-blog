@@ -70,7 +70,11 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .badge{font-family:var(--latin);font-size:.78rem;font-weight:500;color:#FFFFFF;
   border-radius:999px;padding:.2rem .5rem;line-height:1;flex:none;
   font-variant-numeric:tabular-nums;letter-spacing:.04em}
-.badge.sm{font-size:.7rem;padding:.16rem .42rem}
+/* 第二層的品項編號改用 Arial：Cormorant 是舊式數字，0 小、3 和 9 往下掉，
+   小字級一看就糊。Arial 是等高的直式數字，粗一點、等寬，一眼讀得出來。 */
+.badge.sm{font-family:Arial,"Helvetica Neue",Helvetica,sans-serif;font-weight:700;
+  font-size:.74rem;letter-spacing:.03em;padding:.18rem .44rem;
+  font-variant-numeric:lining-nums tabular-nums}
 .tag::after{content:"";position:absolute;left:50%;top:100%;transform:translateX(-50%);
   border:5px solid transparent;border-top-color:var(--cream);opacity:0;transition:opacity .16s}
 .tag:hover::after,.tag.on::after{opacity:1}
