@@ -796,25 +796,27 @@ function tree(kind){
 }
 function doll(shirt){
   const g = new THREE.Group();
-  const b = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.14, 0.34, 7), mat(shirt));
-  b.position.y = 0.34; b.castShadow = true;
+  /* 身體下緣要比腿還窄，腿才露得出來——原本上寬 0.12／下寬 0.14，
+     兩條腿整個被包在身體裡，從上面看等於沒有腳。 */
+  const b = new THREE.Mesh(new THREE.CylinderGeometry(0.125, 0.098, 0.30, 7), mat(shirt));
+  b.position.y = 0.45; b.castShadow = true;
   const h = new THREE.Mesh(new THREE.SphereGeometry(0.145, 8, 7), mat(0xE8B98E));
-  h.position.y = 0.62;
+  h.position.y = 0.71;
   const hr = new THREE.Mesh(new THREE.SphereGeometry(0.153, 8, 6), mat(0x3A2E28));
-  hr.position.set(0, 0.655, -0.018);
+  hr.position.set(0, 0.745, -0.018);
   /* 腳要能擺動，所以每一隻包一個以髖部為原點的 pivot，
      腿往下掛 0.1、腳掌再往下 0.2——不然旋轉會變成繞著腿的中心轉。 */
   const legMat = mat(0x4A5560), shoeMat = mat(0x3A2E28);
   const leg = () => {
     const pv = new THREE.Group();
-    const m = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.2, 5), legMat);
-    m.position.y = -0.1;
-    const foot = new THREE.Mesh(new THREE.BoxGeometry(0.075, 0.045, 0.12), shoeMat);
-    foot.position.set(0, -0.2, 0.022);
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(0.046, 0.046, 0.30, 5), legMat);
+    m.position.y = -0.15;
+    const foot = new THREE.Mesh(new THREE.BoxGeometry(0.078, 0.05, 0.13), shoeMat);
+    foot.position.set(0, -0.305, 0.026);
     pv.add(m, foot); return pv;
   };
-  const l1 = leg(); l1.position.set(-0.055, 0.2, 0);
-  const l2 = leg(); l2.position.set(0.055, 0.2, 0);
+  const l1 = leg(); l1.position.set(-0.064, 0.30, 0);
+  const l2 = leg(); l2.position.set(0.064, 0.30, 0);
   g.add(b, h, hr, l1, l2);
   g.__legs = [l1, l2];
   return g;
@@ -1050,33 +1052,47 @@ nodes.forEach((nd, n) => {
   if (o.id === 'andalusia') t.crop = [0xE8DCC0, 0xC9B38A];      // 岩玫瑰
   g.add(hexIsland(nd.r, t));
 
+  /* 島被縮小過（擠的地方縮得更多），島上的東西一定要跟著縮。
+     原本房子是 -r*0.42 + i*1.5 這種固定間距，小島上第二棟就
+     直接蓋到海裡去了。S 是相對於「設計時的島半徑 2.2」的比例。
+     obst 記下每個障礙物離島心多遠，待會兒讓娃娃繞開。 */
+  const S = Math.min(1, nd.r / 2.2);
+  const obst = [];
+  const mark = (x, z, clr) => obst.push({d:Math.hypot(x, z), clr});
+
   for (let i = 0; i < t.houses; i++){
-    const h = house(ROOFS[(n + i) % ROOFS.length], 1);
-    h.position.set(-nd.r * 0.42 + i * 1.5, 0, -nd.r * 0.3);
+    const h = house(ROOFS[(n + i) % ROOFS.length], S);
+    const hx = nd.r * (-0.40 + i * 0.52), hz = -nd.r * 0.32;
+    h.position.set(hx, 0, hz);
     h.rotation.y = 0.4 + i; h.castShadow = true;
-    g.add(h);
+    g.add(h); mark(hx, hz, 0.52 * S + 0.16);
   }
   if (t.crop){
     for (let i = 0; i < 2; i++){
       const p = patch(t.crop);
-      p.position.set(nd.r * 0.34, 0, -0.6 + i * 1.1);
-      g.add(p);
+      p.scale.setScalar(S);
+      const cx2 = nd.r * 0.36, cz2 = nd.r * (-0.2 + i * 0.36);
+      p.position.set(cx2, 0, cz2);
+      g.add(p); mark(cx2, cz2, 0.5 * S + 0.14);
     }
   }
   if (t.still){
-    const s = still(); s.position.set(-nd.r * 0.3, 0, nd.r * 0.36); g.add(s);
-    steams.push({at:new THREE.Vector3(nd.x - nd.r * 0.3, 1.0, nd.z + nd.r * 0.36), puffs:[]});
+    const s = still(); s.scale.setScalar(S);
+    const sx = -nd.r * 0.3, sz = nd.r * 0.36;
+    s.position.set(sx, 0, sz); g.add(s); mark(sx, sz, 0.45 * S + 0.16);
+    steams.push({at:new THREE.Vector3(nd.x + sx, 1.0 * S, nd.z + sz), puffs:[]});
   }
   if (t.pond){
-    const pd = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.4, 0.4, 14), mat(0x4A8CA6));
-    pd.position.set(-nd.r * 0.28, -0.14, nd.r * 0.3); g.add(pd);
+    const px2 = -nd.r * 0.28, pz2 = nd.r * 0.3;
+    const pd = new THREE.Mesh(new THREE.CylinderGeometry(1.5 * S, 1.4 * S, 0.4, 14), mat(0x4A8CA6));
+    pd.position.set(px2, -0.14, pz2); g.add(pd); mark(px2, pz2, 1.5 * S + 0.2);
     for (let i = 0; i < 5; i++){
-      const lp = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.05, 9), mat(0x6FA86B));
-      lp.position.set(-nd.r * 0.28 + Math.cos(i * 1.3) * 0.85, 0.08,
-                      nd.r * 0.3 + Math.sin(i * 1.3) * 0.85);
+      const lp = new THREE.Mesh(new THREE.CylinderGeometry(0.3 * S, 0.3 * S, 0.05, 9), mat(0x6FA86B));
+      lp.position.set(px2 + Math.cos(i * 1.3) * 0.85 * S, 0.08,
+                      pz2 + Math.sin(i * 1.3) * 0.85 * S);
       g.add(lp);
       if (i % 2 === 0){
-        const fl = new THREE.Mesh(new THREE.ConeGeometry(0.14, 0.3, 6), mat(0x8E9BE0));
+        const fl = new THREE.Mesh(new THREE.ConeGeometry(0.14 * S, 0.3 * S, 6), mat(0x8E9BE0));
         fl.position.copy(lp.position); fl.position.y = 0.25;
         g.add(fl);
       }
@@ -1105,10 +1121,25 @@ nodes.forEach((nd, n) => {
   world.add(g);
   pins.push({o, g, head, n, at:new THREE.Vector3(nd.x, 3.2, nd.z)});
 
+  /* 娃娃走的是定半徑的圓，所以它和某個障礙物的最近距離就是
+     |障礙物離島心的距離 − 這個半徑|。挑一個讓所有障礙物都留出
+     淨空的半徑就不會穿過房子。上限 0.6r 也保證走不到岸外
+     （六邊形的內切半徑是 0.866r）。 */
+  const pickR = () => {
+    let best = nd.r * 0.42, bestGap = -1e9;
+    for (let k = 0; k < 32; k++){
+      const rr = nd.r * (0.3 + Math.random() * 0.3);
+      let gap = 1e9;
+      obst.forEach(ob => { gap = Math.min(gap, Math.abs(ob.d - rr) - ob.clr); });
+      if (gap > 0.12) return rr;
+      if (gap > bestGap){ bestGap = gap; best = rr; }
+    }
+    return best;
+  };
   for (let i = 0; i < t.dolls; i++){
     const d = doll(SHIRTS[(n + i) % SHIRTS.length]);
-    d.userData = {cx:nd.x, cz:nd.z, h:0, a:Math.random() * 6.28,
-      r:nd.r * 0.5 + Math.random() * nd.r * 0.25,
+    d.scale.setScalar(0.6 + 0.4 * S);
+    d.userData = {cx:nd.x, cz:nd.z, h:0, a:Math.random() * 6.28, r:pickR(),
       sp:(0.3 + Math.random() * 0.35) * (i % 2 ? 1 : -1)};
     world.add(d); folk.push(d);
   }

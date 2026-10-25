@@ -596,25 +596,26 @@ function cropPatch(c){
 }
 function doll(shirt){
   const g = new THREE.Group();
-  const b = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.12, 0.3, 7), mat(shirt));
-  b.position.y = 0.3;
+  /* 身體下緣要比腿窄，腿才露得出來 */
+  const b = new THREE.Mesh(new THREE.CylinderGeometry(0.115, 0.088, 0.27, 7), mat(shirt));
+  b.position.y = 0.40;
   const hd = new THREE.Mesh(new THREE.SphereGeometry(0.125, 8, 7), mat(0xE8B98E));
-  hd.position.y = 0.55;
+  hd.position.y = 0.63;
   const hr = new THREE.Mesh(new THREE.SphereGeometry(0.132, 8, 6), mat(0x3A2E28));
-  hr.position.set(0, 0.585, -0.015);
+  hr.position.set(0, 0.66, -0.015);
   /* 腳要能擺動，所以每一隻包一個以髖部為原點的 pivot，
      腿往下掛一半、腳掌再掛到底——不然旋轉會變成繞著腿的中心轉。 */
   const legMat = mat(0x4A5560), shoeMat = mat(0x3A2E28);
   const leg = () => {
     const pv = new THREE.Group();
-    const m = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.18, 5), legMat);
-    m.position.y = -0.09;
-    const foot = new THREE.Mesh(new THREE.BoxGeometry(0.068, 0.042, 0.11), shoeMat);
-    foot.position.set(0, -0.18, 0.02);
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(0.042, 0.042, 0.27, 5), legMat);
+    m.position.y = -0.135;
+    const foot = new THREE.Mesh(new THREE.BoxGeometry(0.072, 0.046, 0.12), shoeMat);
+    foot.position.set(0, -0.275, 0.024);
     pv.add(m, foot); return pv;
   };
-  const l1 = leg(); l1.position.set(-0.05, 0.18, 0);
-  const l2 = leg(); l2.position.set(0.05, 0.18, 0);
+  const l1 = leg(); l1.position.set(-0.058, 0.27, 0);
+  const l2 = leg(); l2.position.set(0.058, 0.27, 0);
   g.add(b, hd, hr, l1, l2);
   g.__legs = [l1, l2];
   return g;
