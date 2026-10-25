@@ -113,12 +113,10 @@ body.notags .tag,body.notags .stem{opacity:0;pointer-events:none}
 .tag.it .nm{font-weight:700;font-size:.92rem}
 
 /* 品項多的島：每一區只放一個區名牌，個別號碼平常收起來 */
-.tag.zone{background:var(--cream);padding:.26rem .85rem .26rem .26rem;gap:.45rem;z-index:3;
+.tag.zone{background:var(--cream);padding:.42rem .9rem .42rem .7rem;gap:.5rem;z-index:3;
   font-size:.86rem;font-weight:600;box-shadow:0 0 0 2px #FFFFFF,0 4px 14px rgba(42,39,36,.22)}
 .tag.zone .nm{max-width:12rem;opacity:1}
-.tag.zone .zb{min-width:28px;height:28px;border-radius:999px;padding:0 .4rem;
-  display:grid;place-items:center;background:var(--ic);color:#FFFFFF;
-  font-family:Arial,"Helvetica Neue",Helvetica,sans-serif;font-weight:700;font-size:.8rem}
+.tag.zone .zb{width:10px;height:10px;border-radius:999px;background:var(--ic);flex:none}
 .tag.zone::after{opacity:1}
 
 /* 字卡就是第二層選單：依區分組，每列前面是和地圖同一個號碼章 */
@@ -1890,7 +1888,8 @@ pins.forEach(p => {
     b.className = 'tag zone';
     const col = '#' + p.isle.side.toString(16).padStart(6, '0');
     b.style.setProperty('--ic', col);
-    b.innerHTML = `<span class="zb">${p.n}</span><span class="nm">${p.zh}</span>`;
+    /* 區名牌不編號：號碼只留給精油，區只用島色圓點標記 */
+    b.innerHTML = `<span class="zb"></span><span class="nm">${p.zh}</span>`;
     /* 點區名牌：字卡捲到那一區 */
     b.addEventListener('click', e => {
       e.stopPropagation();
@@ -2047,7 +2046,7 @@ function groupsOf(isle){
 function isleMenu(isle){
   const col = '#' + isle.side.toString(16).padStart(6, '0');
   return groupsOf(isle).map(gp => `
-    <h3 class="zone-h" data-zone="${gp.key}">${gp.zh}<span class="c">${gp.list.length}</span></h3>` +
+    <h3 class="zone-h" data-zone="${gp.key}">${gp.zh}<span class="c">${gp.list.length} 支</span></h3>` +
     gp.list.map(x => `
       <button class="item menu" data-item="${x.id}" style="--ic:${col}">
         <span class="mb">${String(x.__no).padStart(2, '0')}</span>
