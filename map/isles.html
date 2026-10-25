@@ -490,176 +490,196 @@ const ball = (r,c,x,y,z,o) => mesh(new THREE.SphereGeometry(r,10,8), c,x,y,z,o);
 
 const WIN = [];                                   // 入夜會亮的窗
 
-/* 各島的房子長得不一樣——風情是從建築開始的 */
+/* 各島的房子長得不一樣——風情是從建築開始的。
+   可愛的作法是有規矩的，不是把東西縮小：
+     圓多過方   門是半圓拱、窗是圓的、屋角用球收
+     頭重腳輕   屋頂比屋身還高，而且大大地出簷
+     矮而寬     屋身壓扁，不照真實比例
+   寫實的比例看起來就是生硬，親民感是從誇張來的。 */
 function building(arch, roof){
   const g = new THREE.Group();
-  const W = 0xF6EFE0, S = 0xD8CDB8, WOOD = 0xB08A5E;
-  const win = (x, y, z, w) => {
-    const m = box(w || 0.42, 0.42, 0.06, 0x3E5260, x, y, z);
-    WIN.push(m); g.add(m); return m;
+  const W = 0xFBF4E6, S = 0xE2D8C4, WOOD = 0xC2956A, DARK = 0xAD9A82;
+  /* 圓拱門：半圓頂加一段方身，比長方形的門可愛得多 */
+  const door = (c, x, y, z, w) => {
+    const r = (w || 0.46);
+    g.add(box(r * 2, 0.75, 0.18, c, x, y + 0.37, z));
+    g.add(cyl(r, r, 0.18, 10, c, x, y + 0.75, z).rotateX(Math.PI / 2));
   };
-  if (arch === 'dome'){                           // 中東／印度：圓頂與拱門
-    g.add(box(2.8, 1.9, 2.4, S, 0, 0.95, 0));
-    const dome = new THREE.Mesh(new THREE.SphereGeometry(1.25, 12, 8,
-      0, Math.PI * 2, 0, Math.PI / 2), mat(roof));
-    dome.position.y = 1.9; dome.castShadow = true; g.add(dome);
-    g.add(cone(0.16, 0.5, 6, roof, 0, 3.3, 0));
-    [-0.85, 0, 0.85].forEach(x => {
-      g.add(cyl(0.12, 0.12, 1.2, 6, W, x, 0.6, 1.26));
-      g.add(new THREE.Mesh(new THREE.TorusGeometry(0.34, 0.1, 5, 8, Math.PI),
-        mat(W)).translateX(x).translateY(1.2).translateZ(1.26));
-    });
-    win(-0.9, 1.25, 1.21, 0.3); win(0.9, 1.25, 1.21, 0.3);
-  } else if (arch === 'cabin'){                   // 北美林場：原木屋
-    for (let i = 0; i < 5; i++)
-      g.add(cyl(0.21, 0.21, 3.0, 7, WOOD, 0, 0.22 + i * 0.4, -1.0)
-        .rotateZ(Math.PI / 2));
-    g.add(box(3.0, 1.8, 2.0, mix(WOOD, 0x000000, 0.12), 0, 0.9, 0));
-    g.add(cone(2.3, 1.1, 4, roof, 0, 2.3, 0).rotateY(Math.PI / 4));
-    g.add(cyl(0.22, 0.26, 1.1, 6, 0x9C8E7E, 1.0, 2.5, -0.5));
-    win(0, 1.0, 1.01);
-  } else if (arch === 'tent'){                    // 乾燥山地：帳篷
-    g.add(cone(2.0, 2.0, 7, roof, 0, 1.0, 0));
-    g.add(box(0.7, 0.9, 0.05, mix(roof, 0x000000, 0.3), 0, 0.45, 1.0));
-    g.add(cyl(0.05, 0.05, 2.6, 5, WOOD, 0, 1.3, 0));
-  } else if (arch === 'stone'){                   // 普羅旺斯：石砌
-    g.add(box(2.6, 1.7, 2.2, S, 0, 0.85, 0));
-    g.add(box(2.9, 0.22, 2.5, mix(S, 0x000000, 0.2), 0, 1.78, 0));
-    g.add(cone(2.1, 0.9, 4, roof, 0, 2.3, 0).rotateY(Math.PI / 4));
-    win(0, 0.95, 1.11);
-  } else if (arch === 'barn'){                    // 果園：穀倉
-    g.add(box(3.0, 1.9, 2.4, roof, 0, 0.95, 0));
-    g.add(cone(2.3, 1.2, 4, mix(roof, 0x000000, 0.22), 0, 2.4, 0).rotateY(Math.PI / 4));
-    g.add(box(1.0, 1.3, 0.06, W, 0, 0.65, 1.21));
-    win(-1.0, 1.3, 1.21, 0.34); win(1.0, 1.3, 1.21, 0.34);
-  } else if (arch === 'shed'){                    // 蒸餾小屋
-    g.add(box(2.4, 1.6, 2.0, W, 0, 0.8, 0));
-    g.add(box(2.8, 0.16, 2.4, roof, 0, 1.68, 0).rotateZ(0.12));
-    g.add(cyl(0.2, 0.24, 1.0, 6, 0x9C8E7E, 0.9, 2.1, 0));
-    g.add(cyl(0.5, 0.56, 0.9, 10, 0xC08A4A, -1.5, 0.45, 0.6));
-    g.add(ball(0.3, 0xC08A4A, -1.5, 1.0, 0.6));
-    win(0, 0.9, 1.01);
+  const roundWin = (x, y, z, r) => {
+    const m = cyl(r || 0.3, r || 0.3, 0.14, 10, 0x4E6A78, x, y, z);
+    m.rotation.x = Math.PI / 2;
+    WIN.push(m); g.add(m);
+    g.add(new THREE.Mesh(new THREE.TorusGeometry((r || 0.3) + 0.07, 0.07, 5, 10),
+      mat(W)).translateX(x).translateY(y).translateZ(z + 0.02));
+  };
+  const chimney = (x, z, y, c) => {
+    g.add(box(0.46, 1.1, 0.46, c || W, x, y, z));
+    g.add(ball(0.3, c || W, x, y + 0.6, z));
+  };
+
+  if (arch === 'dome'){                           // 中東／印度：胖圓頂
+    g.add(cyl(1.85, 2.0, 1.5, 8, S, 0, 0.75, 0));
+    const dome = new THREE.Mesh(new THREE.SphereGeometry(1.95, 14, 8,
+      0, Math.PI * 2, 0, Math.PI * 0.56), mat(roof));
+    dome.position.y = 1.5; dome.castShadow = true; g.add(dome);
+    g.add(ball(0.34, roof, 0, 3.4, 0));
+    g.add(cone(0.26, 0.7, 7, roof, 0, 3.85, 0));
+    door(mix(S, 0x000000, 0.16), 0, 0, 1.92, 0.5);
+    roundWin(-1.25, 1.0, 1.5, 0.26);
+    roundWin(1.25, 1.0, 1.5, 0.26);
+  } else if (arch === 'cabin'){                   // 北美林場：圓木屋
+    [0.45, 1.1, 1.75].forEach(y =>
+      g.add(cyl(0.36, 0.36, 3.4, 10, WOOD, 0, y, 0).rotateZ(Math.PI / 2)));
+    g.add(cyl(0.36, 0.36, 2.6, 10, mix(WOOD, 0x000000, 0.1), -1.6, 1.1, 0).rotateX(Math.PI / 2));
+    g.add(cyl(0.36, 0.36, 2.6, 10, mix(WOOD, 0x000000, 0.1), 1.6, 1.1, 0).rotateX(Math.PI / 2));
+    g.add(cone(2.9, 2.0, 6, roof, 0, 3.1, 0));
+    g.add(ball(0.26, roof, 0, 4.1, 0));
+    chimney(-1.3, -0.8, 2.9, S);
+    door(WOOD, 0, 0, 1.38, 0.46);
+    roundWin(1.1, 1.3, 1.38, 0.26);
+  } else if (arch === 'tent'){                    // 乾燥山地：圓帳篷
+    g.add(cyl(2.3, 2.5, 0.9, 10, mix(roof, 0xFFFFFF, 0.1), 0, 0.45, 0));
+    g.add(cone(2.6, 2.4, 10, roof, 0, 2.1, 0));
+    g.add(ball(0.3, mix(roof, 0x000000, 0.2), 0, 3.4, 0));
+    door(mix(roof, 0x000000, 0.3), 0, 0, 2.45, 0.46);
+    g.add(cyl(0.5, 0.58, 0.8, 10, 0xC79A6E, 2.3, 0.4, 1.3));
+    g.add(ball(0.3, 0xE6C79C, 2.3, 0.9, 1.3));
+  } else if (arch === 'stone'){                   // 普羅旺斯：圓角石屋
+    g.add(cyl(1.7, 1.8, 1.5, 8, S, 0, 0.75, 0));
+    g.add(cone(2.3, 1.9, 8, roof, 0, 2.3, 0));
+    g.add(ball(0.24, roof, 0, 3.3, 0));
+    chimney(1.0, -0.7, 2.3, S);
+    door(WOOD, 0, 0, 1.72, 0.44);
+    roundWin(-1.1, 1.0, 1.4, 0.26);
+  } else if (arch === 'barn'){                    // 果園：胖穀倉
+    g.add(cyl(1.8, 1.95, 1.4, 8, roof, 0, 0.7, 0));
+    g.add(cone(2.5, 2.0, 8, mix(roof, 0x000000, 0.22), 0, 2.3, 0));
+    g.add(ball(0.26, W, 0, 3.4, 0));
+    door(W, 0, 0, 1.88, 0.56);
+    roundWin(-1.2, 1.05, 1.45, 0.24);
+    roundWin(1.2, 1.05, 1.45, 0.24);
+  } else if (arch === 'shed'){                    // 蒸餾小屋：圓屋＋銅釜
+    g.add(cyl(1.6, 1.7, 1.4, 8, W, 0, 0.7, 0));
+    g.add(cone(2.2, 1.7, 8, roof, 0, 2.15, 0));
+    g.add(ball(0.24, roof, 0, 3.05, 0));
+    chimney(-1.0, -0.6, 2.2, W);
+    door(WOOD, 0, 0, 1.62, 0.44);
+    g.add(cyl(0.78, 0.92, 1.3, 12, 0xD0995A, 2.6, 0.65, 0.6));
+    g.add(ball(0.78, 0xD0995A, 2.6, 1.5, 0.6));
+    g.add(cyl(1.0, 1.06, 0.3, 12, 0xB3A68E, 2.6, 0.15, 0.6));
   } else {                                        // cottage：保加利亞白牆紅瓦
-    g.add(box(2.6, 1.7, 2.2, W, 0, 0.85, 0));
-    g.add(cone(2.1, 1.1, 4, roof, 0, 2.4, 0).rotateY(Math.PI / 4));
-    g.add(box(0.6, 1.0, 0.06, WOOD, 0, 0.5, 1.11));
-    win(-0.85, 1.1, 1.11, 0.36); win(0.85, 1.1, 1.11, 0.36);
-    g.add(cyl(0.16, 0.18, 0.8, 6, 0xC2A27E, 0.9, 2.6, -0.4));
+    g.add(cyl(1.7, 1.85, 1.4, 8, W, 0, 0.7, 0));
+    g.add(cone(2.4, 2.0, 8, roof, 0, 2.3, 0));
+    g.add(ball(0.26, roof, 0, 3.4, 0));
+    chimney(1.0, -0.7, 2.3, W);
+    door(WOOD, 0, 0, 1.78, 0.46);
+    roundWin(-1.15, 1.0, 1.45, 0.26);
+    roundWin(1.15, 1.0, 1.45, 0.26);
   }
   return g;
 }
 
-/* 各島的田／場 */
+/* 各島的田／場。一樣的規矩：少數幾塊、每塊都大 */
 function fieldOf(kind, c1, c2){
   const g = new THREE.Group();
   const SOIL = 0xA8855E, WOOD = 0xC9A97E;
-  const beds = (rows, cols, col) => {
-    g.add(box(1.8, 0.16, 2.1, SOIL, 0, 0.08, 0));
-    for (let r = 0; r < rows; r++)
-      for (let c = 0; c < cols; c++)
-        g.add(ball(0.17, col, (c - (cols - 1) / 2) * 0.52, 0.27,
-                   (r - (rows - 1) / 2) * 0.5));
-  };
-  if (kind === 'rosebed'){                        // 玫瑰田壟
+  if (kind === 'rosebed'){                        // 玫瑰田：三道壟
     for (let i = 0; i < 3; i++){
-      const row = box(0.5, 0.22, 2.4, SOIL, (i - 1) * 0.72, 0.11, 0);
-      g.add(row);
-      for (let k = 0; k < 5; k++)
-        g.add(ball(0.19, k % 2 ? c1 : c2, (i - 1) * 0.72, 0.36, (k - 2) * 0.5));
+      g.add(box(0.9, 0.3, 3.4, SOIL, (i - 1) * 1.15, 0.15, 0));
+      for (let k = 0; k < 3; k++)
+        g.add(ball(0.42, k % 2 ? c1 : 0xE9BFC9, (i - 1) * 1.15, 0.6, (k - 1) * 1.05));
     }
   } else if (kind === 'lavrow'){                  // 薰衣草壟
-    for (let i = 0; i < 4; i++)
-      for (let k = 0; k < 6; k++)
-        g.add(cone(0.14, 0.5, 5, k % 2 ? 0x9B8EC4 : 0x8878B4,
-                   (i - 1.5) * 0.52, 0.25, (k - 2.5) * 0.42));
+    for (let i = 0; i < 3; i++){
+      g.add(box(0.85, 0.24, 3.2, SOIL, (i - 1) * 1.15, 0.12, 0));
+      for (let k = 0; k < 3; k++)
+        g.add(cone(0.4, 1.0, 6, k % 2 ? 0x9B8EC4 : 0x8878B4,
+                   (i - 1) * 1.15, 0.72, (k - 1) * 1.0));
+    }
   } else if (kind === 'teabush'){                 // 茶樹灌木列
     for (let i = 0; i < 3; i++)
-      for (let k = 0; k < 4; k++)
-        g.add(ball(0.3, k % 2 ? c1 : c2, (i - 1) * 0.78, 0.26, (k - 1.5) * 0.66));
-  } else if (kind === 'orchard'){                 // 果園：梯子與果籃
-    g.add(box(0.1, 1.9, 0.08, WOOD, -0.22, 0.95, 0).rotateZ(0.26));
-    g.add(box(0.1, 1.9, 0.08, WOOD, 0.3, 0.95, 0).rotateZ(0.26));
-    for (let i = 0; i < 5; i++)
-      g.add(box(0.6, 0.06, 0.06, WOOD, 0.04 - i * 0.09, 0.25 + i * 0.35, 0));
-    const bk = cyl(0.36, 0.3, 0.42, 10, WOOD, 1.2, 0.21, 0.5); g.add(bk);
-    for (let i = 0; i < 5; i++)
-      g.add(ball(0.13, c1, 1.2 + Math.cos(i * 1.3) * 0.16, 0.46,
-                 0.5 + Math.sin(i * 1.3) * 0.16));
-  } else if (kind === 'logyard'){                 // 伐木場：原木堆與鋸木架
-    for (let i = 0; i < 6; i++)
-      g.add(cyl(0.2, 0.2, 1.9, 7, 0xB08A5E, -0.6 + (i % 3) * 0.42,
-                0.2 + Math.floor(i / 3) * 0.38, 0).rotateX(Math.PI / 2));
-    [[-0.3, 1.4], [0.3, 1.4]].forEach(([x, z]) => {
-      g.add(box(0.08, 0.9, 0.08, WOOD, x - 0.25, 0.45, z).rotateZ(0.3));
-      g.add(box(0.08, 0.9, 0.08, WOOD, x + 0.25, 0.45, z).rotateZ(-0.3));
-    });
-    g.add(cyl(0.18, 0.18, 1.4, 7, 0xC2A47E, 0, 0.8, 1.4).rotateZ(Math.PI / 2));
-  } else if (kind === 'spicemat'){                // 香料攤：曬在布上
-    [[-0.75, 0, 0xC75B39], [0.05, 0, 0xE0A23C], [0.85, 0, 0x8E6B3A],
-     [-0.35, 0.95, 0xA8452F], [0.45, 0.95, 0xD9B35C]].forEach(([x, z, c]) => {
-      g.add(box(0.66, 0.05, 0.66, 0xEFE3CC, x, 0.03, z));
-      for (let i = 0; i < 4; i++)
-        g.add(ball(0.11, c, x + ((i % 2) - 0.5) * 0.26, 0.11,
-                   z + (Math.floor(i / 2) - 0.5) * 0.26));
-    });
-    g.add(box(1.9, 0.06, 0.06, WOOD, 0, 1.3, -0.5));
-    [-0.9, 0.9].forEach(x => g.add(cyl(0.05, 0.05, 1.3, 5, WOOD, x, 0.65, -0.5)));
-    g.add(box(1.9, 0.04, 0.9, 0xC75B39, 0, 1.28, -0.1).rotateX(0.3));
+      for (let k = 0; k < 3; k++)
+        g.add(ball(0.62, (i + k) % 2 ? c1 : c2, (i - 1) * 1.45, 0.45, (k - 1) * 1.45));
+  } else if (kind === 'orchard'){                 // 果園：粗梯子與大果籃
+    g.add(box(0.16, 3.2, 0.16, WOOD, -0.45, 1.6, 0).rotateZ(0.2));
+    g.add(box(0.16, 3.2, 0.16, WOOD, 0.45, 1.6, 0).rotateZ(0.2));
+    [0.7, 1.6, 2.5].forEach(y => g.add(box(1.1, 0.14, 0.14, WOOD, -y * 0.2 + 0.3, y, 0)));
+    g.add(cyl(0.62, 0.5, 0.75, 10, WOOD, 1.7, 0.38, 0.8));
+    g.add(ball(0.28, 0xE6B45C, 1.6, 0.85, 0.75));
+    g.add(ball(0.26, 0xE6B45C, 1.85, 0.82, 0.95));
+  } else if (kind === 'logyard'){                 // 伐木場：粗原木與鋸木架
+    [[-0.55, 0.32], [0.55, 0.32], [0, 0.95]].forEach(([x, y]) =>
+      g.add(cyl(0.34, 0.34, 3.0, 8, 0xB08A5E, x, y, 0).rotateX(Math.PI / 2)));
+    g.add(box(0.2, 1.3, 0.2, WOOD, 1.7, 0.65, -0.5).rotateZ(0.42));
+    g.add(box(0.2, 1.3, 0.2, WOOD, 2.3, 0.65, -0.5).rotateZ(-0.42));
+    g.add(cyl(0.3, 0.3, 2.0, 8, 0xC2A47E, 2.0, 1.15, -0.5).rotateZ(Math.PI / 2));
+  } else if (kind === 'spicemat'){                // 香料攤：三塊布、三堆香料、一頂棚
+    [[-1.3, 0, 0xC75B39], [0, 0.4, 0xE0A23C], [1.3, 0, 0x8E6B3A]]
+      .forEach(([x, z, c]) => {
+        g.add(box(1.2, 0.12, 1.2, 0xEFE3CC, x, 0.06, z));
+        g.add(cone(0.48, 0.45, 9, c, x, 0.34, z));
+      });
+    g.add(box(0.2, 2.4, 0.2, WOOD, -1.8, 1.2, -1.2));
+    g.add(box(0.2, 2.4, 0.2, WOOD, 1.8, 1.2, -1.2));
+    g.add(box(4.0, 0.16, 1.6, 0xC75B39, 0, 2.3, -0.7).rotateX(0.18));
   } else if (kind === 'dryrack'){                 // 曬籽架
-    g.add(box(1.9, 0.07, 1.3, WOOD, 0, 0.75, 0));
-    [[-0.85, -0.55], [0.85, -0.55], [-0.85, 0.55], [0.85, 0.55]]
-      .forEach(([x, z]) => g.add(cyl(0.06, 0.06, 0.75, 5, WOOD, x, 0.37, z)));
-    for (let i = 0; i < 12; i++)
-      g.add(ball(0.09, i % 3 ? 0x8E6B3A : 0xC9A05C,
-                 -0.7 + (i % 4) * 0.47, 0.84, -0.4 + Math.floor(i / 4) * 0.4));
-  } else if (kind === 'resintap'){                // 割脂：樹幹上的刀痕與陶罐
-    g.add(cyl(0.26, 0.34, 2.2, 7, 0xA8835C, 0, 1.1, 0));
-    [0.7, 1.2, 1.7].forEach(y => g.add(box(0.5, 0.07, 0.06, 0xE8D9B8, 0, y, 0.3)));
-    [[-0.6, 0.5], [0.55, 0.45]].forEach(([x, z]) =>
-      g.add(cyl(0.22, 0.28, 0.44, 8, 0xB98A5E, x, 0.22, z)));
-    g.add(ball(0.17, 0xE6C79C, -0.6, 0.46, 0.5));
-  } else {                                        // rootpit：挖開的土坑與根堆
-    const pit = cyl(0.95, 0.75, 0.3, 9, 0x8E7254, 0, -0.1, 0); g.add(pit);
-    for (let i = 0; i < 5; i++)
-      g.add(cyl(0.05, 0.08, 0.6, 5, 0xC2A47E,
-                Math.cos(i * 1.3) * 0.4, 0.2, Math.sin(i * 1.3) * 0.4)
-        .rotateZ(-0.4 + i * 0.2));
-    g.add(ball(0.42, 0x9C7F62, 1.1, 0.22, 0.3));
-    g.add(cyl(0.42, 0.36, 0.4, 9, 0xB98A5E, -1.1, 0.2, 0.4));
+    g.add(box(3.0, 0.16, 2.0, WOOD, 0, 1.2, 0));
+    [[-1.3, -0.8], [1.3, -0.8], [-1.3, 0.8], [1.3, 0.8]]
+      .forEach(([x, z]) => g.add(box(0.2, 1.2, 0.2, WOOD, x, 0.6, z)));
+    [[-0.8, -0.4, 0x8E6B3A], [0.2, 0.3, 0xC9A05C], [1.0, -0.3, 0x9C7A4A]]
+      .forEach(([x, z, c]) => g.add(cone(0.42, 0.4, 9, c, x, 1.46, z)));
+  } else if (kind === 'resintap'){                // 割脂：粗樹幹、刀痕、大陶罐
+    g.add(cyl(0.6, 0.8, 3.2, 8, 0xA8835C, 0, 1.6, 0));
+    [1.0, 1.7, 2.4].forEach(y => g.add(box(1.1, 0.16, 0.2, 0xE8D9B8, 0, y, 0.6)));
+    g.add(cyl(0.52, 0.62, 0.9, 10, 0xB98A5E, 1.3, 0.45, 0.9));
+    g.add(cyl(0.46, 0.56, 0.8, 10, 0xB98A5E, -1.2, 0.4, 0.8));
+    g.add(ball(0.38, 0xE6C79C, 1.3, 1.0, 0.9));
+  } else {                                        // rootpit：土坑與根堆
+    g.add(cyl(1.5, 1.2, 0.5, 10, 0x8E7254, 0, -0.15, 0));
+    g.add(cyl(0.16, 0.24, 1.3, 6, 0xC2A47E, -0.3, 0.5, 0.2).rotateZ(-0.4));
+    g.add(cyl(0.16, 0.24, 1.3, 6, 0xC2A47E, 0.35, 0.5, -0.2).rotateZ(0.5));
+    g.add(ball(0.75, 0x9C7F62, 1.9, 0.4, 0.5));
+    g.add(cyl(0.6, 0.72, 0.8, 10, 0xB98A5E, -1.9, 0.4, 0.6));
   }
   return g;
 }
 
 /* 樹：照深根大地的比例，三種輪廓隨機 */
+/* 樹也要胖：樹幹短而粗、樹冠大一號。寫實的細高樹不可愛。 */
 function bigTree(kind, c1, c2, rnd){
   const g = new THREE.Group();
-  g.add(cyl(0.15, 0.19, 1.0, 6, 0x8A6A4A, 0, 0.5, 0));
+  g.add(cyl(0.24, 0.3, 0.75, 7, 0x9A7450, 0, 0.37, 0));
   if (kind === 'conifer'){
-    g.add(cone(0.9, 1.6, 7, c1, 0, 1.6, 0));
-    g.add(cone(0.68, 1.2, 7, c2, 0, 2.4, 0));
+    g.add(cone(1.15, 1.5, 8, c1, 0, 1.35, 0));
+    g.add(cone(0.82, 1.15, 8, c2, 0, 2.15, 0));
+    g.add(ball(0.2, c2, 0, 2.8, 0));
   } else if (kind === 'bare'){
-    g.add(cyl(0.1, 0.15, 1.4, 6, 0xA8835C, 0, 1.6, 0));
-    [[-0.5, 2.1, 0.7], [0.5, 2.3, -0.7]].forEach(([x, y, r]) =>
-      g.add(cyl(0.05, 0.07, 0.8, 5, 0xA8835C, x, y, 0).rotateZ(r)));
+    g.add(cyl(0.2, 0.26, 1.5, 7, 0xB08A5E, 0, 1.3, 0));
+    g.add(ball(0.34, mix(c1, 0xFFFFFF, 0.2), -0.55, 2.0, 0.1));
+    g.add(ball(0.34, mix(c1, 0xFFFFFF, 0.2), 0.55, 2.2, -0.1));
+    g.add(ball(0.4, c1, 0, 2.5, 0));
   } else if (kind === 'fruit'){
-    g.add(ball(0.88, c1, 0, 1.7, 0));
-    for (let i = 0; i < 5; i++)
-      g.add(ball(0.13, 0xE6B45C, Math.cos(i * 1.3) * 0.62, 1.7 + Math.sin(i) * 0.3,
-                 Math.sin(i * 1.3) * 0.62));
+    g.add(ball(1.15, c1, 0, 1.5, 0));
+    g.add(ball(0.72, c2, 0.5, 2.0, 0.25));
+    g.add(ball(0.22, 0xE6B45C, -0.72, 1.5, 0.55));
+    g.add(ball(0.22, 0xE6B45C, 0.68, 1.3, -0.5));
   } else if (kind === 'blossom'){
-    g.add(ball(0.85, c1, 0, 1.7, 0));
-    g.add(ball(0.52, c2, 0.4, 2.1, 0.2));
+    g.add(ball(1.1, c1, 0, 1.45, 0));
+    g.add(ball(0.74, mix(c2, 0xFFFFFF, 0.3), 0.45, 1.95, 0.25));
+    g.add(ball(0.5, c1, -0.55, 1.85, -0.2));
   } else {
-    g.add(ball(0.9, c1, 0, 1.7, 0));
-    g.add(ball(0.58, c2, -0.35, 2.1, 0.18));
+    g.add(ball(1.15, c1, 0, 1.5, 0));
+    g.add(ball(0.75, c2, -0.45, 1.95, 0.2));
+    g.add(ball(0.5, c1, 0.55, 1.75, -0.25));
   }
   g.rotation.y = rnd() * 6.28;
   return g;
 }
 function bigBush(c1, c2){
   const g = new THREE.Group();
-  g.add(ball(0.4, c1, 0, 0.3, 0));
-  g.add(ball(0.28, c2, 0.3, 0.2, 0.15));
+  g.add(ball(0.55, c1, 0, 0.38, 0));
+  g.add(ball(0.38, c2, 0.38, 0.28, 0.18));
+  g.add(ball(0.3, c1, -0.3, 0.25, -0.2));
   return g;
 }
 
@@ -678,8 +698,8 @@ function doll(shirt, style){
     : (skirt ? cyl(0.16, 0.27, 0.5, 8, shirt, 0, 0.66, 0)
              : cyl(0.17, 0.135, 0.42, 7, shirt, 0, 0.62, 0));
   g.add(body);
-  g.add(ball(0.2, skin, 0, 0.98, 0));
-  const hd = ball(0.21, hair, 0, 1.01, -0.025); g.add(hd);
+  g.add(ball(0.27, skin, 0, 0.97, 0));
+  const hd = ball(0.285, hair, 0, 1.01, -0.03); g.add(hd);
 
   if (style === 'rosemaid'){                       // 保加利亞仕女：頭巾＋花籃
     const sc = ball(0.225, 0xD96A7A, 0, 1.02, -0.01); g.add(sc);
