@@ -382,6 +382,10 @@ function mix(a, b, k){
   return c.getHex();
 }
 const matCache = {};
+/* 房屋窗戶：白天是暗玻璃，夜裡透出暖光（nightLights 調亮）；winGlow 是窗前的一小團光暈 */
+const winMat = new THREE.MeshBasicMaterial({color:0x4E6270});
+const winGlow = new THREE.MeshBasicMaterial({color:0xFFC870, transparent:true, opacity:0,
+  depthWrite:false, blending:THREE.AdditiveBlending});
 function mat(c, o){
   const k = c + ':' + JSON.stringify(o || 0);
   if (matCache[k]) return matCache[k];
@@ -2390,7 +2394,8 @@ const SCENE = {
       }
       /* 一排尖拱窗 */
       for (let k = 0; k < 11; k++){ const x = -1.5 + k * 0.3; if (Math.abs(x) < 0.3) continue;
-        hg.add(box(0.12, 0.42, 0.02, 0x8E9AA8, x, 0.5, 0.66)); }
+        const w = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.42, 0.02), winMat); w.position.set(x, 0.5, 0.66); hg.add(w); }
+      const pg = new THREE.Mesh(new THREE.SphereGeometry(1.4, 10, 8), winGlow); pg.scale.set(1.6, 0.5, 0.4); pg.position.set(0, 0.5, 0.8); hg.add(pg);
       hg.add(box(0.5, 0.6, 0.04, 0x8A6A4A, 0, 0.3, 0.66));                // 正門
       hg.traverse(o => { if (o.isMesh) o.castShadow = true; });
       hg.position.set(HX, yA, HZ); near.add(hg);
@@ -2942,6 +2947,8 @@ const islandGlows = [];
 })();
 function nightLights(gl){
   bulbMat.color.setHex(0xE8E0C8).lerp(new THREE.Color(0xFFD27A), gl);
+  winMat.color.setHex(0x4E6270).lerp(new THREE.Color(0xFFD27A), gl);
+  winGlow.opacity = gl * 0.35;
   haloMat.opacity = gl * 0.5;
   islandGlows.forEach(l => { l.intensity = gl * 1.6; });
 }
@@ -3204,10 +3211,15 @@ const landH = meshH;
       if (h < -1.6) continue;
       const hg = new THREE.Group();
       hg.add(box(1.3, 0.9, 1.1, 0xF4EEE0, 0, 0.45, 0));
+      /* 門與兩扇窗（正面一扇、側面一扇），夜裡透出燈光 */
+      hg.add(box(0.26, 0.48, 0.03, 0x8A6A4A, -0.3, 0.24, 0.56));
+      const w1 = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.26, 0.03), winMat); w1.position.set(0.28, 0.52, 0.56); hg.add(w1);
+      const w2 = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.26, 0.28), winMat); w2.position.set(0.66, 0.52, 0); hg.add(w2);
+      const gl = new THREE.Mesh(new THREE.SphereGeometry(0.45, 8, 6), winGlow); gl.position.set(0.28, 0.52, 0.75); hg.add(gl);
       const rf = cone(1.05, 0.8, 4, ROOFC[(v + i) % ROOFC.length], 0, 1.3, 0);
       rf.rotation.y = Math.PI / 4; hg.add(rf);
       hg.position.set(x, h, z); hg.rotation.y = rr() * 6.28; hg.scale.setScalar(1.3);
-      hg.traverse(o => { o.castShadow = true; });
+      hg.traverse(o => { o.castShadow = o.material !== winGlow; });   // 光暈不投影
       world.add(hg);
     }
     /* 村邊一兩塊田 */
