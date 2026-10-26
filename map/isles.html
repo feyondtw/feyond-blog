@@ -43,6 +43,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .over{position:fixed;z-index:3;pointer-events:none}
 .over > *{pointer-events:auto}
 .brand{top:0;left:0;padding:1.4rem 1.6rem}
+body.embed .views,body.embed .hint{display:none}
+body.embed .tools{top:1.2rem}
 body.dark .brand h1{color:#F4EFE4} body.dark .brand .sub,body.dark .hint{color:#D9D4C6}
 body.dark .brand .mk{color:#E6C79C}
 .brand h1,.brand .sub,.hint{transition:color .6s}
@@ -3413,6 +3415,15 @@ setInterval(() => { if (!moodPicked) showMood(moodByClock(), false); }, 60000);
 /* ── 相機 ───────────────────────────────────────────── */
 /* 開場：從低角度（約 24°）看進火山口湖，遠山與天空都在畫面裡 */
 const CAM = {theta:-Math.PI / 4 - 0.25, phi:0.48, dist:SPAN * 3.6 + 20, tx:CX, tz:CZ};
+/* 嵌在別的網站（例如 CYBERBIZ 商店頁）裡：框比全螢幕矮，開場拉近讓湖填滿畫面，
+   並收起切頁頁籤與操作提示。網址加 ?embed 也會套用。 */
+let EMBED = false;
+try { EMBED = window.self !== window.top; } catch (e) { EMBED = true; }
+if (/[?&]embed\b/.test(location.search)) EMBED = true;
+if (EMBED){
+  CAM.dist *= 0.6; CAM.phi = 0.56;
+  document.body.classList.add('embed');
+}
 const HOME = Object.assign({}, CAM);
 let BIRD_MIN = 0.30;
 const TARGET = new THREE.Vector3();

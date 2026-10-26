@@ -955,6 +955,8 @@ function applyCam(){
     TARGET.z + CAM.dist * Math.sin(CAM.phi) * Math.cos(CAM.theta));
   camera.lookAt(TARGET);
 }
+/* 給錄製簡介影片用：外部可以控制鏡頭、停止自轉 */
+window.__view = {CAM, applyCam, stop(){ spinning = false; }};
 let dragging = false, moved = false, lx = 0, ly = 0;
 const tp = new Map();
 const gap = () => { const [a, b] = [...tp.values()]; return Math.hypot(a.x - b.x, a.y - b.y); };
