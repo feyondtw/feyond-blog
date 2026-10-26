@@ -3971,6 +3971,9 @@ function loop(now){
   ISLES.forEach(isl => { isl.g.position.y = bobY; });
   bridgeGroup.position.y = bobY;
 
+  /* 下面這些動畫任何一段出錯，都不能讓整個畫面迴圈停掉——
+     否則島照畫、名牌卻卡在出錯前的位置 */
+  try {
   /* 胡蘿蔔籽的花瓣與籽：往上飄、往外漂、左右輕擺，飄遠了從花田重新升起 */
   floaters.forEach(m => {
     const u = m.userData; u.ph = (u.ph + u.sp * dt) % 1;
@@ -4024,10 +4027,11 @@ function loop(now){
     m.position.x = CX + Math.cos(u.a) * u.rad;
     m.position.z = CZ + Math.sin(u.a) * u.rad;
   });
+  } catch (e){ if (!loop.err){ loop.err = e; console.error('動畫更新出錯', e); } }
   /* 先畫再貼名牌：render() 會把相機矩陣更新到這一幀，
      順序反過來名牌就會慢一幀，轉動時看得出來在飄。 */
   renderer.render(scene, camera);
-  placeTags();
+  try { placeTags(); } catch (e){ if (!loop.tagErr){ loop.tagErr = e; console.error('名牌定位出錯', e); } }
 }
 requestAnimationFrame(loop);
 </script>
