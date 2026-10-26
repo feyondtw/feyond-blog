@@ -115,6 +115,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .brandmark .mk{font-family:var(--latin);letter-spacing:.34em;font-size:.72rem;
   text-transform:uppercase;color:var(--muted)}
 .brandmark h1{margin:0;font-size:1.5rem;font-weight:400;letter-spacing:.12em;line-height:1.2}
+.brandmark .draft[hidden]{display:none}
 .brandmark .draft{
   font-family:var(--sans);font-size:.66rem;letter-spacing:.09em;color:var(--muted);
   border:1px solid var(--line);border-radius:999px;padding:.18rem .6rem;align-self:flex-start;
@@ -1045,8 +1046,9 @@ statsEl.innerHTML = [
 ].map(([k, v]) => `<div><b>${v}</b>${k}</div>`).join('');
 
 const nLow = ORIGINS.filter(lowConf).length + ITEMS.filter(lowConf).length;
-document.getElementById('draftchip').textContent =
-  `資料草稿 v0.1 · ${nLow} 項待確認`;
+/* 資料狀態標籤是給內部看的：公開頁面隱藏，網址加 ?notes 才顯示 */
+document.getElementById('draftchip').textContent = `資料草稿 v0.1 · ${nLow} 項待確認`;
+document.getElementById('draftchip').hidden = !NOTES;
 
 const CHIPS = [
   {id:'all', zh:'全部'},
