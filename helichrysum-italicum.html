@@ -8,68 +8,311 @@
 <meta property="og:title" content="義大利永久花｜深度全球精油情報｜飛揚細籽"><meta property="og:description" content="義大利永久花是地中海岩岸與灌叢裡的一種小型菊科灌木，花乾了也不褪色，因此叫「永久花」（Immortelle）。它的精油得油率極低，而且產地不同，香氣與成分可以差到像兩支油：科西嘉的油以甜美果香的乙酸橙花酯為主，巴爾幹的油則常帶較多松針感的 α-蒎烯與木質辛香的倍半萜。">
 <meta property="og:type" content="article"><meta property="og:url" content="https://feyond.muzen.store/helichrysum-italicum.html">
 <meta property="og:image" content="https://feyond.muzen.store/images/helichrysum-italicum-hero.jpg">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Noto+Serif+TC:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400&display=swap" rel="stylesheet">
-<style>
-.nav { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #EDE6D6; background: #FFFEF8; }
-.nav a { text-decoration: none; }
-.nav-logo { font-family: 'Cormorant Garamond', 'Noto Serif TC', serif; font-size: 18px; letter-spacing: 0.15em; color: #252220; }
-.nav-back { font-family: 'Noto Sans TC', sans-serif; font-size: 13px; letter-spacing: 0.08em; color: #7A756D; }
-.nav-back:hover { color: #252220; }
-
-/* 版面：單欄情報檔案；黏頂章節導覽；表格改卡片。色彩取自永久花——金黃花頭、銀灰葉、地中海灌叢 */
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+TC:wght@300;400;500&family=Noto+Sans+TC:wght@300;400&display=swap" rel="stylesheet">
+<style>/* 取自 feyond-blog/pratyahara.html 的文章版型（雙欄：左標題摘要／右內文），不改原 class */
 :root {
-  --bg: #f3f4f0;
-  --surface: #ffffff;
-  --ink: #1d221e;
-  --muted: #5b645c;
-  --line: #dde1d8;
-  --gold: #8f6a00;
-  --gold-soft: #f4e8bf;
-  --hi: #2f6b3f; --hi-bg: #e1efe3;
-  --mid: #8a5a00; --mid-bg: #f6ead0;
-  --lo: #a33a2c; --lo-bg: #f7e0db;
-  --nf: #a33a2c;
-  --sea: #e8eef0; --land: #e6e7e1; --land-mid: #dcded5; --border: #b9bfb3;
-  --c-corse: #8f6a00; --c-balkan: #2f6a7a; --c-new: #8a4a7a;
-  --f-display: "Noto Serif TC", "Songti TC", serif;
-  --f-body: "Noto Sans TC", "PingFang TC", system-ui, sans-serif;
-  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --cream: #FFFEF8;
+  --sand: #EDE6D6;
+  --parchment: #F5F0E3;
+  --ink: #252220;
+  --ink-soft: #4A4540;
+  --ink-muted: #7A756D;
+  --ink-faint: #A8A29A;
+  --gold: #B8965A;
+  --font-display: 'Cormorant Garamond', 'Noto Serif TC', Georgia, serif;
+  --font-body: 'Noto Serif TC', Georgia, serif;
+  --font-sans: 'Noto Sans TC', sans-serif;
 }
 
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 17px; }
+body {
+  font-family: var(--font-body);
+  background: var(--cream);
+  color: var(--ink);
+  line-height: 2;
+  font-weight: 300;
+}
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
 
-* { box-sizing: border-box; }
-body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15.5px; line-height: 1.75; }
-body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
-.wrap { max-width: 860px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
-a { color: var(--gold); text-underline-offset: 2px; word-break: break-word; }
-a:focus-visible, summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 4px; }
-code { font-family: var(--f-mono); font-size: .85em; background: var(--gold-soft); padding: 1px 5px; border-radius: 4px; word-break: break-all; }
-em { font-style: italic; }
+/* NAV */
+.nav {
+  padding: 28px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--sand);
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  color: var(--ink);
+}
+.nav-back {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  transition: color 0.3s;
+}
+.nav-back:hover { color: var(--ink); }
+
+/* ARTICLE HEADER */
+.article-header {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 80px 24px 48px;
+  text-align: center;
+}
+.article-category {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 24px;
+}
+.article-title {
+  font-family: var(--font-display);
+  font-size: 42px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+.article-subtitle {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  margin-bottom: 32px;
+}
+.article-meta {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--ink-faint);
+}
+
+/* HERO IMAGE */
+.article-hero {
+  max-width: 960px;
+  margin: 0 auto 80px;
+  padding: 0 24px;
+}
+.article-hero img {
+  width: 100%;
+  aspect-ratio: 16/10;
+  object-fit: cover;
+  filter: saturate(0.75) contrast(0.9) brightness(0.97);
+}
+.article-hero figcaption {
+  margin-top: 12px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--ink-faint);
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+/* TWO COLUMN LAYOUT */
+.content-section {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 60px;
+  padding: 48px 0;
+  border-top: 1px solid var(--sand);
+}
+
+.two-col:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.col-left {
+  position: sticky;
+  top: 100px;
+  align-self: start;
+}
+.col-left h2 {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  line-height: 1.5;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+.col-left .summary {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--ink-muted);
+  letter-spacing: 0.02em;
+}
+
+.col-right p {
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 2.2;
+  color: var(--ink-soft);
+  margin-bottom: 1.8em;
+  letter-spacing: 0.02em;
+}
+.col-right p:last-child { margin-bottom: 0; }
+
+.col-right blockquote {
+  margin: 2em 0;
+  padding: 1.5em 2em;
+  background: var(--parchment);
+  border-left: 3px solid var(--gold);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-style: italic;
+  line-height: 2;
+  color: var(--ink-soft);
+}
+
+/* INTRO（單欄開場）*/
+.intro-section {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+.intro-section p {
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 2.2;
+  color: var(--ink-soft);
+  margin-bottom: 1.8em;
+  letter-spacing: 0.02em;
+}
+.intro-section p:first-of-type::first-letter {
+  font-family: var(--font-display);
+  font-size: 4em;
+  float: left;
+  line-height: 0.85;
+  margin: 6px 16px 0 0;
+  color: var(--ink);
+  font-weight: 400;
+}
+
+/* 全幅圖 */
+.img-full {
+  max-width: 960px;
+  margin: 40px auto 60px;
+  padding: 0 24px;
+}
+.img-full img {
+  width: 100%;
+  filter: saturate(0.75) contrast(0.9) brightness(0.97);
+}
+.img-full figcaption {
+  margin-top: 12px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--ink-faint);
+  text-align: center;
+}
+
+/* 中型圖 */
+.img-medium {
+  max-width: 560px;
+  margin: 40px auto 60px;
+  padding: 0 24px;
+}
+.img-medium img {
+  width: 100%;
+  filter: saturate(0.75) contrast(0.9) brightness(0.97);
+}
+.img-medium figcaption {
+  margin-top: 12px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--ink-faint);
+  text-align: center;
+}
+
+/* ARTICLE FOOTER */
+.article-footer {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 48px 24px;
+  border-top: 1px solid var(--sand);
+  text-align: center;
+}
+.article-footer p {
+  font-size: 14px;
+  color: var(--ink-muted);
+  margin-bottom: 32px;
+}
+.back-link {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+  padding: 14px 32px;
+  border: 1px solid var(--gold);
+  transition: all 0.3s;
+}
+.back-link:hover {
+  background: var(--gold);
+  color: var(--cream);
+}
+
+/* SITE FOOTER */
+.site-footer {
+  background: var(--ink);
+  padding: 56px 24px;
+  text-align: center;
+}
+.footer-brand {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  color: var(--cream);
+  margin-bottom: 8px;
+}
+.footer-copy {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: rgba(255,254,248,0.4);
+}
+
+/* RWD */
+@media (max-width: 768px) {
+  html { font-size: 16px; }
+  .nav { padding: 20px 24px; }
+  .article-header { padding: 60px 20px 40px; }
+  .article-title { font-size: 32px; }
+  .two-col {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .col-left {
+    position: static;
+    border-bottom: 1px solid var(--sand);
+    padding-bottom: 24px;
+  }
+}
 .nf { color: var(--nf); font-weight: 700; }
-
-.hero { padding-block: 40px 24px; }
-.eyebrow { font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; color: var(--muted); text-transform: uppercase; }
-h1 { font-family: var(--f-display); font-size: clamp(32px, 7vw, 48px); line-height: 1.2; margin: 8px 0 4px; text-wrap: balance; }
-.latin { font-family: var(--f-display); font-style: italic; font-size: 20px; color: var(--gold); margin: 0; }
-.hero .note { margin-top: 16px; }
-
-nav.toc { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--surface); border-bottom: 1px solid var(--line); }
-nav.toc .wrap { display: flex; gap: 6px; overflow-x: auto; padding-block: 10px; scrollbar-width: none; }
-nav.toc a { flex: none; text-decoration: none; color: var(--ink); font-size: 14px; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); }
-nav.toc a.warn { border-color: var(--gold); background: var(--gold-soft); font-weight: 700; }
-
-main { padding-block: 8px 64px; display: grid; gap: 40px; }
-section { scroll-margin-top: 64px; min-width: 0; }
-h2 { font-family: var(--f-display); font-size: 24px; margin: 0 0 12px; display: flex; align-items: baseline; gap: 10px; }
-h2 .num { font-family: var(--f-mono); font-size: 13px; color: var(--muted); font-weight: 400; }
-h3 { font-family: var(--f-display); font-size: 18px; margin: 28px 0 10px; }
-h4 { margin: 0; font-size: 15.5px; font-weight: 700; line-height: 1.5; }
-p { margin: 0 0 10px; }
-ul { margin: 0 0 10px; padding-left: 1.3em; }
-ul ul { margin-top: 4px; }
-li { margin-bottom: 6px; }
 .note { font-size: 14px; color: var(--muted); border: 1px dashed var(--line); border-radius: 8px; padding: 10px 14px; }
-
 .cards { display: grid; gap: 12px; }
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; min-width: 0; }
 .card header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 8px; }
@@ -80,28 +323,13 @@ li { margin-bottom: 6px; }
 .card .src dd { font-size: 13px; color: var(--muted); }
 .card .meta { font-family: var(--f-mono); font-size: 12px; color: var(--muted); margin: 10px 0 0; }
 @media (max-width: 520px) { .card dl > div { grid-template-columns: 1fr; gap: 0; } }
-
 .chip { flex: none; font-size: 12px; font-weight: 700; padding: 2px 10px; border-radius: 999px; white-space: nowrap; max-width: 55%; overflow: hidden; text-overflow: ellipsis; }
 .chip.hi { color: var(--hi); background: var(--hi-bg); }
 .chip.mid { color: var(--mid); background: var(--mid-bg); }
 .chip.lo { color: var(--lo); background: var(--lo-bg); }
 .chip.na { color: var(--muted); background: var(--bg); }
 @media (max-width: 520px) { .chip { white-space: normal; max-width: 45%; text-align: right; } }
-
-#alert { background: var(--gold-soft); border-radius: 14px; padding: 20px; }
-#alert .card header h4 { font-size: 16px; }
-
-.todo { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; }
-.todo ol { margin: 0; padding-left: 1.4em; display: grid; gap: 10px; }
-.todo .who { display: inline-block; font-size: 12px; color: var(--gold); border: 1px solid var(--gold); border-radius: 999px; padding: 0 8px; margin-left: 6px; }
-
-details { border-top: 1px solid var(--line); padding-top: 16px; }
-details > summary { list-style: none; cursor: pointer; }
-details > summary::-webkit-details-marker { display: none; }
-details > summary h2::after { content: "收合"; margin-left: auto; font-family: var(--f-body); font-size: 13px; color: var(--muted); font-weight: 400; }
-details:not([open]) > summary h2::after { content: "展開"; }
 .legend { display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: 13px; color: var(--muted); align-items: center; }
-/* 產區地圖 */
 .map { margin: 0 0 8px; display: grid; gap: 12px; }
 .map-svg { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
 .map svg { display: block; width: 100%; height: auto; }
@@ -117,14 +345,19 @@ details:not([open]) > summary h2::after { content: "展開"; }
 .map .site { cursor: pointer; outline: none; }
 .map .site circle { stroke: var(--surface); stroke-width: 3; transition: r .15s; }
 .map .site text { font-family: var(--f-mono); font-size: 14px; font-weight: 500; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
-.map .s-main circle { fill: var(--gold); } .map .s-main text { fill: var(--surface); }
-.map .s-other circle { fill: var(--surface); stroke: var(--gold); stroke-width: 3; } .map .s-other text { fill: var(--gold); }
-.map .s-study circle { fill: var(--surface); stroke: var(--muted); stroke-width: 2; stroke-dasharray: 4 3; } .map .s-study text { fill: var(--muted); }
+.map .s-main circle { fill: var(--gold); }
+.map .s-main text { fill: var(--surface); }
+.map .s-other circle { fill: var(--surface); stroke: var(--gold); stroke-width: 3; }
+.map .s-other text { fill: var(--gold); }
+.map .s-study circle { fill: var(--surface); stroke: var(--muted); stroke-width: 2; stroke-dasharray: 4 3; }
+.map .s-study text { fill: var(--muted); }
 .map .site.on circle, .map .site:focus-visible circle { stroke: var(--ink); stroke-width: 4; stroke-dasharray: none; }
 .map .legend { font-size: 13px; }
 .map .legend .hint { color: var(--muted); }
 .dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; vertical-align: -1px; margin-right: 4px; }
-.dot.main { background: var(--gold); } .dot.other { border: 2px solid var(--gold); } .dot.study { border: 2px dashed var(--muted); }
+.dot.main { background: var(--gold); }
+.dot.other { border: 2px solid var(--gold); }
+.dot.study { border: 2px dashed var(--muted); }
 .sw { display: inline-block; width: 14px; height: 10px; border-radius: 2px; margin-right: 4px; background: var(--gold-soft); border: 1px solid var(--border); }
 ol.sites { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 8px; }
 ol.sites li { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); font-size: 14px; line-height: 1.6; margin: 0; cursor: default; scroll-margin-top: 72px; min-width: 0; }
@@ -136,9 +369,7 @@ ol.sites .badge { flex: none; width: 26px; height: 26px; border-radius: 50%; dis
 ol.sites .cat { font-size: 12px; color: var(--muted); margin-left: 6px; }
 ol.sites .ct { font-size: 13px; }
 ol.sites .sn { font-size: 13px; color: var(--muted); }
-/* 栽種歷史時間軸 */
 h4.sub { font-family: var(--f-display); font-size: 16px; margin: 22px 0 8px; color: var(--ink); }
-#history { scroll-margin-top: 72px; }
 .timeline { list-style: none; margin: 8px 0 0; padding: 0; position: relative; display: grid; gap: 14px; }
 .timeline::before { content: ""; position: absolute; left: 6.4em; top: 6px; bottom: 6px; width: 2px; background: var(--line); }
 .timeline li { display: grid; grid-template-columns: 5.6em 1fr; gap: 28px; margin: 0; position: relative; }
@@ -151,74 +382,72 @@ h4.sub { font-family: var(--f-display); font-size: 16px; margin: 22px 0 8px; col
 .tl-impact { font-size: 14px; margin: 0 0 6px; }
 .tl-impact span { font-size: 12px; color: var(--muted); margin-right: 8px; }
 .tl-src { font-size: 12.5px; color: var(--muted); margin: 0; }
-.tl-corse { --tl: var(--c-corse); } .tl-balkan { --tl: var(--c-balkan); } .tl-new { --tl: var(--c-new); } .tl-other { --tl: var(--muted); }
+.tl-corse { --tl: var(--c-corse); }
+.tl-balkan { --tl: var(--c-balkan); }
+.tl-new { --tl: var(--c-new); }
+.tl-other { --tl: var(--muted); }
 .tl-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--muted); margin: 4px 0 8px; }
 .tl-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; }
-@media (max-width: 520px) {
-  .timeline::before { left: 6px; }
-  .timeline li { grid-template-columns: 1fr; gap: 4px; padding-left: 26px; }
-  .timeline li::before { left: 0; }
-  .tl-date { text-align: left; }
-}
-/* 基本資料：名牌＋欄位列 */
-.bi-names { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin-bottom: 18px; }
-.bi-name { background: var(--surface); padding: 14px 16px; display: grid; gap: 4px; align-content: start; min-width: 0; }
-.bi-name .bi-label, .bi-row dt { font-size: 12px; color: var(--muted); letter-spacing: .06em; }
-.bi-name .bi-value { font-family: var(--f-display); font-size: 19px; line-height: 1.45; }
-.bi-name.latin-name .bi-value { color: var(--gold); }
-.bi-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; font-size: 12px; color: var(--muted); margin-top: 2px; }
-.bi-meta .chip { font-size: 11px; padding: 0 8px; }
-.bi-date { font-family: var(--f-mono); }
-.bi-rows { margin: 0; display: grid; }
-.bi-row { display: grid; grid-template-columns: 8.5em 1fr; gap: 16px; padding: 12px 0; border-top: 1px solid var(--line); }
-.bi-row:last-child { border-bottom: 1px solid var(--line); }
-.bi-row dt { padding-top: 3px; }
-.bi-row dd { margin: 0; min-width: 0; }
-.bi-row.mono .bi-value { font-family: var(--f-mono); font-size: 13.5px; }
-.bi-row.mono code { background: none; padding: 0; font-size: 1em; }
-.bi-kids { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 10px; }
-.bi-kids li { margin: 0; padding-left: 12px; border-left: 2px solid var(--line); }
-@media (max-width: 520px) { .bi-row { grid-template-columns: 1fr; gap: 4px; } }
-footer { font-size: 13px; color: var(--muted); padding-block: 0 40px; }
-@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+@media (max-width: 520px) { .timeline::before { left: 6px; } .timeline li { grid-template-columns: 1fr; gap: 4px; padding-left: 26px; } .timeline li::before { left: 0; } .tl-date { text-align: left; } }
+:root { --bg: #FFFEF8; --surface: #FFFEF8; --muted: #7A756D; --line: #EDE6D6; --gold-soft: #F5F0E3;
+  --hi: #4A6358; --hi-bg: #E6EEE9; --mid: #8B6A2E; --mid-bg: #F5ECD8; --lo: #A0533F; --lo-bg: #F6E4DE; --nf: #A0533F;
+  --sea: #EEF2EF; --land: #EFE9DC; --land-mid: #E4DAC4; --border: #CFC4B0;
+  --c-corse: #B8965A; --c-balkan: #4A6358; --c-new: #8B5A3C;
+  --f-display: 'Noto Serif TC', serif; --f-body: 'Noto Serif TC', serif; --f-mono: ui-monospace, Menlo, monospace; }
+.col-right ul { margin: 0 0 1.8em 1.2em; } .col-right li { font-weight: 300; line-height: 2; color: var(--ink-soft); margin-bottom: .6em; }
+.col-right ul ul { margin: .4em 0 0 1.2em; }
+.col-right strong, .intro-section strong { font-weight: 500; color: var(--ink); }
+.col-right a, .intro-section a { color: var(--gold); border-bottom: 1px solid rgba(184,150,90,.35); }
+.col-right code { font-family: var(--f-mono); font-size: .78em; background: var(--parchment); padding: 1px 6px; word-break: break-all; }
+.col-right .cards { gap: 14px; margin-bottom: 1.8em; }
+.col-right .card { background: #fff; border: 1px solid var(--sand); border-radius: 0; box-shadow: none; font-size: 14px; }
+.col-right .card dt { font-family: var(--font-sans); } .col-right .card dd { line-height: 1.8; }
+.col-right .timeline li { font-size: 14px; }
+.col-right .note { font-family: var(--font-sans); font-size: 13px; color: var(--ink-muted); background: var(--parchment); padding: 12px 16px; }
+details.more { margin: 1.2em 0 2em; }
+details.more > summary { cursor: pointer; font-family: var(--font-sans); font-size: 13px; letter-spacing: .1em; color: var(--gold);
+  list-style: none; padding: 10px 0; border-top: 1px solid var(--sand); }
+details.more > summary::before { content: '＋ '; } details.more[open] > summary::before { content: '－ '; }
+details.more > summary::-webkit-details-marker { display: none; }
+.map-figure { max-width: 960px; margin: 0 auto 60px; padding: 0 24px; }
+.map-figure .cap { margin-top: 12px; font-family: var(--font-sans); font-size: 12px; color: var(--ink-faint); text-align: center; }
+.map .legend, .map-note, ol.sites { font-family: var(--font-sans); font-size: 13px; }
+.related { max-width: 680px; margin: 0 auto; padding: 0 24px 40px; font-family: var(--font-sans); font-size: 14px; color: var(--ink-muted); text-align: center; }
+.related a { color: var(--gold); }
 
-:root {
-  --bg: #FFFEF8; --surface: #FFFEF8; --ink: #252220; --muted: #7A756D; --line: #EDE6D6;
-  --gold: #8B6A2E; --gold-soft: #F5F0E3;
-  --sea: #EAF0EE; --land: #EDE6D6; --land-mid: #E2D8C2; --border: #C5B8A8;
-  --f-display: "Noto Serif TC", serif; --f-body: "Noto Serif TC", serif;
-}
-body { font-size: 16px; }
-nav.toc { top: 0; }
-.meta-intel { font-family: 'Noto Sans TC', sans-serif; }
-.hero-intel .eyebrow { font-family: 'Noto Sans TC', sans-serif; }
-.hero-intel { position: relative; min-height: 62vh; display: flex; align-items: flex-end; color: #fff; overflow: hidden; }
-.hero-intel img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.hero-intel::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,18,15,0) 35%, rgba(20,18,15,.62) 100%); }
-.hero-intel .wrap { position: relative; z-index: 1; padding-bottom: 44px; width: 100%; }
-.hero-intel .eyebrow { color: #F2D27A; letter-spacing: .3em; }
-.hero-intel h1 { color: #fff; font-size: clamp(36px, 8vw, 60px); font-weight: 500; letter-spacing: .08em; }
-.hero-intel .latin { color: #F7EBC8; font-family: "Cormorant Garamond", serif; font-size: 24px; }
-.meta-intel { color: var(--muted); font-size: 14px; padding-block: 18px; border-bottom: 1px solid var(--line); }
-.article section { border-top: 1px solid var(--line); padding-top: 28px; margin-top: 28px; }
-.article section:first-child { border-top: 0; }
-.article h2 { font-size: 26px; font-weight: 600; letter-spacing: .04em; }
-.article p, .article li { max-width: 70ch; }
-.related { margin: 40px 0; padding: 22px 24px; border: 1px solid var(--line); border-radius: 14px; background: #fff; }
-.related a { font-weight: 600; text-decoration: none; }
-.site-nav a { text-decoration: none; color: inherit; }
-html, body { margin: 0; padding: 0; }
-code { word-break: break-all; }
-.site-foot { text-align: center; color: var(--muted); font-size: 13px; padding: 40px 16px 60px; border-top: 1px solid var(--line); }
+.rchart { margin: 2em 0; padding: 22px 22px 6px; background: #fff; border: 1px solid var(--sand); font-family: var(--font-sans); }
+.rc-title { font-family: var(--font-body); font-size: 16px; font-weight: 500; color: var(--ink); }
+.rc-legend { font-size: 12px; color: var(--ink-muted); margin: 6px 0 10px; display: flex; gap: 16px; flex-wrap: wrap; }
+.rc-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+.rc-comp { font-size: 14px; color: var(--ink); margin: 18px 0 6px; }
+.rc-row { display: grid; grid-template-columns: 150px 1fr; align-items: center; min-height: 32px; }
+.rc-lab { font-size: 12.5px; color: var(--ink-soft); line-height: 1.4; padding-right: 10px; }
+.rc-track { position: relative; height: 32px; margin-right: 84px;
+  background: repeating-linear-gradient(90deg, var(--sand) 0 1px, transparent 1px calc(100% / 4.5)); }
+.rc-bar { position: absolute; top: 9px; height: 14px; border-radius: 4px; }
+.rc-dot { position: absolute; top: 9px; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%; box-shadow: 0 0 0 2px #fff; }
+.rc-v { position: absolute; top: 6px; font-size: 12px; color: var(--ink-soft); white-space: nowrap; }
+.rc-nf { position: absolute; top: 6px; left: 0; font-size: 12px; color: #A0533F; }
+.rc-axis { min-height: 20px; } .rc-ticks { position: relative; height: 20px; margin-right: 84px; }
+.rc-ticks span { position: absolute; transform: translateX(-50%); font-size: 10.5px; color: var(--ink-faint); }
+.rc-note { font-size: 12px; line-height: 1.8; color: var(--ink-muted); margin: 14px 0 6px; }
+.rc-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.rc-table th, .rc-table td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--sand); }
+@media (max-width: 768px) { .rchart { padding: 18px 14px 4px; } .rc-row { grid-template-columns: 1fr; } .rc-lab { padding-top: 4px; }
+  .rc-axis .rc-lab { display: none; } .rc-track, .rc-ticks { margin-right: 70px; } }
 </style>
-</head><body><nav class="nav"><a href="index.html" class="nav-back">← 返回</a><a href="index.html" class="nav-logo">飛揚細籽 FEYOND</a></nav>
-<header class="hero-intel"><img src="images/helichrysum-italicum-hero.jpg" alt="地中海岩岸的野生永久花">
-  <div class="wrap"><div class="eyebrow">深度全球精油情報</div><h1>義大利永久花</h1><p class="latin"><em>Helichrysum italicum</em></p></div>
+</head><body>
+<nav class="nav"><a href="index.html" class="nav-back">← 返回</a><a href="index.html" class="nav-logo">飛揚細籽 FEYOND</a></nav>
+
+<header class="article-header">
+  <p class="article-category">植物誌 · Botany ｜ 深度全球精油情報</p>
+  <h1 class="article-title">義大利永久花</h1>
+  <p class="article-subtitle">Helichrysum italicum · 一份產地情報</p>
+  <p class="article-meta">2026.11.23 · 依學術文獻、公開法規與 MUZEN 實驗室數據整理</p>
 </header>
-<div class="wrap meta-intel">Feyond · 更新於 2026.11.23 · 內容依學術文獻、公開法規與 MUZEN 實驗室數據整理，不含任何供應商與價格資訊</div>
-<nav class="toc" aria-label="章節"><div class="wrap"><a href="#p1">一句話認識</a><a href="#p2">基本資料</a><a href="#p3">原生地與產區</a><a href="#history">栽種史</a><a href="#p5">亞種與化學型</a><a href="#p6">GC 關鍵成分與品質判讀</a><a href="#p7">法規與安全</a><a href="#p8">市場動態</a><a href="#p9">參考文獻</a></div></nav>
-<main class="wrap article">
-<section id="p1"><h2>一句話認識</h2><p>義大利永久花是地中海岩岸與灌叢裡的一種小型菊科灌木，花乾了也不褪色，因此叫「永久花」（Immortelle）。它的精油得油率極低，而且<strong>產地不同，香氣與成分可以差到像兩支油</strong>：科西嘉的油以甜美果香的乙酸橙花酯為主，巴爾幹的油則常帶較多松針感的 α-蒎烯與木質辛香的倍半萜。認識永久花，等於上一堂「產地、亞種與 GC 報告怎麼一起看」的課。</p></section><section id="p2"><h2>基本資料</h2><ul>
+<figure class="article-hero"><img src="images/helichrysum-italicum-hero.jpg" alt="地中海岩岸的野生永久花"><figcaption>地中海岩岸的野生永久花</figcaption></figure>
+<section class="intro-section"><p>義大利永久花是地中海岩岸與灌叢裡的一種小型菊科灌木，花乾了也不褪色，因此叫「永久花」（Immortelle）。它的精油得油率極低，而且<strong>產地不同，香氣與成分可以差到像兩支油</strong>：科西嘉的油以甜美果香的乙酸橙花酯為主，巴爾幹的油則常帶較多松針感的 α-蒎烯與木質辛香的倍半萜。認識永久花，等於上一堂「產地、亞種與 GC 報告怎麼一起看」的課。</p></section>
+<div class="content-section"><div class="two-col" id="s1"><div class="col-left"><h2>基本資料</h2><p class="summary">名稱、學名與 INCI——先確認手上這瓶，是哪一種永久花。</p></div><div class="col-right"><ul>
 <li>中文俗名：義大利永久花（亦稱義大利蠟菊、蠟菊；<span class="nf">未查得</span>台灣官方中文名）</li>
 <li>英文名：Immortelle、Everlasting、Italian Helichrysum（<a href="https://ec.europa.eu/growth/tools-databases/cosing/" target="_blank" rel="noopener">EU CosIng</a>）</li>
 <li>拉丁學名：<em>Helichrysum italicum</em> (Roth) G.Don（<a href="https://wfoplantlist.org/taxon/wfo-0000077691-2026-06" target="_blank" rel="noopener">WFO Plant List 2026-06 版</a>為接受名）</li>
@@ -231,7 +460,7 @@ code { word-break: break-all; }
 <li>純露 <code>HELICHRYSUM ITALICUM FLOWER WATER</code> 亦已登錄</li>
 </ul>
 </ul>
-<p><strong>名稱提醒：</strong> 商業與法規文件常見的 <em>Helichrysum angustifolium</em> DC.（例如 IFRA 與美國 21 CFR 182.20 仍用此名），在 <a href="https://list.worldfloraonline.org/matching_rest.php?input_string=Helichrysum%20angustifolium" target="_blank" rel="noopener">WFO</a> 現行分類中被歸為另一物種 <em>H. litoreum</em> 的異名，<strong>並不等於</strong> <em>H. italicum</em>。看到標籤或文件寫 <em>H. angustifolium</em>，建議向來源確認實際物種。（分類學見解差異大，可信度：中）</p></section><section id="p3"><h2>原生地與產區</h2><p><strong>原生範圍：</strong> 依 WCVP（英國邱園 POWO 的底層資料庫）資料，<em>H. italicum</em> 原生於整個地中海盆地：北非三國（摩洛哥、阿爾及利亞、突尼西亞）、伊比利、法國本土與科西嘉、義大利與薩丁尼亞／西西里、西北巴爾幹、希臘與克里特、賽普勒斯、土耳其（<a href="https://api.gbif.org/v1/species/3131614/distributions" target="_blank" rel="noopener">WCVP via GBIF</a>）。換句話說，<strong>巴爾幹與法國都是原生地，不是引種</strong>。</p>
+<p><strong>名稱提醒：</strong> 商業與法規文件常見的 <em>Helichrysum angustifolium</em> DC.（例如 IFRA 與美國 21 CFR 182.20 仍用此名），在 <a href="https://list.worldfloraonline.org/matching_rest.php?input_string=Helichrysum%20angustifolium" target="_blank" rel="noopener">WFO</a> 現行分類中被歸為另一物種 <em>H. litoreum</em> 的異名，<strong>並不等於</strong> <em>H. italicum</em>。看到標籤或文件寫 <em>H. angustifolium</em>，建議向來源確認實際物種。（分類學見解差異大，可信度：中）</p></div></div><div class="two-col" id="s2"><div class="col-left"><h2>原生地與產區</h2><p class="summary">整個地中海都是它的故鄉；商業產區集中在科西嘉與巴爾幹。</p></div><div class="col-right"><p><strong>原生範圍：</strong> 依 WCVP（英國邱園 POWO 的底層資料庫）資料，<em>H. italicum</em> 原生於整個地中海盆地：北非三國（摩洛哥、阿爾及利亞、突尼西亞）、伊比利、法國本土與科西嘉、義大利與薩丁尼亞／西西里、西北巴爾幹、希臘與克里特、賽普勒斯、土耳其（<a href="https://api.gbif.org/v1/species/3131614/distributions" target="_blank" rel="noopener">WCVP via GBIF</a>）。換句話說，<strong>巴爾幹與法國都是原生地，不是引種</strong>。</p><blockquote>巴爾幹與法國，都是原生地，不是引種。</blockquote>
 <p>它偏好開闊、乾燥、排水好的地方——灌叢邊、路邊、海岸岩石、海崖、沙丘，不挑岩質，常是擾動地上最先長出來的先驅植物，從海平面分布到海拔 2,200 公尺（<a href="https://collectaneabotanica.revistas.csic.es/index.php/collectaneabotanica/article/download/243/286?inline=1" target="_blank" rel="noopener">Herrando-Moraira et al. 2016</a>）。</p>
 <p><strong>主要產區特色：</strong></p>
 <ul>
@@ -242,7 +471,7 @@ code { word-break: break-all; }
 <li><strong>義大利、希臘、西班牙</strong>：文獻多為研究樣品，商業產量<span class="nf">未查得</span>。</li>
 </ul>
 <p><strong>為什麼這麼貴？得油率極低。</strong> 實驗室水蒸餾（直接把植物泡在水裡煮）的得油率約 0.02–0.31%（<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6244829" target="_blank" rel="noopener">Mastelić et al. 2008</a>、<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6264769" target="_blank" rel="noopener">Mancini et al. 2011</a>）；業界說法大約 500–1,000 公斤鮮草才出 1 公升油（<a href="https://biznis.kurir.rs/moj-biznis/10114173/zarada-od-smilja-kada-pocinje-profit-i-troskovi" target="_blank" rel="noopener">Kurir 2026-09</a>，可信度低）。注意：乾重／鮮重、實驗室／商業的口徑不同，這些數字不能直接相比。</p>
-<p><strong>萃取方式：</strong> 商業主流是水蒸氣蒸餾。超臨界 CO₂ 萃取（用高壓二氧化碳當溶劑）的得率較高，但成分與精油差異很大，還會帶出 scopoletin 等非揮發性成分（<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9957194/" target="_blank" rel="noopener">Furlan &amp; Bren 2023</a>）。原精（absolute）的學術資料：<span class="nf">未查得</span>。</p><figure class="map" id="oilmap">
+<p><strong>萃取方式：</strong> 商業主流是水蒸氣蒸餾。超臨界 CO₂ 萃取（用高壓二氧化碳當溶劑）的得率較高，但成分與精油差異很大，還會帶出 scopoletin 等非揮發性成分（<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9957194/" target="_blank" rel="noopener">Furlan &amp; Bren 2023</a>）。原精（absolute）的學術資料：<span class="nf">未查得</span>。</p></div></div></div><div class="map-figure"><figure class="map" id="oilmap">
 <div class="map-svg"><svg viewBox="0 0 1000 711" role="img" aria-label="產區地圖">
 <defs><pattern id="hatch" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="9" class="hatch-line"/></pattern></defs>
 <rect width="1000" height="711" class="sea"/>
@@ -272,7 +501,7 @@ code { word-break: break-all; }
 </svg></div>
 <figcaption class="legend"><span><i class="dot main"></i>商業主產區</span><span><i class="dot other"></i>其他商業來源</span><span><i class="dot study"></i>文獻／研究樣品</span><span><i class="sw hi"></i>有商業產地的國家</span><span><i class="sw native"></i>原生範圍</span><span class="hint">點選編號看說明 · 位置為產區概略位置</span></figcaption>
 <p class="map-note">原生範圍：原生範圍依 WCVP（GBIF API）＋Herrando-Moraira 2016；以國家為單位標示，實際只分布於各國地中海沿岸與島嶼。賽普勒斯、土耳其在地圖範圍外。西班牙：另一派分類將伊比利植株另立為 H. serotinum。</p>
-<ol class="sites">
+<details class="more"><summary>看各產區說明</summary><ol class="sites">
 <li id="site-1" data-n="1"><span class="badge s-main">1</span><div><strong>法國・科西嘉</strong><span class="cat">商業主產區</span><br><span class="ct">化學型：neryl acetate＋italidiones 型</span><br><span class="sn">乙酸橙花酯 20–42%（文獻）；2022 起面臨滯銷，產地正申請 IGP 地理標示</span></div></li>
 <li id="site-2" data-n="2"><span class="badge s-main">2</span><div><strong>克羅埃西亞・達爾馬提亞</strong><span class="cat">商業主產區</span><br><span class="ct">化學型：α-pinene 偏高型</span><br><span class="sn">花期 5–7 月；以野生族群為主，野採需許可證</span></div></li>
 <li id="site-3" data-n="3"><span class="badge s-main">3</span><div><strong>克羅埃西亞・Kvarner 群島</strong><span class="cat">商業主產區</span><br><span class="ct">化學型：α-pinene 偏高型</span><br><span class="sn">2014 年發生大規模非法採集，島嶼禁採</span></div></li>
@@ -288,7 +517,7 @@ code { word-break: break-all; }
 <li id="site-13" data-n="13"><span class="badge s-study">13</span><div><strong>西班牙</strong><span class="cat">文獻／研究樣品</span><br><span class="ct">化學型：guaiol、nerol 為主</span><br><span class="sn">ssp. serotinum 文獻樣品</span></div></li>
 <li id="site-14" data-n="14"><span class="badge s-study">14</span><div><strong>匈牙利</strong><span class="cat">文獻／研究樣品</span><br><span class="ct">化學型：<span class="nf">未查得</span></span><br><span class="sn">綜述列為栽培地之一，無數字</span></div></li>
 <li id="site-15" data-n="15"><span class="badge s-other">15</span><div><strong>安哥拉（地圖範圍外）</strong><span class="cat">其他商業來源</span><br><span class="ct">化學型：<span class="nf">未查得</span></span><br><span class="sn">市場出現標示此產地的有機貨源（產業觀察，2026）；不在原生範圍內，需 GC-MS 確認物種</span></div></li>
-</ol></figure>
+</ol></details></figure>
 <script>
 (function(){
   var fig=document.getElementById('oilmap'); if(!fig) return;
@@ -307,12 +536,12 @@ code { word-break: break-all; }
     li.addEventListener('click', function(){ pick(li.getAttribute('data-n'), false); });
   });
 })();
-</script></section><section id="history"><h2>栽種史</h2>
+</script><p class="cap">產區地圖 · 點選編號看說明；斜線為原生範圍</p></div><div class="content-section"><div class="two-col" id="history"><div class="col-left"><h2>栽種史</h2><p class="summary">從科西嘉的契作，到巴爾幹的搶種與崩跌——三十年的產區起伏。</p></div><div class="col-right">
 <div class="tl-legend"><span><i style="background:var(--c-corse)"></i>法國（科西嘉／本土）</span><span><i style="background:var(--c-balkan)"></i>巴爾幹</span><span><i style="background:var(--c-new)"></i>新興產地</span></div>
 <ol class="timeline">
 <li class="tl-corse"><div class="tl-date">1994</div><div class="tl-body">
 <div class="tl-head"><span class="tl-region">法國</span></div>
-<p class="tl-event">法國本土 PACA 區（普羅旺斯－阿爾卑斯－蔚藍海岸）將義大利永久花列為保護植物，全區禁止野生個體的摘採、運送與販售</p>
+<p class="tl-event">法國本土 PACA 區（普羅旺斯－阿爾卑斯－蔚藍海岸）將義大利永久花列為保護植物，全區禁止野生個體的摘採、運送與販售</p><blockquote>種下後要兩、三年才盛產。一起種下的園區，就會一起放量。</blockquote>
 </div></li>
 <li class="tl-corse"><div class="tl-date">2001</div><div class="tl-body">
 <div class="tl-head"><span class="tl-region">法國</span></div>
@@ -357,7 +586,7 @@ code { word-break: break-all; }
 </ol>
 <p><strong>為什麼 2017 年會崩？</strong> 永久花是多年生植物，種下後約 2–3 年才進入盛產。2014–2015 年高價時一起種下的園區，在 2017 年前後同時放量——這是典型的「延遲供給」崩盤。（<strong>推論</strong>：依據上列 Grude Online 2017 報導與產量曲線，非文獻直接結論）</p>
 <p><strong>為什麼法國的產業集中在科西嘉？</strong> 法國本土其實也有原生族群，但 PACA 區自 1994 年起禁止野採販售，無法像科西嘉早期那樣從野生資源起家。（<strong>推論</strong>：無文獻直接論證此因果）</p>
-<p class="note">小提醒：部分行銷文案稱永久花「科西嘉特有」，但植物學資料顯示它廣布整個地中海，科西嘉只是其中一個原生地。</p></section><section id="p5"><h2>亞種與化學型</h2><p><strong>先說結論：永久花沒有國際公認的 CT（化學型）命名。</strong> 實務上，大家用「產地＋乙酸橙花酯（neryl acetate）含量」來區分，學術上則用「化學型群」描述。</p>
+<p class="note">小提醒：部分行銷文案稱永久花「科西嘉特有」，但植物學資料顯示它廣布整個地中海，科西嘉只是其中一個原生地。</p></div></div><div class="two-col" id="s4"><div class="col-left"><h2>亞種與化學型</h2><p class="summary">四個亞種，沒有國際公認的 CT；實務上看產地與乙酸橙花酯。</p></div><div class="col-right"><p><strong>先說結論：永久花沒有國際公認的 CT（化學型）命名。</strong> 實務上，大家用「產地＋乙酸橙花酯（neryl acetate）含量」來區分，學術上則用「化學型群」描述。</p><blockquote>市售的永久花，幾乎都是 ssp. <em>italicum</em>，或沒有標示亞種。</blockquote>
 <p><strong>亞種怎麼分？</strong> 本文採用 <a href="https://collectaneabotanica.revistas.csic.es/index.php/collectaneabotanica/article/download/243/286?inline=1" target="_blank" rel="noopener">Herrando-Moraira et al. 2016</a> 的四亞種架構：</p>
 <div class="cards">
 <article class="card">
@@ -396,7 +625,7 @@ code { word-break: break-all; }
 <p>3. <strong>薑黃烯＋芹子烯倍半萜型</strong>：亞得里亞海南段、塞爾維亞、普利亞（<a href="https://www.frontiersin.org/journals/plant-science/articles/10.3389/fpls.2025.1467421/full" target="_blank" rel="noopener">Ninčević Runjić et al. 2025</a>、<a href="https://pubmed.ncbi.nlm.nih.gov/38927166/" target="_blank" rel="noopener">Zeremski et al. 2024</a>）。</p>
 <p>4. <strong>特殊倍半萜型</strong>：義大利 Cilento 單一樣品，以 iso-italicene epoxide、β-costol 為主（<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6264769" target="_blank" rel="noopener">Mancini et al. 2011</a>）。</p>
 <p><strong>同一個海岸也分三型。</strong> 克羅埃西亞研究把 18 個野生族群種在同一個園子裡比較，結果仍分成北／中／南三型：北部 neryl acetate 平均 24.5%，南部只有 8.3%，而 ar-薑黃烯與 β-芹子烯升到 12% 以上（<a href="https://www.frontiersin.org/journals/plant-science/articles/10.3389/fpls.2025.1467421/full" target="_blank" rel="noopener">Ninčević Runjić et al. 2025</a>）。保加利亞的同園栽培也看到同樣現象（<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9002512/" target="_blank" rel="noopener">Zheljazkov et al. 2022</a>）。這代表<strong>遺傳差異是真實的，不只是氣候或土壤造成</strong>。</p>
-<p class="note">讀數據前的提醒：以上多為單一族群、單一季節、實驗室水蒸餾的結果，不能直接當成商業油規格。</p></section><section id="p6"><h2>GC 關鍵成分與品質判讀</h2><p>GC（氣相層析）報告是辨識永久花產地與亞種最直接的工具。下表的「判讀意義」是依文獻整理的<strong>判讀原則，不是官方標準</strong>；ISO／AFNOR 是否有永久花精油標準：<span class="nf">未查得</span>。</p>
+<p class="note">讀數據前的提醒：以上多為單一族群、單一季節、實驗室水蒸餾的結果，不能直接當成商業油規格。</p></div></div><div class="two-col" id="s5"><div class="col-left"><h2>GC 關鍵成分與品質判讀</h2><p class="summary">讀 GC 報告時該看的成分，以及它們各自指向哪個產地。</p></div><div class="col-right"><p>GC（氣相層析）報告是辨識永久花產地與亞種最直接的工具。下表的「判讀意義」是依文獻整理的<strong>判讀原則，不是官方標準</strong>；ISO／AFNOR 是否有永久花精油標準：<span class="nf">未查得</span>。</p><blockquote>同一個產地，嫩枝期與盛花期採收，乙酸橙花酯可以從 15.8% 變成 42.5%。</blockquote><figure class="rchart"><figcaption class="rc-title">兩個關鍵成分，各產地的文獻範圍</figcaption><div class="rc-legend"><span><i style="background:#A87512"></i>科西嘉</span><span><i style="background:#1F6FA0"></i>巴爾幹</span><span><i style="background:#B04A3A"></i>薩丁尼亞</span></div><div class="rc-comp">乙酸橙花酯 neryl acetate</div><div class="rc-row" title="科西嘉：15.8–42.5%（Bianchini 2001）"><div class="rc-lab">科西嘉</div><div class="rc-track"><i class="rc-bar" style="left:35.11%;width:max(4px,59.33%);background:#A87512"></i><span class="rc-v" style="left:calc(94.44% + 6px)">15.8–42.5%</span></div></div><div class="rc-row" title="薩丁尼亞 ssp. tyrrhenicum：17.6–35.6%（Usai 2010）"><div class="rc-lab">薩丁尼亞 ssp. tyrrhenicum</div><div class="rc-track"><i class="rc-bar" style="left:39.11%;width:max(4px,40.00%);background:#B04A3A"></i><span class="rc-v" style="left:calc(79.11% + 6px)">17.6–35.6%</span></div></div><div class="rc-row" title="東亞得里亞海：5.38–29.22%（Ninčević Runjić 2025）"><div class="rc-lab">東亞得里亞海</div><div class="rc-track"><i class="rc-bar" style="left:11.96%;width:max(4px,52.98%);background:#1F6FA0"></i><span class="rc-v" style="left:calc(64.93% + 6px)">5.38–29.22%</span></div></div><div class="rc-row rc-axis"><div class="rc-lab"></div><div class="rc-ticks"><span style="left:0.00%">0%</span><span style="left:22.22%">10%</span><span style="left:44.44%">20%</span><span style="left:66.67%">30%</span><span style="left:88.89%">40%</span></div></div><div class="rc-comp">α-蒎烯 α-pinene</div><div class="rc-row" title="科西嘉：未查得（未查得）"><div class="rc-lab">科西嘉</div><div class="rc-track"><span class="rc-nf">未查得</span></div></div><div class="rc-row" title="西南薩丁尼亞：≤0.42%（Juliano 2019）"><div class="rc-lab">西南薩丁尼亞</div><div class="rc-track"><i class="rc-bar" style="left:0.00%;width:max(4px,0.93%);background:#B04A3A"></i><span class="rc-v" style="left:calc(0.93% + 6px)">≤0.42%</span></div></div><div class="rc-row" title="東亞得里亞海：1.88–10.55%（Ninčević Runjić 2025）"><div class="rc-lab">東亞得里亞海</div><div class="rc-track"><i class="rc-bar" style="left:4.18%;width:max(4px,19.27%);background:#1F6FA0"></i><span class="rc-v" style="left:calc(23.44% + 6px)">1.88–10.55%</span></div></div><div class="rc-row" title="波赫種源（單一樣品）：13.74%（Zheljazkov 2022）"><div class="rc-lab">波赫種源（單一樣品）</div><div class="rc-track"><i class="rc-dot" style="left:30.53%;background:#1F6FA0"></i><span class="rc-v" style="left:calc(30.53% + 10px)">13.74%</span></div></div><div class="rc-row rc-axis"><div class="rc-lab"></div><div class="rc-ticks"><span style="left:0.00%">0%</span><span style="left:22.22%">10%</span><span style="left:44.44%">20%</span><span style="left:66.67%">30%</span><span style="left:88.89%">40%</span></div></div><div class="rc-note">橫條為文獻報告的含量範圍（%），圓點為單一樣品；同一產地也會因採收期、族群而變動。MUZEN 實驗室數據待補。</div><details class="more"><summary>看數據表</summary><table class="rc-table"><tr><th>成分</th><th>產地</th><th>含量</th><th>文獻</th></tr><tr><td>乙酸橙花酯 neryl acetate</td><td>科西嘉</td><td>15.8–42.5%</td><td>Bianchini 2001</td></tr><tr><td>乙酸橙花酯 neryl acetate</td><td>薩丁尼亞 ssp. tyrrhenicum</td><td>17.6–35.6%</td><td>Usai 2010</td></tr><tr><td>乙酸橙花酯 neryl acetate</td><td>東亞得里亞海</td><td>5.38–29.22%</td><td>Ninčević Runjić 2025</td></tr><tr><td>α-蒎烯 α-pinene</td><td>科西嘉</td><td>未查得</td><td>未查得</td></tr><tr><td>α-蒎烯 α-pinene</td><td>西南薩丁尼亞</td><td>≤0.42%</td><td>Juliano 2019</td></tr><tr><td>α-蒎烯 α-pinene</td><td>東亞得里亞海</td><td>1.88–10.55%</td><td>Ninčević Runjić 2025</td></tr><tr><td>α-蒎烯 α-pinene</td><td>波赫種源（單一樣品）</td><td>13.74%</td><td>Zheljazkov 2022</td></tr></table></details></figure>
 <div class="cards">
 <article class="card">
 <header><h4>neryl acetate（乙酸橙花酯）</h4></header><dl>
@@ -433,6 +662,9 @@ code { word-break: break-all; }
 <div><dt>判讀意義</dt><dd>與 γ-curcumene <strong>是不同化合物</strong>，不同論文各報其一；報告須分開列，合併或混標會誤判產地</dd></div>
 </dl>
 </article>
+</div>
+<details class="more"><summary>看其餘 8 項</summary>
+<div class="cards">
 <article class="card">
 <header><h4>β-selinene（β-芹子烯）</h4></header><dl>
 <div><dt>文獻範圍</dt><dd>東亞得里亞海 6.05–14.75%［Ninčević Runjić 2025］；希臘 17.2%［Roussis 2000］；β-selinene 型 11.6–38.0%（轉引 Aćimović 2021）</dd></div>
@@ -490,19 +722,20 @@ code { word-break: break-all; }
 </dl>
 </article>
 </div>
+</details>
 <p>＊MUZEN 實驗室數據待補</p>
-<p><strong>驗收時建議一併要求：</strong> 採收物候期（嫩枝或盛花）、蒸餾方式、亞種與產地聲明，以及 γ-curcumene 與 ar-curcumene 分列的 GC 報告。（判讀原則，依 Bianchini 2001 物候期研究與上列文獻比較整理）</p></section><section id="p7"><h2>法規與安全</h2><p><strong>EU 化粧品法規：</strong> 永久花精油、全株油與純露在 <a href="https://ec.europa.eu/growth/tools-databases/cosing/" target="_blank" rel="noopener">EU CosIng</a> 都沒有使用限制。2023 年修訂的香料過敏原清單（<a href="https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32023R1545" target="_blank" rel="noopener">Regulation (EU) 2023/1545</a>）新增了一批植物精油條目，<strong>不含永久花</strong>。但油裡所含的 limonene、linalool、geraniol、citral 等成分本身就是標示過敏原：駐留型產品 &gt;0.001%、沖洗型 &gt;0.01% 須在成分表個別標示。不同產地的油過敏原含量差異大，<strong>要依每批 GC 報告計算</strong>。</p>
+<p><strong>驗收時建議一併要求：</strong> 採收物候期（嫩枝或盛花）、蒸餾方式、亞種與產地聲明，以及 γ-curcumene 與 ar-curcumene 分列的 GC 報告。（判讀原則，依 Bianchini 2001 物候期研究與上列文獻比較整理）</p></div></div><div class="two-col" id="s6"><div class="col-left"><h2>法規與安全</h2><p class="summary">EU、IFRA、台灣 TFDA 與美國的規範現況，以及皮膚使用的提醒。</p></div><div class="col-right"><p><strong>EU 化粧品法規：</strong> 永久花精油、全株油與純露在 <a href="https://ec.europa.eu/growth/tools-databases/cosing/" target="_blank" rel="noopener">EU CosIng</a> 都沒有使用限制。2023 年修訂的香料過敏原清單（<a href="https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32023R1545" target="_blank" rel="noopener">Regulation (EU) 2023/1545</a>）新增了一批植物精油條目，<strong>不含永久花</strong>。但油裡所含的 limonene、linalool、geraniol、citral 等成分本身就是標示過敏原：駐留型產品 &gt;0.001%、沖洗型 &gt;0.01% 須在成分表個別標示。不同產地的油過敏原含量差異大，<strong>要依每批 GC 報告計算</strong>。</p>
 <p><strong>IFRA：</strong> <span class="nf">未查得</span>針對 <em>H. italicum</em> 的專屬標準（IFRA 官網無法直接存取核對，可信度：中）。間接相關的是 Geraniol 標準附錄，列出 Helichrysum oil（物種寫 <em>H. angustifolium</em> DC.）geraniol 典型含量 0.7%，供配方計算香葉醇總量（<a href="https://www.perfumersworld.com/documents/Project-Templates/IFRA-Standards/Geraniol.pdf" target="_blank" rel="noopener">IFRA Geraniol Amendment 49，第三方存檔</a>）。</p>
 <p><strong>台灣 TFDA：</strong> 化粧品禁用成分表與限用成分表皆查無永久花（<a href="https://data.gov.tw/dataset/173684" target="_blank" rel="noopener">資料集 173684</a>、<a href="https://data.gov.tw/dataset/173685" target="_blank" rel="noopener">173685</a>）。衛福部 2025-01 預告「化粧品應標示之特定香精或香料成分」草案（24 項香料成分），正式公告：<span class="nf">未查得</span>（<a href="https://mohw.gov.tw/cp-16-81310-1.html" target="_blank" rel="noopener">衛福部預告</a>）。</p>
 <p><strong>美國：</strong> <a href="https://www.law.cornell.edu/cfr/text/21/182.20" target="_blank" rel="noopener">21 CFR 182.20</a> 將「Immortelle」列為 GRAS（一般認為安全）的食品香料精油，學名寫 <em>H. angustifolium</em>（原文拼作 <em>augustifolium</em>）。</p>
 <p><strong>CITES 與野採：</strong> 未列入 CITES 附錄（<a href="https://speciesplus.net/api/v1/taxon_concepts?taxon_concept_query=Helichrysum&amp;taxonomy=cites_eu" target="_blank" rel="noopener">Species+</a>）。但克羅埃西亞野採需許可證，國家公園與保護區禁採（<a href="https://www.novilist.hr/?p=272236" target="_blank" rel="noopener">Novi list 2014</a>）；法國 PACA 區全面禁止野採販售（見栽種史）。</p>
-<p><strong>使用安全：</strong> 文獻記載 1 例 69 歲非異位性女性對永久花花頂萃取物產生過敏性接觸皮膚炎（<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9957194/" target="_blank" rel="noopener">Furlan &amp; Bren 2023 綜述</a>）。病例雖少，仍建議皮膚使用前稀釋並做局部測試，並注意油品保存以減少檸檬烯氧化。安全專書的最大建議用量：<span class="nf">未查得</span>。</p></section><section id="p8"><h2>市場動態</h2><ul>
+<p><strong>使用安全：</strong> 文獻記載 1 例 69 歲非異位性女性對永久花花頂萃取物產生過敏性接觸皮膚炎（<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9957194/" target="_blank" rel="noopener">Furlan &amp; Bren 2023 綜述</a>）。病例雖少，仍建議皮膚使用前稀釋並做局部測試，並注意油品保存以減少檸檬烯氧化。安全專書的最大建議用量：<span class="nf">未查得</span>。</p></div></div><div class="two-col" id="s7"><div class="col-left"><h2>市場動態</h2><p class="summary">科西嘉滯銷、巴爾幹仍有新進者，非原生地的貨源開始出現。</p></div><div class="col-right"><ul>
 <li><strong>科西嘉：高價油也會滯銷。</strong> 2022 年起科西嘉業界面臨永久花精油滯銷，生產者因此組成協會、推動 IGP，希望以產地標示對抗仿冒（<a href="https://www.corsenetinfos.corsica/Huiles-essentielles-la-filiere-corse-s-organise_a83340.html" target="_blank" rel="noopener">Corse Net Infos 2025-03</a>、<a href="https://www.corsenetinfos.corsica/L-immortelle-de-Corse-en-route-vers-une-IGP_a85387.html" target="_blank" rel="noopener">2025-06</a>）。近 2–3 年還出現種苗發芽問題，栽培端產量有不確定性。</li>
 <li><strong>巴爾幹：搶種與崩跌之後。</strong> 2017 年崩跌後大量小農退出，產能集中到有銷路的大型業者；國際買家直接進駐產地（見栽種史）。塞爾維亞 2026 年報導顯示仍有新進者（<a href="https://biznis.kurir.rs/moj-biznis/10114173/zarada-od-smilja-kada-pocinje-profit-i-troskovi" target="_blank" rel="noopener">Kurir 2026-09</a>，可信度低）。</li>
 <li><strong>「產地＝品質」容易被冒用。</strong> 因為各產地 neryl acetate 從約 10% 到 40% 以上不等，單看產地標示並不足以判斷。具體摻偽手法與檢測專論：<span class="nf">未查得</span>。</li>
 <li><strong>產業觀察：</strong> 國際產業會議上已出現標示來自地中海以外地區（例如非洲南部）的有機貨源，產地與物種仍待查證。這些地區不在永久花的原生範圍內，建議以 GC 報告確認物種與化學型。</li>
 <li><strong>氣候：</strong> 乾旱、野火對近年收成的具體影響：<span class="nf">未查得</span>。</li>
-</ul></section><section id="p9"><h2>參考文獻</h2><p><strong>植物分類與分布</strong></p>
+</ul></div></div><div class="two-col" id="s8"><div class="col-left"><h2>參考文獻</h2><p class="summary">本文引用的論文、法規與報導。</p></div><div class="col-right"><details class="more"><summary>展開參考文獻</summary><p><strong>植物分類與分布</strong></p>
 <ul>
 <li>Herrando-Moraira S. et al. 2016. <em>Collectanea Botanica</em> 35: e009. <a href="https://collectaneabotanica.revistas.csic.es/index.php/collectaneabotanica/article/download/243/286?inline=1" target="_blank" rel="noopener">連結</a></li>
 <li>WFO Plant List（2026-06 版）. <a href="https://wfoplantlist.org/taxon/wfo-0000077691-2026-06" target="_blank" rel="noopener">連結</a></li>
@@ -540,8 +773,8 @@ code { word-break: break-all; }
 <li>Arrêté du 9 mai 1994（PACA 區保護植物名單）. <a href="https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000349624" target="_blank" rel="noopener">連結</a></li>
 <li>台灣 TFDA 化粧品成分資料集 173684／173685；衛福部 2025-01 預告. <a href="https://mohw.gov.tw/cp-16-81310-1.html" target="_blank" rel="noopener">連結</a></li>
 <li>CITES Species+. <a href="https://speciesplus.net/api/v1/taxon_concepts?taxon_concept_query=Helichrysum&amp;taxonomy=cites_eu" target="_blank" rel="noopener">連結</a></li>
-</ul></section>
-<div class="related">延伸閱讀 · Feyond 的產區故事<br><a href="helichrysum.html">巴爾幹半島｜摺痕大地綻出的不凋花 →</a></div>
-</main>
-<footer class="site-foot">深度全球精油情報 · 飛揚細籽 FEYOND<br>本頁為公開版，資料持續更新；引用請註明出處。</footer>
+</ul></details></div></div></div>
+<p class="related">延伸閱讀 · Feyond 的產區故事　<a href="helichrysum.html">巴爾幹半島｜摺痕大地綻出的不凋花 →</a></p>
+<footer class="article-footer"><p>本頁為公開版，資料持續更新；不含任何供應商與價格資訊。</p><a href="index.html" class="back-link">← 回到所有文章</a></footer>
+<footer class="site-footer"><p class="footer-brand">飛揚細籽 FEYOND</p><p class="footer-copy">© 2026 Feyond · Dhyana Aromatherapy</p></footer>
 </body></html>
